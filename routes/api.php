@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\DosenLBController;
+use App\Http\Controllers\API\DosenTetapController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -41,3 +42,13 @@ function(){
     Route::delete('delete/{id}', [DosenLBController::class, 'destroy'])->name('delete');
 
 });
+
+// Dosen Tetap
+Route::prefix('dosen_tetap')->middleware('auth:sanctum')->name('dosen_tetap.')->group(
+    function(){
+        Route::get('', [DosenTetapController::class, 'fetch'])->name('fetch');
+        Route::post('create', [DosenTetapController::class, 'create'])->name('create');
+        Route::put('update/{id}', [DosenTetapController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [DosenTetapController::class, 'destroy'])->name('delete');
+
+    });

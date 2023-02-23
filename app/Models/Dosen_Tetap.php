@@ -20,6 +20,8 @@ class Dosen_Tetap extends Model
      *
      * @var array<int, string>
      */
+
+     public $table = "dosen_tetap";
     protected $fillable = [
         'nama_dostap',
         'no_pegawai_dostap',

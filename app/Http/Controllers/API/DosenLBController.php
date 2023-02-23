@@ -24,7 +24,7 @@ class DosenLBController extends Controller
         $alamat_KTP_dosluar = $request->input('alamat_KTP_dosluar');
         $alamat_saatini_dosluar = $request->input('alamat_saatini_dosluar');
         $nama_bank_dosluar = $request->input('nama_bank_dosluar');
-        $total_pendapatan_id = $request->input('nama_dosluar');
+        $total_pendapatan_id = $request->input('total_pendapatan_id');
         $limit = $request->input('limit', 10);
 
         $dosenlbQuery = Dosen_LuarBiasa::query();
