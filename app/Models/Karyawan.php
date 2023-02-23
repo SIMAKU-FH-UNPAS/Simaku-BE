@@ -20,6 +20,7 @@ class Karyawan extends Model
      *
      * @var array<int, string>
      */
+    public $table = "karyawan";
     protected $fillable = [
         'nama_karyawan',
         'no_pegawai_karyawan',

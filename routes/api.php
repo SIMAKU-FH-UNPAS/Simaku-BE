@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\API\DosenLBController;
-use App\Http\Controllers\API\DosenTetapController;
-use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\DosenLBController;
+use App\Http\Controllers\API\KaryawanController;
+use App\Http\Controllers\API\DosenTetapController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,5 +51,15 @@ Route::prefix('dosen_tetap')->middleware('auth:sanctum')->name('dosen_tetap.')->
         Route::post('create', [DosenTetapController::class, 'create'])->name('create');
         Route::put('update/{id}', [DosenTetapController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenTetapController::class, 'destroy'])->name('delete');
+
+    });
+
+// Karyawan
+Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
+    function(){
+        Route::get('', [KaryawanController::class, 'fetch'])->name('fetch');
+        Route::post('create', [KaryawanController::class, 'create'])->name('create');
+        Route::put('update/{id}', [KaryawanController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [KaryawanController::class, 'destroy'])->name('delete');
 
     });
