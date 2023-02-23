@@ -2,9 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Karyawan;
+use App\Models\Dosen_Tetap;
+use App\Models\Pajak_Tambahan;
+use App\Models\Dosen_LuarBiasa;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Pajak extends Model
 {
     use HasFactory, SoftDeletes;

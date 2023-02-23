@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\DosenLBController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -20,8 +21,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // AUTH USER ADMIN
-Route::post('login', [UserController::class, 'login']);
-Route::post('register', [UserController::class, 'register']);
-Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
-Route::get('user', [UserController::class, 'fetch'])->middleware('auth:sanctum');
+Route::name('auth.')->group(function(){
+    Route::post('login', [UserController::class, 'login']);
+    Route::post('register', [UserController::class, 'register']);
 
+    Route::middleware('auth:sanctum')->group(function(){
+        Route::post('logout', [UserController::class, 'logout'])->name('logout');
+        Route::get('user', [UserController::class, 'fetch'])->name('fetch');
+    });
+
+});
+
+//Dosen Luar Biasa
+Route::prefix('dosen_luarbiasa')->middleware('auth:sanctum')->name('dosen_luarbiasa.')->group(
+function(){
+    Route::get('', [DosenLBController::class, 'fetch'])->name('fetch');
+    Route::post('create', [DosenLBController::class, 'create'])->name('create');
+    Route::put('update/{id}', [DosenLBController::class, 'update'])->name('update');
+    Route::delete('delete/{id}', [DosenLBController::class, 'destroy'])->name('delete');
+
+});

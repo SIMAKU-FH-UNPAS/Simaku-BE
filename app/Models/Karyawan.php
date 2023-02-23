@@ -2,9 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Pajak;
+use App\Models\Potongan;
+use App\Models\Gaji_Fakultas;
+use App\Models\Gaji_Universitas;
+use App\Models\Total_Pendapatan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 class Karyawan extends Model
 {
     use HasFactory, SoftDeletes;
