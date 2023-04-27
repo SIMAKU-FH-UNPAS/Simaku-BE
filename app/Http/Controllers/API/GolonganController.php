@@ -55,7 +55,7 @@ class GolonganController extends Controller
     public function create(CreateGolonganRequest $request){
        try {
 
-           // Create Dosen Luar Biasa
+           // Create Golongan
         $golongan = Golongan::create([
             'jenis_golongan' => $request-> jenis_golongan,
 
@@ -74,15 +74,15 @@ class GolonganController extends Controller
     {
         try {
 
-            // Get Dosen Luar Biasa
+            // Get Golongan
             $golongan = Golongan::find($id);
 
-            // Check if Dosen Luar Biasa exists
+            // Check if Golongan exists
             if(!$golongan){
                 throw new Exception('Data Golongan Pegawai not found');
             }
 
-            // Update Dosen Luar Biasa
+            // Update Golongan
             $golongan -> update([
                 'jenis_golongan' => $request-> jenis_golongan,
         ]);
@@ -96,15 +96,15 @@ class GolonganController extends Controller
 
 public function destroy($id){
     try{
-        // Get Data Dosen Luar Biasa
+        // Get Data Golongan
         $golongan = Golongan::find($id);
 
-        // Check if Data Dosen Luar Biasa exists
+        // Check if Data Golongan exists
         if(!$golongan){
             throw new Exception('Data Golongan Pegawai not found');
         }
 
-        // Delete Data Dosen Luar Biasa
+        // Delete Data Golongan
         $golongan->delete();
 
         return ResponseFormatter::success('Data Golongan Pegawai deleted');

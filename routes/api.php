@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\PegawaiController;
 use App\Http\Controllers\API\GolonganController;
+use App\Models\Gaji_Universitas;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,4 +57,13 @@ Route::prefix('golongan')->middleware('auth:sanctum')->name('golongan.')->group(
 
     });
 
+//Gaji Universitas
+Route::prefix('gajiuniv')->middleware('auth:sanctum')->name('gajiuniv.')->group(
+    function(){
+        Route::get('', [GajiUnivController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [GajiUnivController::class, 'fetch'])->name('fetch');
+        Route::post('create', [GajiUnivController::class, 'create'])->name('create');
+        Route::post('update/{id}', [GajiUnivController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [GajiUnivController::class, 'destroy'])->name('delete');
 
+    });
