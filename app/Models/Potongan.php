@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Karyawan;
-use App\Models\Dosen_Tetap;
-use App\Models\Dosen_LuarBiasa;
+use App\Models\Pegawai;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,24 +19,10 @@ class Potongan extends Model
     protected $fillable = [
         'jenis_potongan',
         'besar_potongan',
-        'karyawan_id',
-        'dosluar_id',
-        'dostap_id'
+        'pegawai_id'
     ];
 
-    public function dosenluarbiasa()
-    {
-        return $this->belongsTo(Dosen_LuarBiasa::class);
-    }
-
-
-    public function dosentetap()
-    {
-        return $this->belongsTo(Dosen_Tetap::class);
-    }
-
-    public function karyawan()
-    {
-        return $this->belongsTo(Karyawan::class);
+    public function pegawai(){
+        return $this->belongsTo(Pegawai::class);
     }
 }

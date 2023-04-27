@@ -28,9 +28,8 @@ return new class extends Migration
             $table->integer('honor_univ');
             $table->integer('tj_suami_istri');
             $table->integer('tj_anak');
-            $table->bigInteger('dostap_id')->nullable()->unsigned();
-            $table->bigInteger('dosluar_id')->nullable()->unsigned();
-            $table->bigInteger('karyawan_id')->nullable()->unsigned();
+            $table->decimal('total_gaji_univ')->nullable();
+            $table->bigInteger('pegawai_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();
         });

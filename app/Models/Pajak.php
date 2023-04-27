@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Models\Karyawan;
-use App\Models\Dosen_Tetap;
+use App\Models\Pegawai;
 use App\Models\Pajak_Tambahan;
-use App\Models\Dosen_LuarBiasa;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -35,25 +33,11 @@ class Pajak extends Model
         'jml_set_pajak',
         'pot_tj_kena_pajak',
         'pajak_tb_id',
-        'karyawan_id',
-        'dosluar_id',
-        'dostap_id'
+        'pegawai_id'
     ];
 
-    public function dosenluarbiasa()
-    {
-        return $this->belongsTo(Dosen_LuarBiasa::class);
-    }
-
-
-    public function dosentetap()
-    {
-        return $this->belongsTo(Dosen_Tetap::class);
-    }
-
-    public function karyawan()
-    {
-        return $this->belongsTo(Karyawan::class);
+    public function pegawai(){
+        return $this->belongsTo(Pegawai::class);
     }
 
     public function pajaktambahan(){

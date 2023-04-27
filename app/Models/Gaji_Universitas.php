@@ -2,9 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Karyawan;
-use App\Models\Dosen_Tetap;
-use App\Models\Dosen_LuarBiasa;
+use App\Models\Pegawai;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,6 +16,7 @@ class Gaji_Universitas extends Model
      *
      * @var array<int, string>
      */
+    public $table = "gaji_universitas";
     protected $fillable = [
         'gaji_pokok',
         'tj_struktural',
@@ -32,24 +31,12 @@ class Gaji_Universitas extends Model
         'honor_univ',
         'tj_suami_istri',
         'tj_anak',
-        'karyawan_id',
-        'dosluar_id',
-        'dostap_id'
+        'total_gaji_univ',
+        'pegawai_id'
     ];
 
-    public function dosenluarbiasa()
-    {
-        return $this->belongsTo(Dosen_LuarBiasa::class);
+    public function pegawai(){
+        return $this->belongsTo(Pegawai::class);
     }
 
-
-    public function dosentetap()
-    {
-        return $this->belongsTo(Dosen_Tetap::class);
-    }
-
-    public function karyawan()
-    {
-        return $this->belongsTo(Karyawan::class);
-    }
 }

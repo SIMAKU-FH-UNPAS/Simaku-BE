@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('total_pendapatan', function (Blueprint $table) {
+        Schema::create('golongan', function (Blueprint $table) {
             $table->id();
-            $table->integer('total_gajiuniv');
-            $table->integer('total_gajifak');
-            $table->integer('total_potongan');
-            $table->integer('total_pajak');
-            $table->bigInteger('pegawai_id')->unsigned();
+            $table->string('jenis_golongan');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -32,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('total_pendapatan');
+        Schema::dropIfExists('golongan');
     }
 };

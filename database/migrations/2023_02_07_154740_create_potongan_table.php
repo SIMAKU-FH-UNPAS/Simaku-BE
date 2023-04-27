@@ -17,9 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('jenis_potongan')->nullable();
             $table->integer('besar_potongan')->nullable();
-            $table->bigInteger('karyawan_id')->nullable()->unsigned();
-            $table->bigInteger('dosluar_id')->nullable()->unsigned();
-            $table->bigInteger('dostap_id')->nullable()->unsigned();
+            $table->bigInteger('pegawai_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();
         });

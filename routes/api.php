@@ -1,11 +1,11 @@
 <?php
 
+use App\Http\Controllers\API\GajiUnivController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\DosenLBController;
-use App\Http\Controllers\API\KaryawanController;
-use App\Http\Controllers\API\DosenTetapController;
+use App\Http\Controllers\API\PegawaiController;
+use App\Http\Controllers\API\GolonganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,32 +34,26 @@ Route::name('auth.')->group(function(){
 
 });
 
-//Dosen Luar Biasa
-Route::prefix('dosen_luarbiasa')->middleware('auth:sanctum')->name('dosen_luarbiasa.')->group(
+//Pegawai
+Route::prefix('pegawai')->middleware('auth:sanctum')->name('pegawai.')->group(
 function(){
-    Route::get('', [DosenLBController::class, 'fetch'])->name('fetch');
-    Route::post('create', [DosenLBController::class, 'create'])->name('create');
-    Route::put('update/{id}', [DosenLBController::class, 'update'])->name('update');
-    Route::delete('delete/{id}', [DosenLBController::class, 'destroy'])->name('delete');
+    Route::get('', [PegawaiController::class, 'fetch'])->name('fetch');
+    Route::get('/{id}', [PegawaiController::class, 'fetch'])->name('fetch');
+    Route::post('create', [PegawaiController::class, 'create'])->name('create');
+    Route::post('update/{id}', [PegawaiController::class, 'update'])->name('update');
+    Route::delete('delete/{id}', [PegawaiController::class, 'destroy'])->name('delete');
 
 });
 
-// Dosen Tetap
-Route::prefix('dosen_tetap')->middleware('auth:sanctum')->name('dosen_tetap.')->group(
+// Golongan
+Route::prefix('golongan')->middleware('auth:sanctum')->name('golongan.')->group(
     function(){
-        Route::get('', [DosenTetapController::class, 'fetch'])->name('fetch');
-        Route::post('create', [DosenTetapController::class, 'create'])->name('create');
-        Route::put('update/{id}', [DosenTetapController::class, 'update'])->name('update');
-        Route::delete('delete/{id}', [DosenTetapController::class, 'destroy'])->name('delete');
+        Route::get('', [GolonganController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [GolonganController::class, 'fetch'])->name('fetch');
+        Route::post('create', [GolonganController::class, 'create'])->name('create');
+        Route::post('update/{id}', [GolonganController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [GolonganController::class, 'destroy'])->name('delete');
 
     });
 
-// Karyawan
-Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
-    function(){
-        Route::get('', [KaryawanController::class, 'fetch'])->name('fetch');
-        Route::post('create', [KaryawanController::class, 'create'])->name('create');
-        Route::put('update/{id}', [KaryawanController::class, 'update'])->name('update');
-        Route::delete('delete/{id}', [KaryawanController::class, 'destroy'])->name('delete');
 
-    });
