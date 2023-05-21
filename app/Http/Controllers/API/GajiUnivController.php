@@ -9,7 +9,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGajiUnivRequest;
 use App\Http\Requests\UpdateGajiUnivRequest;
-use Illuminate\Support\Facades\DB;
+
 
 class GajiUnivController extends Controller
 {

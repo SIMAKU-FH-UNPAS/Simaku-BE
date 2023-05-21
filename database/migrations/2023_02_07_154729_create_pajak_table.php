@@ -27,7 +27,8 @@ return new class extends Migration
             $table->integer('pkp')->nullable();
             $table->integer('pajak_pph21')->nullable();
             $table->integer('jml_set_pajak')->nullable();
-            $table->integer('pot_tj_kena_pajak')->nullable();
+            $table->integer('pot_tk_kena_pajak')->nullable();
+            $table->integer('total_pajak')->nullable();
             $table->bigInteger('pegawai_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();

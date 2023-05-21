@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\PajakController;
 use App\Http\Controllers\API\GajiFakController;
 use App\Http\Controllers\API\PegawaiController;
 use App\Http\Controllers\API\GajiUnivController;
@@ -70,7 +71,7 @@ Route::prefix('gajiuniv')->middleware('auth:sanctum')->name('gajiuniv.')->group(
     });
 
 
-    //Gaji Fakultas
+//Gaji Fakultas
 Route::prefix('gajifak')->middleware('auth:sanctum')->name('gajifak.')->group(
     function(){
         Route::get('', [GajiFakController::class, 'fetch'])->name('fetch');
@@ -89,6 +90,15 @@ Route::prefix('potongan')->middleware('auth:sanctum')->name('potongan.')->group(
         Route::post('update/{id}', [PotonganController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [PotonganController::class, 'destroy'])->name('delete');
 
+    });
+//Pajak
+Route::prefix('pajak')->middleware('auth:sanctum')->name('pajak.')->group(
+    function(){
+        Route::get('', [PajakController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [PajakController::class, 'fetch'])->name('fetch');
+        Route::post('create', [PajakController::class, 'create'])->name('create');
+        Route::post('update/{id}', [PajakController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [PajakController::class, 'destroy'])->name('delete');
     });
 
 
