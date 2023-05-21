@@ -39,8 +39,4 @@ class Pajak extends Model
     public function pegawai(){
         return $this->belongsTo(Pegawai::class);
     }
-
-    public function pajaktambahan(){
-        return $this->belongsTo(Pajak_Tambahan::class);
-    }
 }

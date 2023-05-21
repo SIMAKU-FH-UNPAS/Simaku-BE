@@ -172,7 +172,7 @@ class GajiUnivController extends Controller
                 // Get Gaji Universitas
                 $gajiuniv = Gaji_Universitas::find($id);
 
-                // Check if Dosen Luar Biasa exists
+                // Check if Gaji Universitas exists
                 if(!$gajiuniv){
                     throw new Exception('Data Gaji Universitas Pegawai not found');
                 }

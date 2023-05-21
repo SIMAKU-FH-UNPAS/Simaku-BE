@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('honor_mengajar_DPK')->nullable();
             $table->integer('peny_honor_mengajar')->nullable();
             $table->integer('tj_guru_besar')->nullable();
-            $table->bigInteger('honor_fakultas_id')->nullable()->unsigned();
+            $table->integer('total_gaji_fakultas')->nullable();
             $table->bigInteger('pegawai_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();

@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('potongan', function (Blueprint $table) {
             $table->id();
-            $table->integer('jenis_potongan')->nullable();
-            $table->integer('besar_potongan')->nullable();
+            $table->string('jenis_potongan');
+            $table->integer('besar_potongan');
             $table->bigInteger('pegawai_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();

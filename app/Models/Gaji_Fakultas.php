@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Pegawai;
 use App\Models\Honor_Fakultas;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +18,7 @@ class Gaji_Fakultas extends Model
      *
      * @var array<int, string>
      */
+    public $table = "gaji_fakultas";
     protected $fillable = [
         'tj_tambahan',
         'honor_kinerja',
@@ -24,8 +26,7 @@ class Gaji_Fakultas extends Model
         'honor_mengajar_DPK',
         'peny_honor_mengajar',
         'tj_guru_besar',
-        'total_gaji_FH',
-        'honor_fakultas_id',
+        'total_gaji_fakultas',
         'pegawai_id',
     ];
 
@@ -33,7 +34,15 @@ class Gaji_Fakultas extends Model
         return $this->belongsTo(Pegawai::class);
     }
 
-    public function honorfakultas(){
-        return $this->belongsToMany(Honor_Fakultas::class);
+    public function total_gaji_fakultas($request){
+        $tj_tambahan = $request-> tj_tambahan;
+        $honor_kinerja = $request-> honor_kinerja;
+        $honor_klb_mengajar = $request-> honor_klb_mengajar;
+        $honor_mengajar_DPK = $request-> honor_mengajar_DPK;
+        $peny_honor_mengajar = $request-> peny_honor_mengajar;
+        $tj_guru_besar = $request-> tj_guru_besar;
+        $total_gaji_fakultas = $tj_tambahan+$honor_kinerja+$honor_klb_mengajar+$honor_mengajar_DPK+$peny_honor_mengajar+$tj_guru_besar;
+
+        return $total_gaji_fakultas;
     }
 }

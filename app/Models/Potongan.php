@@ -16,6 +16,7 @@ class Potongan extends Model
      *
      * @var array<int, string>
      */
+    public $table = "potongan";
     protected $fillable = [
         'jenis_potongan',
         'besar_potongan',

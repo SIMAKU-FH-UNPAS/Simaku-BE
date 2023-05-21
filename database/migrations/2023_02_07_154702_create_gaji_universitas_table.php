@@ -28,7 +28,7 @@ return new class extends Migration
             $table->integer('honor_univ');
             $table->integer('tj_suami_istri');
             $table->integer('tj_anak');
-            $table->decimal('total_gaji_univ')->nullable();
+            $table->integer('total_gaji_univ')->nullable();
             $table->bigInteger('pegawai_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();

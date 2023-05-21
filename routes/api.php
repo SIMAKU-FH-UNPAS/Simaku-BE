@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\API\GajiUnivController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\GajiFakController;
 use App\Http\Controllers\API\PegawaiController;
+use App\Http\Controllers\API\GajiUnivController;
 use App\Http\Controllers\API\GolonganController;
-use App\Models\Gaji_Universitas;
+use App\Http\Controllers\API\PotonganController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,3 +68,32 @@ Route::prefix('gajiuniv')->middleware('auth:sanctum')->name('gajiuniv.')->group(
         Route::delete('delete/{id}', [GajiUnivController::class, 'destroy'])->name('delete');
 
     });
+
+
+    //Gaji Fakultas
+Route::prefix('gajifak')->middleware('auth:sanctum')->name('gajifak.')->group(
+    function(){
+        Route::get('', [GajiFakController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [GajiFakController::class, 'fetch'])->name('fetch');
+        Route::post('create', [GajiFakController::class, 'create'])->name('create');
+        Route::post('update/{id}', [GajiFakController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [GajiFakController::class, 'destroy'])->name('delete');
+    });
+
+//Potongan Gaji
+Route::prefix('potongan')->middleware('auth:sanctum')->name('potongan.')->group(
+    function(){
+        Route::get('', [PotonganController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [PotonganController::class, 'fetch'])->name('fetch');
+        Route::post('create', [PotonganController::class, 'create'])->name('create');
+        Route::post('update/{id}', [PotonganController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [PotonganController::class, 'destroy'])->name('delete');
+
+    });
+
+
+    // // Coba
+    // Route::prefix('cobain')->middleware('auth:sanctum')->name('cobain.')->group(
+    //     function(){
+    //         Route::get('', [GajiFakController::class, 'total_gaji'])->name('total_gaji');
+    //     });

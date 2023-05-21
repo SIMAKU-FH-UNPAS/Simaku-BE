@@ -25,19 +25,19 @@ class UpdateGajiUnivRequest extends FormRequest
     public function rules()
     {
         return [
-            'gaji_pokok' => 'required|integer|max:255',
-            'tj_struktural' => 'required|integer|max:255',
-            'tj_pres_kerja' => 'required|integer|max:255',
-            'u_lembur_hk' => 'required|integer|max:255',
-            'u_lembur_hl' => 'required|integer|max:255',
-            'trans_kehadiran' => 'required|integer|max:255',
-            'tj_fungsional' => 'required|integer|max:255',
-            'gaji_pusat' => 'required|integer|max:255',
-            'tj_khs_istimewa' => 'required|integer|max:255',
-            'tj_tambahan' => 'required|integer|max:255',
-            'honor_univ' => 'required|integer|max:255',
-            'tj_suami_istri' => 'required|integer|max:255',
-            'tj_anak' => 'required|integer|max:255',
+            'gaji_pokok' => 'required|integer',
+            'tj_struktural' => 'required|integer',
+            'tj_pres_kerja' => 'required|integer',
+            'u_lembur_hk' => 'required|integer',
+            'u_lembur_hl' => 'required|integer',
+            'trans_kehadiran' => 'required|integer',
+            'tj_fungsional' => 'required|integer',
+            'gaji_pusat' => 'required|integer',
+            'tj_khs_istimewa' => 'required|integer',
+            'tj_tambahan' => 'required|integer',
+            'honor_univ' => 'required|integer',
+            'tj_suami_istri' => 'required|integer',
+            'tj_anak' => 'required|integer',
             'total_gaji_univ' => 'nullable',
             'pegawai_id' => 'required|integer|exists:pegawai,id'
         ];
