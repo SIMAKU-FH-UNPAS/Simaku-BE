@@ -41,7 +41,7 @@ class RekapitulasiController extends Controller
             $gajifakultasarray = !empty($gajifakultas[$key]) ? $gajifakultas[$key]['total_gaji_fakultas'] : 0;
             $gajiunivarray = !empty($gaji) ? $gaji['total_gaji_univ'] : 0;
             $pajakarray = !empty($pajak[$key]) ? $pajak[$key]['pensiun'] : 0;
-        // Perhitungan Gaji
+        // Perhitungan Bruto
             $pendapatanbruto[] = ['nama'=>Pegawai::find($pegawai->id)->nama, 'posisi'=>Pegawai::find($pegawai->id)->posisi, 'pendapatan_bruto'=>$gajifakultasarray  + $gajiunivarray + $pajakarray];
         }
         return ResponseFormatter::success($pendapatanbruto);
@@ -65,7 +65,7 @@ class RekapitulasiController extends Controller
                     $gajifakultasarray = !empty($gajifakultas[$key]) ? $gajifakultas[$key]['total_gaji_fakultas'] : 0;
                     $gajiunivarray = !empty($gaji) ? $gaji['total_gaji_univ'] : 0;
                     $pajakarray = !empty($pajak[$key]) ? $pajak[$key]['pensiun'] : 0;
-        //Perhitungan Gaji
+        //Perhitungan Bruto
                     $pendapatanbruto[] = ['nama'=>Pegawai::find($pegawai->id)->nama, 'posisi'=>Pegawai::find($pegawai->id)->posisi, 'pendapatan_bruto'=>$gajifakultasarray  + $gajiunivarray + $pajakarray];
                 }
             return ResponseFormatter::success($pendapatanbruto);
