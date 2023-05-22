@@ -9,6 +9,7 @@ use App\Http\Controllers\API\PegawaiController;
 use App\Http\Controllers\API\GajiUnivController;
 use App\Http\Controllers\API\GolonganController;
 use App\Http\Controllers\API\PotonganController;
+use App\Http\Controllers\API\RekapitulasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,8 +103,8 @@ Route::prefix('pajak')->middleware('auth:sanctum')->name('pajak.')->group(
     });
 
 
-    // // Coba
-    // Route::prefix('cobain')->middleware('auth:sanctum')->name('cobain.')->group(
-    //     function(){
-    //         Route::get('', [GajiFakController::class, 'total_gaji'])->name('total_gaji');
-    //     });
+    // Coba
+    Route::prefix('rekapitulasi')->middleware('auth:sanctum')->name('rekapitulasi.')->group(
+        function(){
+            Route::get('bruto', [RekapitulasiController::class, 'pendapatanbruto'])->name('pendapatanbruto');
+        });

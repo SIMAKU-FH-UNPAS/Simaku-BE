@@ -181,7 +181,7 @@ public function create(CreatePajakRequest $request){
             $pajak = new Pajak;
             $total_pajak = $pajak->total_pajak($request);
             $pajakpegawai -> update([
-                'pensiun' => $request-> pensiun,
+            'pensiun' => $request-> pensiun,
             'bruto_pajak' => $request-> bruto_pajak,
             'bruto_murni' => $request-> bruto_murni,
             'biaya_jabatan' => $request-> biaya_jabatan,
