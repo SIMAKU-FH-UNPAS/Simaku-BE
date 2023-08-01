@@ -20,7 +20,7 @@ class PegawaiController extends Controller
         $no_pegawai = $request->input('no_pegawai');
         $status = $request->input('status');
         $posisi = $request->input('posisi');
-        $golongan_id = $request->input('golongan_id');
+        $golongan = $request->input('golongan');
         $jabatan = $request->input('jabatan');
         $alamat_KTP = $request->input('alamat_KTP');
         $alamat_saatini = $request->input('alamat_saatini');
@@ -91,8 +91,8 @@ class PegawaiController extends Controller
         $pegawai->where('norek_bank', 'like', '%'.$norek_bank.'%');
 
     }
-    if ($golongan_id) {
-        $pegawai->where('golongan_id', $golongan_id);
+    if ($golongan) {
+        $pegawai->where('golongan', 'like', '%'.$golongan.'%');
     }
 
 
@@ -113,7 +113,7 @@ class PegawaiController extends Controller
             'no_pegawai' => $request-> no_pegawai,
             'posisi' => $request-> posisi,
             'status' => $request-> status,
-            'golongan_id' => $request-> golongan_id,
+            'golongan' => $request-> golongan,
             'jabatan' => $request-> jabatan,
             'alamat_KTP' => $request-> alamat_KTP,
             'alamat_saatini' => $request->  alamat_saatini,
@@ -149,7 +149,7 @@ class PegawaiController extends Controller
                 'no_pegawai' => $request-> no_pegawai,
                 'posisi' => $request-> posisi,
                 'status' => $request-> status,
-                'golongan_id' => $request-> golongan_id,
+                'golongan' => $request-> golongan,
                 'jabatan' => $request-> jabatan,
                 'alamat_KTP' => $request-> alamat_KTP,
                 'alamat_saatini' => $request->  alamat_saatini,

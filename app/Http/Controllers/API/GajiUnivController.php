@@ -15,6 +15,7 @@ class GajiUnivController extends Controller
 {
     public function fetch(Request $request){
         $id = $request->input('id');
+        $pegawai_id= $request->input('pegawai_id');
         $gaji_pokok = $request->input('gaji_pokok');
         $tj_struktural = $request->input('tj_struktural');
         $tj_pres_kerja = $request->input('tj_pres_kerja');
@@ -22,14 +23,12 @@ class GajiUnivController extends Controller
         $u_lembur_hl= $request->input('u_lembur_hl');
         $trans_kehadiran= $request->input('trans_kehadiran');
         $tj_fungsional= $request->input('tj_fungsional');
-        $gaji_pusat= $request->input('gaji_pusat');
         $tj_khs_istimewa= $request->input('tj_khs_istimewa');
         $tj_tambahan= $request->input('tj_tambahan');
         $honor_univ= $request->input('honor_univ');
         $tj_suami_istri= $request->input('tj_suami_istri');
         $tj_anak= $request->input('tj_anak');
         $total_gaji_univ= $request->input('total_gaji_univ');
-        $pegawai_id= $request->input('pegawai_id');
         $limit = $request->input('limit', 10);
 
         $gajiunivQuery = Gaji_Universitas::query();
@@ -52,7 +51,6 @@ class GajiUnivController extends Controller
     if($gaji_pokok)
     {
         $gajiuniv->where('gaji_pokok', 'like', '%'.$gaji_pokok.'%');
-
     }
     if($tj_struktural)
     {
@@ -82,11 +80,6 @@ class GajiUnivController extends Controller
     if($tj_fungsional)
     {
         $gajiuniv->where('tj_fungsional', 'like', '%'.$tj_fungsional.'%');
-
-    }
-    if($gaji_pusat)
-    {
-        $gajiuniv->where('gaji_pusat', 'like', '%'.$gaji_pusat.'%');
 
     }
     if($tj_khs_istimewa)
@@ -140,6 +133,7 @@ class GajiUnivController extends Controller
             $total_gaji_univ = $gajiuniversitas->total_gaji_univ($request);
             // Create Gaji Universitas
             $gajiuniv = Gaji_Universitas::create([
+                'pegawai_id' => $request-> pegawai_id,
                 'gaji_pokok' => $request-> gaji_pokok,
                 'tj_struktural' => $request-> tj_struktural,
                 'tj_pres_kerja' => $request-> tj_pres_kerja,
@@ -147,14 +141,12 @@ class GajiUnivController extends Controller
                 'u_lembur_hl' => $request-> u_lembur_hl,
                 'trans_kehadiran' => $request-> trans_kehadiran,
                 'tj_fungsional' => $request-> tj_fungsional,
-                'gaji_pusat' => $request-> gaji_pusat,
                 'tj_khs_istimewa' => $request-> tj_khs_istimewa,
                 'tj_tambahan' => $request-> tj_tambahan,
                 'honor_univ' => $request-> honor_univ,
                 'tj_suami_istri' => $request-> tj_suami_istri,
                 'tj_anak' => $request-> tj_anak,
                 'total_gaji_univ' => $total_gaji_univ,
-                'pegawai_id' => $request-> pegawai_id
             ]);
             if(!$gajiuniv){
                 throw new Exception('Data Gaji Universitas Pegawai not created');
@@ -181,6 +173,7 @@ class GajiUnivController extends Controller
                 $gajiuniversitas = new Gaji_Universitas;
                 $total_gaji_univ = $gajiuniversitas->total_gaji_univ($request);
                 $gajiuniv -> update([
+                    'pegawai_id' => $request-> pegawai_id,
                     'gaji_pokok' => $request-> gaji_pokok,
                     'tj_struktural' => $request-> tj_struktural,
                     'tj_pres_kerja' => $request-> tj_pres_kerja,
@@ -188,14 +181,12 @@ class GajiUnivController extends Controller
                     'u_lembur_hl' => $request-> u_lembur_hl,
                     'trans_kehadiran' => $request-> trans_kehadiran,
                     'tj_fungsional' => $request-> tj_fungsional,
-                    'gaji_pusat' => $request-> gaji_pusat,
                     'tj_khs_istimewa' => $request-> tj_khs_istimewa,
                     'tj_tambahan' => $request-> tj_tambahan,
                     'honor_univ' => $request-> honor_univ,
                     'tj_suami_istri' => $request-> tj_suami_istri,
                     'tj_anak' => $request-> tj_anak,
                     'total_gaji_univ' => $total_gaji_univ,
-                    'pegawai_id' => $request-> pegawai_id
             ]);
 
 

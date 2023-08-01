@@ -17,7 +17,9 @@ class Gaji_Universitas extends Model
      * @var array<int, string>
      */
     public $table = "gaji_universitas";
+    protected $primaryKey = 'id';
     protected $fillable = [
+        'pegawai_id',
         'gaji_pokok',
         'tj_struktural',
         'tj_pres_kerja',
@@ -25,14 +27,12 @@ class Gaji_Universitas extends Model
         'u_lembur_hl',
         'trans_kehadiran',
         'tj_fungsional',
-        'gaji_pusat',
         'tj_khs_istimewa',
         'tj_tambahan',
         'honor_univ',
         'tj_suami_istri',
         'tj_anak',
         'total_gaji_univ',
-        'pegawai_id'
     ];
 
     public function pegawai(){
@@ -48,7 +48,6 @@ class Gaji_Universitas extends Model
         $u_lembur_hl = $request->u_lembur_hl;
         $trans_kehadiran = $request->trans_kehadiran;
         $tj_fungsional = $request ->tj_fungsional;
-        $gaji_pusat = $request -> gaji_pusat;
         $tj_khs_istimewa = $request->tj_khs_istimewa;
         $tj_tambahan = $request->tj_tambahan;
         $honor_univ = $request->honor_univ;
@@ -57,7 +56,7 @@ class Gaji_Universitas extends Model
 
 
         $total_gaji_univ = $gaji_pokok+$tj_struktural+$tj_pres_kerja+$u_lembur_hk+$u_lembur_hl+$trans_kehadiran
-        +$tj_fungsional+$gaji_pusat+$tj_khs_istimewa+$tj_tambahan+$honor_univ+$tj_suami_istri+$tj_anak;
+        +$tj_fungsional+$tj_khs_istimewa+$tj_tambahan+$honor_univ+$tj_suami_istri+$tj_anak;
 
         return $total_gaji_univ;
     }

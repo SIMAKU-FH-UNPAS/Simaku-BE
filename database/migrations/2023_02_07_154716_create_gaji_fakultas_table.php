@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('gaji_fakultas', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('pegawai_id')->unsigned();
             $table->integer('tj_tambahan')->nullable();
             $table->integer('honor_kinerja')->nullable();
             $table->integer('honor_klb_mengajar')->nullable();
@@ -22,7 +23,6 @@ return new class extends Migration
             $table->integer('peny_honor_mengajar')->nullable();
             $table->integer('tj_guru_besar')->nullable();
             $table->integer('total_gaji_fakultas')->nullable();
-            $table->bigInteger('pegawai_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -21,12 +21,13 @@ class Pegawai extends Model
      */
 
     public $table = "pegawai";
+    protected $primaryKey = 'id';
     protected $fillable = [
         'nama',
         'no_pegawai',
         'status',
         'posisi',
-        'golongan_id',
+        'golongan',
         'jabatan',
         'alamat_KTP',
         'alamat_saatini',
@@ -36,17 +37,12 @@ class Pegawai extends Model
     ];
 
 
-    public function golongan(){
-        return $this->belongsTo(Golongan::class);
-    }
-
-
     public function gaji_universitas(){
-        return $this->hasMany(Gaji_Universitas::class);
+        return $this->hasMany(Gaji_Universitas::class,'pegawai_id', 'id');
     }
 
     public function gaji_fakultas(){
-        return $this->hasMany(Gaji_Fakultas::class);
+        return $this->hasMany(Gaji_Fakultas::class,'pegawai_id', 'id' );
     }
     public function pajak(){
         return $this->hasMany(Pajak::class);

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('no_pegawai');
             $table->enum('status', ['Aktif', 'Tidak Aktif']);
             $table->enum('posisi', ['Dosen Tetap', 'Dosen Luar Biasa', 'Karyawan']);
-            $table->bigInteger('golongan_id')->unsigned();
+            $table->enum('golongan', ['IIA','IIB','IIC','IID','IIIA','IIIB','IIIC','IIID','IVA','IVB','IVC','IVD','IVE']);
             $table->string('jabatan');
             $table->string('alamat_KTP');
             $table->string('alamat_saatini');

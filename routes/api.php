@@ -8,6 +8,7 @@ use App\Http\Controllers\API\GajiFakController;
 use App\Http\Controllers\API\PegawaiController;
 use App\Http\Controllers\API\GajiUnivController;
 use App\Http\Controllers\API\GolonganController;
+use App\Http\Controllers\API\HonorFakTambahanController;
 use App\Http\Controllers\API\PotonganController;
 use App\Http\Controllers\API\RekapitulasiController;
 
@@ -49,17 +50,6 @@ function(){
 
 });
 
-// Golongan
-Route::prefix('golongan')->middleware('auth:sanctum')->name('golongan.')->group(
-    function(){
-        Route::get('', [GolonganController::class, 'fetch'])->name('fetch');
-        Route::get('/{id}', [GolonganController::class, 'fetch'])->name('fetch');
-        Route::post('create', [GolonganController::class, 'create'])->name('create');
-        Route::post('update/{id}', [GolonganController::class, 'update'])->name('update');
-        Route::delete('delete/{id}', [GolonganController::class, 'destroy'])->name('delete');
-
-    });
-
 //Gaji Universitas
 Route::prefix('gajiuniv')->middleware('auth:sanctum')->name('gajiuniv.')->group(
     function(){
@@ -80,6 +70,16 @@ Route::prefix('gajifak')->middleware('auth:sanctum')->name('gajifak.')->group(
         Route::post('create', [GajiFakController::class, 'create'])->name('create');
         Route::post('update/{id}', [GajiFakController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [GajiFakController::class, 'destroy'])->name('delete');
+    });
+
+// //Honor Fakultas Tambahan
+Route::prefix('honorfaktambahan')->middleware('auth:sanctum')->name('honorfaktambahan.')->group(
+    function(){
+        Route::get('', [HonorFakTambahanController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [HonorFakTambahanController::class, 'fetch'])->name('fetch');
+        Route::post('create/{gaji_fakultas_id}', [HonorFakTambahanController::class, 'create'])->name('create');
+        Route::post('update/{id}/{gaji_fakultas_id}', [HonorFakTambahanController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [HonorFakTambahanController::class, 'destroy'])->name('delete');
     });
 
 //Potongan Gaji

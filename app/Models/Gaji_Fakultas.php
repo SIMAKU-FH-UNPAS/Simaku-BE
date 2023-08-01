@@ -12,14 +12,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Gaji_Fakultas extends Model
 {
     use HasFactory, SoftDeletes;
-
        /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     public $table = "gaji_fakultas";
+    protected $primaryKey = 'id';
+    protected $dates = ['deleted_at'];
     protected $fillable = [
+        'pegawai_id',
         'tj_tambahan',
         'honor_kinerja',
         'honor_klb_mengajar',
@@ -27,11 +29,13 @@ class Gaji_Fakultas extends Model
         'peny_honor_mengajar',
         'tj_guru_besar',
         'total_gaji_fakultas',
-        'pegawai_id',
-    ];
 
+    ];
     public function pegawai(){
         return $this->belongsTo(Pegawai::class);
+    }
+    public function honorfakultastambahan(){
+        return $this->hasMany(Honor_Fakultas_Tambahan::class,'gaji_fakultas_id', 'id');
     }
 
     public function total_gaji_fakultas($request){
@@ -45,4 +49,5 @@ class Gaji_Fakultas extends Model
 
         return $total_gaji_fakultas;
     }
+
 }

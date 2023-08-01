@@ -25,6 +25,7 @@ class CreateGajiUnivRequest extends FormRequest
     public function rules()
     {
         return [
+            'pegawai_id' => 'required|integer|exists:pegawai,id',
             'gaji_pokok' => 'required|integer',
             'tj_struktural' => 'required|integer',
             'tj_pres_kerja' => 'required|integer',
@@ -32,16 +33,12 @@ class CreateGajiUnivRequest extends FormRequest
             'u_lembur_hl' => 'required|integer',
             'trans_kehadiran' => 'required|integer',
             'tj_fungsional' => 'required|integer',
-            'gaji_pusat' => 'required|integer',
             'tj_khs_istimewa' => 'required|integer',
             'tj_tambahan' => 'required|integer',
             'honor_univ' => 'required|integer',
             'tj_suami_istri' => 'required|integer',
             'tj_anak' => 'required|integer',
-            'total_gaji_univ' => 'nullable',
-            'pegawai_id' => 'required|integer|exists:pegawai,id'
-
-
+            'total_gaji_univ' => 'nullable'
         ];
     }
 }

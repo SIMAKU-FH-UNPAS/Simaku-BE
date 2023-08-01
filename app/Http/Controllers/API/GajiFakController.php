@@ -9,11 +9,13 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGajiFakRequest;
 use App\Http\Requests\UpdateGajiFakRequest;
+use App\Models\Honor_Fakultas_Tambahan;
 
 class GajiFakController extends Controller
 {
     public function fetch(Request $request){
         $id = $request->input('id');
+        $pegawai_id= $request->input('pegawai_id');
         $tj_tambahan = $request->input('tj_tambahan');
         $honor_kinerja = $request->input('honor_kinerja');
         $honor_klb_mengajar = $request->input('honor_klb_mengajar');
@@ -21,7 +23,6 @@ class GajiFakController extends Controller
         $peny_honor_mengajar = $request->input('peny_honor_mengajar');
         $tj_guru_besar = $request->input('tj_guru_besar');
         $total_gaji_fakultas= $request->input('total_gaji_fakultas');
-        $pegawai_id= $request->input('pegawai_id');
         $limit = $request->input('limit', 10);
 
         $gajifakQuery = Gaji_Fakultas::query();
@@ -93,6 +94,7 @@ public function create(CreateGajiFakRequest $request){
         $total_gaji_fakultas = $gajifakultas->total_gaji_fakultas($request);
         // Create Gaji Fakultas
         $gajifak = Gaji_Fakultas::create([
+            'pegawai_id' => $request-> pegawai_id,
             'tj_tambahan' => $request-> tj_tambahan,
             'honor_kinerja' => $request-> honor_kinerja,
             'honor_klb_mengajar' => $request-> honor_klb_mengajar,
@@ -100,7 +102,6 @@ public function create(CreateGajiFakRequest $request){
             'peny_honor_mengajar' => $request-> peny_honor_mengajar,
             'tj_guru_besar' => $request-> tj_guru_besar,
             'total_gaji_fakultas' => $total_gaji_fakultas,
-            'pegawai_id' => $request-> pegawai_id,
         ]);
         if(!$gajifak){
             throw new Exception('Data Gaji Fakultas Pegawai not created');
@@ -113,19 +114,32 @@ public function create(CreateGajiFakRequest $request){
     public function update(UpdateGajiFakRequest $request, $id)
     {
         try {
-
             // Get Gaji Fakultas
             $gajifak = Gaji_Fakultas::find($id);
-
             // Check if Gaji Fakultas exists
             if(!$gajifak){
                 throw new Exception('Data Gaji Fakultas Pegawai not found');
             }
+             // Menghitung total_gaji_fakultas tanpa mempertimbangkan besar_honor_FK
+            $total_gaji_fakultas =
+            $request->tj_tambahan +
+            $request->honor_kinerja +
+            $request->honor_klb_mengajar +
+            $request->honor_mengajar_DPK +
+            $request->peny_honor_mengajar +
+            $request->tj_guru_besar;
 
-            // Update Gaji Fakultas
-            $gajifakultas = new Gaji_Fakultas;
-            $total_gaji_fakultas = $gajifakultas->total_gaji_fakultas($request);
+            // Mengecek apakah ada data besar_honor_FK dari tabel Honor_Fakultas_Tambahan
+            $honor_fakultas_tambahan = Honor_Fakultas_Tambahan::where('gaji_fakultas_id',$id)->whereNull('deleted_at')->get();
+            if ($honor_fakultas_tambahan){
+                foreach($honor_fakultas_tambahan as $honorfak){
+                    // Jika ada, tambahkan besar_honor_FK ke total_gaji_fakultas
+                $total_gaji_fakultas += $honorfak->besar_honor_FH;
+            }
+                }
+           // Update Gaji Fakultas
             $gajifak -> update([
+                'pegawai_id' => $request-> pegawai_id,
                 'tj_tambahan' => $request-> tj_tambahan,
                 'honor_kinerja' => $request-> honor_kinerja,
                 'honor_klb_mengajar' => $request-> honor_klb_mengajar,
@@ -133,10 +147,7 @@ public function create(CreateGajiFakRequest $request){
                 'peny_honor_mengajar' => $request-> peny_honor_mengajar,
                 'tj_guru_besar' => $request-> tj_guru_besar,
                 'total_gaji_fakultas' => $total_gaji_fakultas,
-                'pegawai_id' => $request-> pegawai_id,
         ]);
-
-
         return ResponseFormatter::success($gajifak, 'Data Gaji Fakultas Pegawai updated');
     }catch(Exception $e){
         return ResponseFormatter::error($e->getMessage(), 500);
@@ -144,21 +155,23 @@ public function create(CreateGajiFakRequest $request){
     }
 
 public function destroy($id){
-    try{
+ try {
         // Get Data Gaji Fakultas
-        $gajifak = Gaji_Fakultas::find($id);
+        $gajifak = Gaji_Fakultas::findOrFail($id);
 
         // Check if Data Gaji Fakultas exists
-        if(!$gajifak){
+        if (!$gajifak) {
             throw new Exception('Data Gaji Fakultas Pegawai not found');
         }
 
-        // Delete Data Gaji Fakultas
+        // Delete the related Honor_Fakultas_Tambahan records
+        $gajifak->honorfakultastambahan()->delete();
+        // Use Eloquent destroy to trigger cascading delete
         $gajifak->delete();
 
         return ResponseFormatter::success('Data Gaji Fakultas Pegawai deleted');
 
-    }catch(Exception $e){
+    } catch (Exception $e) {
         return ResponseFormatter::error($e->getMessage(), 500);
     }
 }
