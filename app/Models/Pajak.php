@@ -41,6 +41,10 @@ class Pajak extends Model
         return $this->belongsTo(Pegawai::class);
     }
 
+    public function pajaktambahan(){
+        return $this->hasMany(Pajak_Tambahan::class,'pajak_id', 'id');
+    }
+
     public function total_pajak($request){
         $pensiun = $request-> pensiun;
         $bruto_pajak = $request-> bruto_pajak;

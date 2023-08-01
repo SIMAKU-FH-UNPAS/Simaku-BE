@@ -9,6 +9,7 @@ use App\Http\Controllers\API\PegawaiController;
 use App\Http\Controllers\API\GajiUnivController;
 use App\Http\Controllers\API\GolonganController;
 use App\Http\Controllers\API\HonorFakTambahanController;
+use App\Http\Controllers\API\PajakTambahanController;
 use App\Http\Controllers\API\PotonganController;
 use App\Http\Controllers\API\RekapitulasiController;
 
@@ -72,7 +73,7 @@ Route::prefix('gajifak')->middleware('auth:sanctum')->name('gajifak.')->group(
         Route::delete('delete/{id}', [GajiFakController::class, 'destroy'])->name('delete');
     });
 
-// //Honor Fakultas Tambahan
+//Honor Fakultas Tambahan
 Route::prefix('honorfaktambahan')->middleware('auth:sanctum')->name('honorfaktambahan.')->group(
     function(){
         Route::get('', [HonorFakTambahanController::class, 'fetch'])->name('fetch');
@@ -92,6 +93,7 @@ Route::prefix('potongan')->middleware('auth:sanctum')->name('potongan.')->group(
         Route::delete('delete/{id}', [PotonganController::class, 'destroy'])->name('delete');
 
     });
+
 //Pajak
 Route::prefix('pajak')->middleware('auth:sanctum')->name('pajak.')->group(
     function(){
@@ -100,6 +102,16 @@ Route::prefix('pajak')->middleware('auth:sanctum')->name('pajak.')->group(
         Route::post('create', [PajakController::class, 'create'])->name('create');
         Route::post('update/{id}', [PajakController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [PajakController::class, 'destroy'])->name('delete');
+    });
+
+//Pajak Tambahan
+Route::prefix('pajaktambahan')->middleware('auth:sanctum')->name('pajaktambahan.')->group(
+    function(){
+        Route::get('', [PajakTambahanController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [PajakTambahanController::class, 'fetch'])->name('fetch');
+        Route::post('create/{pajak_id}', [PajakTambahanController::class, 'create'])->name('create');
+        Route::post('update/{id}/{pajak_id}', [PajakTambahanController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [PajakTambahanController::class, 'destroy'])->name('delete');
     });
 
 

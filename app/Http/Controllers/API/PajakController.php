@@ -9,11 +9,13 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreatePajakRequest;
 use App\Http\Requests\UpdatePajakRequest;
+use App\Models\Pajak_Tambahan;
 
 class PajakController extends Controller
 {
     public function fetch(Request $request){
         $id = $request->input('id');
+        $pegawai_id= $request->input('pegawai_id');
         $pensiun = $request->input('pensiun');
         $bruto_pajak = $request->input('bruto_pajak');
         $bruto_murni = $request->input('bruto_murni');
@@ -28,7 +30,6 @@ class PajakController extends Controller
         $jml_set_pajak = $request->input('jml_set_pajak');
         $pot_tk_kena_pajak = $request->input('pot_tk_kena_pajak');
         $total_pajak= $request->input('total_pajak');
-        $pegawai_id= $request->input('pegawai_id');
         $limit = $request->input('limit', 10);
 
         $PajakQuery = Pajak::query();
@@ -177,10 +178,33 @@ public function create(CreatePajakRequest $request){
                 throw new Exception('Data Pajak Pegawai not found');
             }
 
+            // Menghitung total_pajak tanpa mempertimbangkan besar_pajak
+            $total_pajak =
+            $request->pensiun +
+            $request->bruto_pajak +
+            $request->bruto_murni +
+            $request->biaya_jabatan +
+            $request->as_bumi_putera +
+            $request->dplk_pensiun +
+            $request->jml_pot_kn_pajak +
+            $request->set_potongan_kn_pajak +
+            $request->ptkp +
+            $request->pkp +
+            $request->pajak_pph21 +
+            $request->jml_set_pajak +
+            $request->pot_tk_kena_pajak;
+
+             // Mengecek apakah ada data besar_pajak dari tabel Pajak_Tambahan
+             $pajak_tambahan = Pajak_Tambahan::where('pajak_id',$id)->whereNull('deleted_at')->get();
+             if ($pajak_tambahan){
+                 foreach($pajak_tambahan as $pajak){
+                     // Jika ada, tambahkan besar_pajak ke total_pajak
+                 $total_pajak += $pajak->besar_pajak;
+             }
+            }
             // Update Pajak Pegawai
-            $pajak = new Pajak;
-            $total_pajak = $pajak->total_pajak($request);
             $pajakpegawai -> update([
+            'pegawai_id' => $request-> pegawai_id,
             'pensiun' => $request-> pensiun,
             'bruto_pajak' => $request-> bruto_pajak,
             'bruto_murni' => $request-> bruto_murni,
@@ -194,8 +218,7 @@ public function create(CreatePajakRequest $request){
             'pajak_pph21' => $request-> pajak_pph21,
             'jml_set_pajak' => $request-> jml_set_pajak,
             'pot_tk_kena_pajak' => $request-> pot_tk_kena_pajak,
-            'total_pajak' => $total_pajak,
-            'pegawai_id' => $request-> pegawai_id,
+            'total_pajak' => $total_pajak
         ]);
 
 
@@ -207,13 +230,15 @@ public function create(CreatePajakRequest $request){
     public function destroy($id){
         try{
             // Get Data Pajak Pegawai
-            $pajakpegawai = Pajak::find($id);
+            $pajakpegawai = Pajak::findorFail($id);
 
             // Check if Data Pajak Pegawai exists
             if(!$pajakpegawai){
                 throw new Exception('Data Pajak Pegawai not found');
             }
 
+            // Delete the related Pajak_Tambahan records
+            $pajakpegawai->pajaktambahan()->delete();
             // Delete Data Pajak Pegawai
             $pajakpegawai->delete();
 

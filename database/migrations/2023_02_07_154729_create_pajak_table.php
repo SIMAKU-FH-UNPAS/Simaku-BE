@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('pajak', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('pegawai_id')->unsigned();
             $table->integer('pensiun')->nullable();
             $table->integer('bruto_pajak')->nullable();
             $table->integer('bruto_murni')->nullable();
@@ -29,7 +30,6 @@ return new class extends Migration
             $table->integer('jml_set_pajak')->nullable();
             $table->integer('pot_tk_kena_pajak')->nullable();
             $table->integer('total_pajak')->nullable();
-            $table->bigInteger('pegawai_id')->unsigned();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -120,7 +120,7 @@ public function create(CreateGajiFakRequest $request){
             if(!$gajifak){
                 throw new Exception('Data Gaji Fakultas Pegawai not found');
             }
-             // Menghitung total_gaji_fakultas tanpa mempertimbangkan besar_honor_FK
+             // Menghitung total_gaji_fakultas tanpa mempertimbangkan besar_honor_FH
             $total_gaji_fakultas =
             $request->tj_tambahan +
             $request->honor_kinerja +
@@ -129,7 +129,7 @@ public function create(CreateGajiFakRequest $request){
             $request->peny_honor_mengajar +
             $request->tj_guru_besar;
 
-            // Mengecek apakah ada data besar_honor_FK dari tabel Honor_Fakultas_Tambahan
+            // Mengecek apakah ada data besar_honor_FH dari tabel Honor_Fakultas_Tambahan
             $honor_fakultas_tambahan = Honor_Fakultas_Tambahan::where('gaji_fakultas_id',$id)->whereNull('deleted_at')->get();
             if ($honor_fakultas_tambahan){
                 foreach($honor_fakultas_tambahan as $honorfak){
