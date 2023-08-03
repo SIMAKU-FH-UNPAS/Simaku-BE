@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('pajak_id');
             $table->string('nama_pajak');
-            $table->integer('besar_pajak')->nullable();
+            $table->integer('besar_pajak');
             $table->softDeletes();
             $table->timestamps();
 

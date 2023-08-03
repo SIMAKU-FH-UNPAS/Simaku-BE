@@ -17,13 +17,34 @@ class Potongan extends Model
      * @var array<int, string>
      */
     public $table = "potongan";
+    protected $primaryKey = 'id';
+    protected $dates = ['deleted_at'];
     protected $fillable = [
-        'jenis_potongan',
-        'besar_potongan',
-        'pegawai_id'
+        'pegawai_id',
+        'sp_FH',
+        'iiku',
+        'iid',
+        'infaq',
+        'abt',
+        'total_potongan'
     ];
 
     public function pegawai(){
         return $this->belongsTo(Pegawai::class);
     }
+    public function potongantambahan(){
+        return $this->hasMany(Potongan_Tambahan::class,'potongan_id', 'id');
+    }
+
+    public function total_potongan($request){
+            $sp_FH = $request-> sp_FH;
+            $iiku = $request-> iiku;
+            $iid = $request-> iid;
+            $infaq = $request-> infaq;
+            $abt = $request-> abt;
+            $total_potongan = $sp_FH+$iiku+$iid+$infaq+$abt;
+
+            return $total_potongan;
+        }
+
 }

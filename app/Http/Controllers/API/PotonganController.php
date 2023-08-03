@@ -9,14 +9,19 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreatePotonganRequest;
 use App\Http\Requests\UpdatePotonganRequest;
+use App\Models\Potongan_Tambahan;
 
 class PotonganController extends Controller
 {
     public function fetch(Request $request){
         $id = $request->input('id');
-        $jenis_potongan= $request->input('jenis_potongan');
-        $besar_potongan = $request->input('besar_potongan');
         $pegawai_id= $request->input('pegawai_id');
+        $sp_FH= $request->input('sp_FH');
+        $iiku = $request->input('iiku');
+        $iid= $request->input('iid');
+        $infaq= $request->input('infaq');
+        $abt= $request->input('abt');
+        $total_potongan= $request->input('total_potongan');
         $limit = $request->input('limit', 10);
 
         $potonganQuery = Potongan::query();
@@ -36,14 +41,31 @@ class PotonganController extends Controller
     $potongan = $potonganQuery;
 
     // // Get by attribute
-    if($jenis_potongan)
+    if($sp_FH)
     {
-        $potongan->where('jenis_potongan', 'like', '%'.$jenis_potongan.'%');
+        $potongan->where('sp_FH', 'like', '%'.$sp_FH.'%');
 
     }
-    if($besar_potongan)
+    if($iiku)
     {
-        $potongan->where('besar_potongan', 'like', '%'.$besar_potongan.'%');
+        $potongan->where('iiku', 'like', '%'.$iiku.'%');
+    }
+    if($iid)
+    {
+        $potongan->where('iid', 'like', '%'.$iid.'%');
+    }
+    if($infaq)
+    {
+        $potongan->where('infaq', 'like', '%'.$infaq.'%');
+    }
+    if($abt)
+    {
+        $potongan->where('abt', 'like', '%'.$abt.'%');
+    }
+    if($total_potongan)
+    {
+        $potongan->where('total_potongan', 'like', '%'.$total_potongan.'%');
+
     }
     if ($pegawai_id) {
         $potongan->where('pegawai_id', $pegawai_id);
@@ -62,11 +84,18 @@ class PotonganController extends Controller
     public function create(CreatePotonganRequest $request){
         try{
 
+            $potonganobjek = new Potongan;
+            $total_potongan = $potonganobjek->total_potongan($request);
+
             // Create Potongan
             $potongan = Potongan::create([
-                'jenis_potongan' => $request-> jenis_potongan,
-                'besar_potongan' => $request-> besar_potongan,
-                'pegawai_id' => $request-> pegawai_id
+                'pegawai_id' => $request-> pegawai_id,
+                'sp_FH' => $request-> sp_FH,
+                'iiku' => $request-> iiku,
+                'iid' => $request-> iid,
+                'infaq' => $request-> infaq,
+                'abt' => $request-> abt,
+                'total_potongan' => $total_potongan
             ]);
             if(!$potongan){
                 throw new Exception('Data Potongan Pegawai not created');
@@ -89,14 +118,33 @@ class PotonganController extends Controller
                     throw new Exception('Data Potongan Pegawai not found');
                 }
 
+                // Menghitung total_potongan tanpa mempertimbangkan besar_potongan
+                $total_potongan =
+                $request-> sp_FH +
+                $request-> iiku +
+                $request-> iid +
+                $request-> infaq +
+                $request-> abt;
+
+                // Mengecek apakah ada data besar_potongan dari tabel Potongan_Tambahan
+                $potongan_tambahan = Potongan_Tambahan::where('potongan_id',$id)->whereNull('deleted_at')->get();
+                if ($potongan_tambahan){
+                    foreach($potongan_tambahan as $potongantambahan){
+                        // Jika ada, tambahkan besar_potongan ke total_potongan
+                    $total_potongan += $potongantambahan->besar_potongan;
+                }
+                    }
+
                 // Update potongan
                 $potongan -> update([
-                    'jenis_potongan' => $request-> jenis_potongan,
-                    'besar_potongan' => $request-> besar_potongan,
-                    'pegawai_id' => $request-> pegawai_id
+                    'pegawai_id' => $request-> pegawai_id,
+                    'sp_FH' => $request-> sp_FH,
+                    'iiku' => $request-> iiku,
+                    'iid' => $request-> iid,
+                    'infaq' => $request-> infaq,
+                    'abt' => $request-> abt,
+                    'total_potongan' => $total_potongan
             ]);
-
-
             return ResponseFormatter::success($potongan, 'Data Potongan Pegawai updated');
         }catch(Exception $e){
             return ResponseFormatter::error($e->getMessage(), 500);
@@ -112,6 +160,9 @@ class PotonganController extends Controller
             if(!$potongan){
                 throw new Exception('Data Potongan Pegawai not found');
             }
+
+             // Delete the related Honor_Fakultas_Tambahan records
+              $potongan->potongantambahan()->delete();
 
             // Delete Data Potongan
             $potongan->delete();

@@ -7,10 +7,10 @@ use App\Http\Controllers\API\PajakController;
 use App\Http\Controllers\API\GajiFakController;
 use App\Http\Controllers\API\PegawaiController;
 use App\Http\Controllers\API\GajiUnivController;
-use App\Http\Controllers\API\GolonganController;
 use App\Http\Controllers\API\HonorFakTambahanController;
 use App\Http\Controllers\API\PajakTambahanController;
 use App\Http\Controllers\API\PotonganController;
+use App\Http\Controllers\API\PotonganTambahanController;
 use App\Http\Controllers\API\RekapitulasiController;
 
 /*
@@ -83,17 +83,6 @@ Route::prefix('honorfaktambahan')->middleware('auth:sanctum')->name('honorfaktam
         Route::delete('delete/{id}', [HonorFakTambahanController::class, 'destroy'])->name('delete');
     });
 
-//Potongan Gaji
-Route::prefix('potongan')->middleware('auth:sanctum')->name('potongan.')->group(
-    function(){
-        Route::get('', [PotonganController::class, 'fetch'])->name('fetch');
-        Route::get('/{id}', [PotonganController::class, 'fetch'])->name('fetch');
-        Route::post('create', [PotonganController::class, 'create'])->name('create');
-        Route::post('update/{id}', [PotonganController::class, 'update'])->name('update');
-        Route::delete('delete/{id}', [PotonganController::class, 'destroy'])->name('delete');
-
-    });
-
 //Pajak
 Route::prefix('pajak')->middleware('auth:sanctum')->name('pajak.')->group(
     function(){
@@ -112,6 +101,27 @@ Route::prefix('pajaktambahan')->middleware('auth:sanctum')->name('pajaktambahan.
         Route::post('create/{pajak_id}', [PajakTambahanController::class, 'create'])->name('create');
         Route::post('update/{id}/{pajak_id}', [PajakTambahanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [PajakTambahanController::class, 'destroy'])->name('delete');
+    });
+
+//Potongan Gaji
+Route::prefix('potongan')->middleware('auth:sanctum')->name('potongan.')->group(
+    function(){
+        Route::get('', [PotonganController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [PotonganController::class, 'fetch'])->name('fetch');
+        Route::post('create', [PotonganController::class, 'create'])->name('create');
+        Route::post('update/{id}', [PotonganController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [PotonganController::class, 'destroy'])->name('delete');
+
+    });
+
+//Potongan Tambahan
+Route::prefix('potongantambahan')->middleware('auth:sanctum')->name('potongantambahan.')->group(
+    function(){
+        Route::get('', [PotonganTambahanController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [PotonganTambahanController::class, 'fetch'])->name('fetch');
+        Route::post('create/{potongan_id}', [PotonganTambahanController::class, 'create'])->name('create');
+        Route::post('update/{id}/{potongan_id}', [PotonganTambahanController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [PotonganTambahanController::class, 'destroy'])->name('delete');
     });
 
 

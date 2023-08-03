@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('gaji_fakultas_id');
             $table->string('nama_honor_FH');
-            $table->integer('besar_honor_FH')->nullable();
+            $table->integer('besar_honor_FH');
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('gaji_fakultas_id')->references('id')->on('gaji_fakultas')->onDelete('cascade');

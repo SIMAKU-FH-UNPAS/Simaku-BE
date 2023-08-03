@@ -33,7 +33,7 @@ class CreateGajiFakRequest extends FormRequest
             'peny_honor_mengajar' => 'nullable|integer',
             'tj_guru_besar' => 'nullable|integer',
             'total_gaji_fakultas' => 'nullable|integer',
-            'pegawai_id' => 'nullable|integer|exists:pegawai,id'
+            'pegawai_id' => 'required|integer|exists:pegawai,id'
 
 
         ];

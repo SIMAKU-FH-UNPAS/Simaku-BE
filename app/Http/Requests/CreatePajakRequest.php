@@ -39,7 +39,7 @@ class CreatePajakRequest extends FormRequest
             'jml_set_pajak' => 'nullable|integer',
             'pot_tk_kena_pajak' => 'nullable|integer',
             'total_pajak' => 'nullable|integer',
-            'pegawai_id' => 'nullable|integer|exists:pegawai,id'
+            'pegawai_id' => 'required|integer|exists:pegawai,id'
 
 
         ];

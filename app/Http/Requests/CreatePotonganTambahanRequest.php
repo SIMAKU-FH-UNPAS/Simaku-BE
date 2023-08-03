@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class CreatePotonganRequest extends FormRequest
+class CreatePotonganTambahanRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,13 +25,9 @@ class CreatePotonganRequest extends FormRequest
     public function rules()
     {
         return [
-            'sp_FH' => 'nullable|integer',
-            'iiku' => 'nullable|integer',
-            'iid' => 'nullable|integer',
-            'infaq' => 'nullable|integer',
-            'abt' => 'nullable|integer',
-            'total_potongan' => 'nullable|integer',
-            'pegawai_id' => 'required|integer|exists:pegawai,id'
+            'nama_potongan' => 'required|string|max:255',
+            'besar_potongan' => 'required|integer',
+            'potongan_id' => 'required|integer|exists:potongan,id'
 
 
         ];
