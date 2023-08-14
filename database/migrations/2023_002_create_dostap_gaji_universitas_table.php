@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gaji_universitas', function (Blueprint $table) {
+        Schema::create('dostap_gaji_universitas', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('pegawai_id')->unsigned();
             $table->integer('gaji_pokok');
             $table->integer('tj_struktural');
             $table->integer('tj_pres_kerja');
@@ -29,8 +28,13 @@ return new class extends Migration
             $table->integer('tj_suami_istri');
             $table->integer('tj_anak');
             $table->integer('total_gaji_univ')->nullable();
+            $table->unsignedBigInteger('dosen_tetap_id');
             $table->softDeletes();
             $table->timestamps();
+
+        });
+            Schema::table('dostap_gaji_universitas', function(Blueprint $table){
+            $table->foreign('dosen_tetap_id')->references('id')->on('dosen_tetap');
         });
     }
 

@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\dosentetap;
 
-use App\Models\Pegawai;
+use App\Models\dosentetap\Dostap_Pajak;
+use App\Models\dosentetap\Dosen_Tetap;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Gaji_Universitas extends Model
+class Dostap_Gaji_Universitas extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -16,10 +17,8 @@ class Gaji_Universitas extends Model
      *
      * @var array<int, string>
      */
-    public $table = "gaji_universitas";
-    protected $primaryKey = 'id';
+    public $table = "dostap_gaji_universitas";
     protected $fillable = [
-        'pegawai_id',
         'gaji_pokok',
         'tj_struktural',
         'tj_pres_kerja',
@@ -33,10 +32,14 @@ class Gaji_Universitas extends Model
         'tj_suami_istri',
         'tj_anak',
         'total_gaji_univ',
+        'dosen_tetap_id'
     ];
 
-    public function pegawai(){
-        return $this->belongsTo(Pegawai::class);
+    public function dosen_tetap(){
+        return $this->belongsTo(Dosen_Tetap::class, 'dosen_tetap_id', 'id');
+    }
+    public function pajak(){
+        return $this->hasOne(Dostap_Pajak::class,'dostap_gaji_universitas_id', 'id');
     }
 
     public function total_gaji_univ($request)

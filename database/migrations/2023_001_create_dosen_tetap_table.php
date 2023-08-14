@@ -13,12 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pegawai', function (Blueprint $table) {
+        Schema::create('dosen_tetap', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
             $table->string('no_pegawai');
             $table->enum('status', ['Aktif', 'Tidak Aktif']);
-            $table->enum('posisi', ['Dosen Tetap', 'Dosen Luar Biasa', 'Karyawan']);
             $table->enum('golongan', ['IIA','IIB','IIC','IID','IIIA','IIIB','IIIC','IIID','IVA','IVB','IVC','IVD','IVE']);
             $table->string('jabatan');
             $table->string('alamat_KTP');

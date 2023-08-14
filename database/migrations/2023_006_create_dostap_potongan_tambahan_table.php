@@ -13,17 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('potongan', function (Blueprint $table) {
+        Schema::create('dostap_potongan_tambahan', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('pegawai_id')->unsigned();
-            $table->integer('sp_FH')->nullable();
-            $table->integer('iiku')->nullable();
-            $table->integer('iid')->nullable();
-            $table->integer('infaq')->nullable();
-            $table->integer('abt')->nullable();
-            $table->integer('total_potongan')->nullable();
+            $table->string('nama_potongan');
+            $table->integer('besar_potongan');
+            $table->unsignedBigInteger('dostap_potongan_id');
             $table->softDeletes();
             $table->timestamps();
+        });
+            Schema::table('dostap_potongan_tambahan', function(Blueprint $table){
+            $table->foreign('dostap_potongan_id')->references('id')->on('dostap_potongan')->onDelete('cascade');
         });
     }
 
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('potongan');
+        Schema::dropIfExists('potongan_tambahan');
     }
 };

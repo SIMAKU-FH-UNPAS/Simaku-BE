@@ -25,7 +25,7 @@ class UpdateGajiUnivRequest extends FormRequest
     public function rules()
     {
         return [
-            'pegawai_id' => 'required|integer|exists:pegawai,id',
+            'dosen_tetap_id' => 'required|integer|exists:dosen_tetap,id',
             'gaji_pokok' => 'required|integer',
             'tj_struktural' => 'required|integer',
             'tj_pres_kerja' => 'required|integer',
@@ -38,7 +38,7 @@ class UpdateGajiUnivRequest extends FormRequest
             'honor_univ' => 'required|integer',
             'tj_suami_istri' => 'required|integer',
             'tj_anak' => 'required|integer',
-            'total_gaji_univ' => 'nullable',
+            'total_gaji_univ' => 'nullable'
         ];
     }
 }

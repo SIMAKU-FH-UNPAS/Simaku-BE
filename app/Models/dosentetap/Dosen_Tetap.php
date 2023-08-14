@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\dosentetap;
 
-use App\Models\Pajak;
-use App\Models\Golongan;
-use App\Models\Gaji_Fakultas;
-use App\Models\Gaji_Universitas;
+use App\Models\dosentetap\Dostap_Pajak;
+use App\Models\dosentetap\Dostap_Potongan;
+use App\Models\dosentetap\Dostap_Gaji_Fakultas;
+use App\Models\dosentetap\Dostap_Gaji_Universitas;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Pegawai extends Model
+class Dosen_Tetap extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -20,13 +20,11 @@ class Pegawai extends Model
      * @var array<int, string>
      */
 
-    public $table = "pegawai";
-    protected $primaryKey = 'id';
+    public $table = "dosen_tetap";
     protected $fillable = [
         'nama',
         'no_pegawai',
         'status',
-        'posisi',
         'golongan',
         'jabatan',
         'alamat_KTP',
@@ -38,14 +36,17 @@ class Pegawai extends Model
 
 
     public function gaji_universitas(){
-        return $this->hasMany(Gaji_Universitas::class,'pegawai_id', 'id');
+        return $this->hasMany(Dostap_Gaji_Universitas::class,'dosen_tetap_id', 'id');
     }
 
     public function gaji_fakultas(){
-        return $this->hasMany(Gaji_Fakultas::class,'pegawai_id', 'id' );
+        return $this->hasMany(Dostap_Gaji_Fakultas::class,'dosen_tetap_id', 'id');
     }
     public function pajak(){
-        return $this->hasMany(Pajak::class);
+        return $this->hasMany(DOstap_Pajak::class,'dosen_tetap_id', 'id');
+    }
+    public function potongan(){
+        return $this->hasMany(Dostap_Potongan::class,'dosen_tetap_id', 'id');
     }
     public function total_pendapatan(){
         return $this->hasMany(Total_Pendapatan::class);

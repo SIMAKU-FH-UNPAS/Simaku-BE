@@ -32,8 +32,9 @@ class UpdateGajiFakRequest extends FormRequest
             'honor_mengajar_DPK' => 'nullable|integer',
             'peny_honor_mengajar' => 'nullable|integer',
             'tj_guru_besar' => 'nullable|integer',
+            'honor' => 'nullable|integer',
             'total_gaji_fakultas' => 'nullable|integer',
-            'pegawai_id' => 'nullable|integer|exists:pegawai,id'
+            'dosen_tetap_id' => 'required|integer|exists:dosen_tetap,id'
 
         ];
     }

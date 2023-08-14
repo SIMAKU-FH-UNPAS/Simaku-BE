@@ -13,14 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('honor_fakultas_tambahan', function (Blueprint $table) {
+        Schema::create('dostap_potongan', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('gaji_fakultas_id');
-            $table->string('nama_honor_FH');
-            $table->integer('besar_honor_FH');
+            $table->integer('sp_FH')->nullable();
+            $table->integer('infaq')->nullable();
+            $table->integer('total_potongan')->nullable();
+            $table->unsignedBigInteger('dosen_tetap_id');
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('gaji_fakultas_id')->references('id')->on('gaji_fakultas')->onDelete('cascade');
+        });
+            Schema::table('dostap_potongan', function(Blueprint $table){
+            $table->foreign('dosen_tetap_id')->references('id')->on('dosen_tetap');
         });
     }
 
@@ -31,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('honor_fakultas_tambahan');
+        Schema::dropIfExists('potongan');
     }
 };

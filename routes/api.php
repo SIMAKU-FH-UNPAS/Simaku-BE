@@ -3,15 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
-use App\Http\Controllers\API\PajakController;
-use App\Http\Controllers\API\GajiFakController;
-use App\Http\Controllers\API\PegawaiController;
-use App\Http\Controllers\API\GajiUnivController;
-use App\Http\Controllers\API\HonorFakTambahanController;
-use App\Http\Controllers\API\PajakTambahanController;
-use App\Http\Controllers\API\PotonganController;
-use App\Http\Controllers\API\PotonganTambahanController;
-use App\Http\Controllers\API\RekapitulasiController;
+use App\Http\Controllers\API\dosentetap\PajakController;
+use App\Http\Controllers\API\dosentetap\GajiFakController;
+use App\Http\Controllers\API\dosentetap\GajiUnivController;
+use App\Http\Controllers\API\dosentetap\DosenTetapController;
+use App\Http\Controllers\API\dosentetap\HonorFakTambahanController;
+use App\Http\Controllers\API\dosentetap\PotonganController;
+use App\Http\Controllers\API\dosentetap\PotonganTambahanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -41,18 +40,18 @@ Route::name('auth.')->group(function(){
 });
 
 //Pegawai
-Route::prefix('pegawai')->middleware('auth:sanctum')->name('pegawai.')->group(
+Route::prefix('dosentetap')->middleware('auth:sanctum')->name('dosentetap.')->group(
 function(){
-    Route::get('', [PegawaiController::class, 'fetch'])->name('fetch');
-    Route::get('/{id}', [PegawaiController::class, 'fetch'])->name('fetch');
-    Route::post('create', [PegawaiController::class, 'create'])->name('create');
-    Route::post('update/{id}', [PegawaiController::class, 'update'])->name('update');
-    Route::delete('delete/{id}', [PegawaiController::class, 'destroy'])->name('delete');
+    Route::get('', [DosenTetapController::class, 'fetch'])->name('fetch');
+    Route::get('/{id}', [DosenTetapController::class, 'fetch'])->name('fetch');
+    Route::post('create', [DosenTetapController::class, 'create'])->name('create');
+    Route::post('update/{id}', [DosenTetapController::class, 'update'])->name('update');
+    Route::delete('delete/{id}', [DosenTetapController::class, 'destroy'])->name('delete');
 
 });
 
 //Gaji Universitas
-Route::prefix('gajiuniv')->middleware('auth:sanctum')->name('gajiuniv.')->group(
+Route::prefix('dosentetap-gajiuniv')->middleware('auth:sanctum')->name('dosentetap-gajiuniv.')->group(
     function(){
         Route::get('', [GajiUnivController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [GajiUnivController::class, 'fetch'])->name('fetch');
@@ -64,7 +63,7 @@ Route::prefix('gajiuniv')->middleware('auth:sanctum')->name('gajiuniv.')->group(
 
 
 //Gaji Fakultas
-Route::prefix('gajifak')->middleware('auth:sanctum')->name('gajifak.')->group(
+Route::prefix('dosentetap-gajifak')->middleware('auth:sanctum')->name('dosentetap-gajifak.')->group(
     function(){
         Route::get('', [GajiFakController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [GajiFakController::class, 'fetch'])->name('fetch');
@@ -74,37 +73,18 @@ Route::prefix('gajifak')->middleware('auth:sanctum')->name('gajifak.')->group(
     });
 
 //Honor Fakultas Tambahan
-Route::prefix('honorfaktambahan')->middleware('auth:sanctum')->name('honorfaktambahan.')->group(
+Route::prefix('dosentetap-honorfaktambahan')->middleware('auth:sanctum')->name('dosentetap-honorfaktambahan.')->group(
     function(){
         Route::get('', [HonorFakTambahanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [HonorFakTambahanController::class, 'fetch'])->name('fetch');
-        Route::post('create/{gaji_fakultas_id}', [HonorFakTambahanController::class, 'create'])->name('create');
-        Route::post('update/{id}/{gaji_fakultas_id}', [HonorFakTambahanController::class, 'update'])->name('update');
+        Route::post('create', [HonorFakTambahanController::class, 'create'])->name('create');
+        Route::post('update/{id}', [HonorFakTambahanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [HonorFakTambahanController::class, 'destroy'])->name('delete');
     });
 
-//Pajak
-Route::prefix('pajak')->middleware('auth:sanctum')->name('pajak.')->group(
-    function(){
-        Route::get('', [PajakController::class, 'fetch'])->name('fetch');
-        Route::get('/{id}', [PajakController::class, 'fetch'])->name('fetch');
-        Route::post('create', [PajakController::class, 'create'])->name('create');
-        Route::post('update/{id}', [PajakController::class, 'update'])->name('update');
-        Route::delete('delete/{id}', [PajakController::class, 'destroy'])->name('delete');
-    });
-
-//Pajak Tambahan
-Route::prefix('pajaktambahan')->middleware('auth:sanctum')->name('pajaktambahan.')->group(
-    function(){
-        Route::get('', [PajakTambahanController::class, 'fetch'])->name('fetch');
-        Route::get('/{id}', [PajakTambahanController::class, 'fetch'])->name('fetch');
-        Route::post('create/{pajak_id}', [PajakTambahanController::class, 'create'])->name('create');
-        Route::post('update/{id}/{pajak_id}', [PajakTambahanController::class, 'update'])->name('update');
-        Route::delete('delete/{id}', [PajakTambahanController::class, 'destroy'])->name('delete');
-    });
 
 //Potongan Gaji
-Route::prefix('potongan')->middleware('auth:sanctum')->name('potongan.')->group(
+Route::prefix('dosentetap-potongan')->middleware('auth:sanctum')->name('dosentetap-potongan.')->group(
     function(){
         Route::get('', [PotonganController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [PotonganController::class, 'fetch'])->name('fetch');
@@ -115,18 +95,30 @@ Route::prefix('potongan')->middleware('auth:sanctum')->name('potongan.')->group(
     });
 
 //Potongan Tambahan
-Route::prefix('potongantambahan')->middleware('auth:sanctum')->name('potongantambahan.')->group(
+Route::prefix('dosentetap-potongantambahan')->middleware('auth:sanctum')->name('dosentetap-potongantambahan.')->group(
     function(){
         Route::get('', [PotonganTambahanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [PotonganTambahanController::class, 'fetch'])->name('fetch');
-        Route::post('create/{potongan_id}', [PotonganTambahanController::class, 'create'])->name('create');
-        Route::post('update/{id}/{potongan_id}', [PotonganTambahanController::class, 'update'])->name('update');
+        Route::post('create', [PotonganTambahanController::class, 'create'])->name('create');
+        Route::post('update/{id}', [PotonganTambahanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [PotonganTambahanController::class, 'destroy'])->name('delete');
     });
 
 
+//Pajak
+Route::prefix('dosentetap-pajak')->middleware('auth:sanctum')->name('dosentetap-pajak.')->group(
+    function(){
+        Route::get('', [PajakController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [PajakController::class, 'fetch'])->name('fetch');
+        Route::post('create', [PajakController::class, 'create'])->name('create');
+        Route::post('update/{id}', [PajakController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [PajakController::class, 'destroy'])->name('delete');
+    });
+
+
     // Coba
-    Route::prefix('rekapitulasi')->middleware('auth:sanctum')->name('rekapitulasi.')->group(
+    Route::prefix('transaksi')->middleware('auth:sanctum')->name('transaksi.')->group(
         function(){
             Route::get('bruto', [RekapitulasiController::class, 'pendapatanbruto'])->name('pendapatanbruto');
+            // Route::get('pegawai/{bulan}/{tahun}', [TransaksiGajiController::class, 'getDataByMonthAndYear'])->name('pegawai.getDataByMonthAndYear');
         });

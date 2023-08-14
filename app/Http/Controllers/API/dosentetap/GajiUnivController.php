@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\dosentetap;
 
 use Exception;
 use Illuminate\Http\Request;
-use App\Models\Gaji_Universitas;
+use App\Models\dosentetap\Dostap_Gaji_Universitas;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateGajiUnivRequest;
 use App\Http\Requests\UpdateGajiUnivRequest;
-
+use App\Http\Controllers\API\dosentetap\HitungPajakController;
 
 class GajiUnivController extends Controller
 {
     public function fetch(Request $request){
         $id = $request->input('id');
-        $pegawai_id= $request->input('pegawai_id');
+        $dosen_tetap_id= $request->input('dosen_tetap_id');
         $gaji_pokok = $request->input('gaji_pokok');
         $tj_struktural = $request->input('tj_struktural');
         $tj_pres_kerja = $request->input('tj_pres_kerja');
@@ -31,7 +31,7 @@ class GajiUnivController extends Controller
         $total_gaji_univ= $request->input('total_gaji_univ');
         $limit = $request->input('limit', 10);
 
-        $gajiunivQuery = Gaji_Universitas::query();
+        $gajiunivQuery = Dostap_Gaji_Universitas::query();
 
            // Get single data
     if($id)
@@ -39,9 +39,9 @@ class GajiUnivController extends Controller
         $gajiuniv= $gajiunivQuery->find($id);
 
         if($gajiuniv){
-            return ResponseFormatter::success($gajiuniv, 'Data Gaji Universitas Pegawai found');
+            return ResponseFormatter::success($gajiuniv, 'Data Gaji Universitas Dosen Tetap found');
         }
-            return ResponseFormatter::error('Data Gaji Universitas Pegawai not found', 404);
+            return ResponseFormatter::error('Data Gaji Universitas Dosen Tetap not found', 404);
     }
 
     //    Get multiple Data
@@ -112,15 +112,15 @@ class GajiUnivController extends Controller
         $gajiuniv->where('total_gaji_univ', 'like', '%'.$total_gaji_univ.'%');
 
     }
-    if ($pegawai_id) {
-        $gajiuniv->where('pegawai_id', $pegawai_id);
+    if ($dosen_tetap_id) {
+        $gajiuniv->where('dosen_tetap_id', $dosen_tetap_id);
     }
 
 
 
     return ResponseFormatter::success(
         $gajiuniv->paginate($limit),
-        'Data Gaji Universitas Pegawai Found'
+        'Data Gaji Universitas Dosen Tetap Found'
     );
     }
 
@@ -128,12 +128,28 @@ class GajiUnivController extends Controller
 
     public function create(CreateGajiUnivRequest $request){
         try{
+            $dosen_tetap_id = $request->dosen_tetap_id;
 
-            $gajiuniversitas = new Gaji_Universitas;
+            // Get the current month and year
+            $currentMonth = now()->month;
+            $currentYear = now()->year;
+
+
+        // Check if data already exists for the current month and year
+        $existingGajiUniv = Dostap_Gaji_Universitas::where('dosen_tetap_id', $dosen_tetap_id)
+        ->whereMonth('created_at', $currentMonth)
+        ->whereYear('created_at', $currentYear)
+        ->first();
+
+        if ($existingGajiUniv) {
+            return ResponseFormatter::error('Data Gaji Universitas Dosen Tetap for this month already exists', 400);
+        }
+
+            $gajiuniversitas = new Dostap_Gaji_Universitas;
             $total_gaji_univ = $gajiuniversitas->total_gaji_univ($request);
             // Create Gaji Universitas
-            $gajiuniv = Gaji_Universitas::create([
-                'pegawai_id' => $request-> pegawai_id,
+            $gajiuniv = Dostap_Gaji_Universitas::create([
+                'dosen_tetap_id' => $request-> dosen_tetap_id,
                 'gaji_pokok' => $request-> gaji_pokok,
                 'tj_struktural' => $request-> tj_struktural,
                 'tj_pres_kerja' => $request-> tj_pres_kerja,
@@ -149,9 +165,9 @@ class GajiUnivController extends Controller
                 'total_gaji_univ' => $total_gaji_univ,
             ]);
             if(!$gajiuniv){
-                throw new Exception('Data Gaji Universitas Pegawai not created');
+                throw new Exception('Data Gaji Universitas Dosen Tetap not created');
             }
-            return ResponseFormatter::success($gajiuniv, 'Data Gaji Universitas Pegawai created');
+            return ResponseFormatter::success($gajiuniv, 'Data Gaji Universitas Dosen Tetap created');
         }catch(Exception $e){
             return ResponseFormatter::error($e->getMessage(), 500);
         }
@@ -162,18 +178,18 @@ class GajiUnivController extends Controller
             try {
 
                 // Get Gaji Universitas
-                $gajiuniv = Gaji_Universitas::find($id);
+                $gajiuniv = Dostap_Gaji_Universitas::find($id);
 
                 // Check if Gaji Universitas exists
                 if(!$gajiuniv){
-                    throw new Exception('Data Gaji Universitas Pegawai not found');
+                    throw new Exception('Data Gaji Universitas Dosen Tetap not found');
                 }
 
                 // Update Gaji Universitas
-                $gajiuniversitas = new Gaji_Universitas;
+                $gajiuniversitas = new Dostap_Gaji_Universitas;
                 $total_gaji_univ = $gajiuniversitas->total_gaji_univ($request);
                 $gajiuniv -> update([
-                    'pegawai_id' => $request-> pegawai_id,
+                    'dosen_tetap_id' => $request-> dosen_tetap_id,
                     'gaji_pokok' => $request-> gaji_pokok,
                     'tj_struktural' => $request-> tj_struktural,
                     'tj_pres_kerja' => $request-> tj_pres_kerja,
@@ -188,33 +204,36 @@ class GajiUnivController extends Controller
                     'tj_anak' => $request-> tj_anak,
                     'total_gaji_univ' => $total_gaji_univ,
             ]);
+            // Memanggil Controller Hitung Pajak untuk update value rumus pajak
+            $hitungPajakController = new HitungPajakController();
+            $hitungPajakController->Hitung_Pajak_Univ($request, $gajiuniv->id); // Memanggil method Hitung_Pajak
 
 
-            return ResponseFormatter::success($gajiuniv, 'Data Gaji Universitas Pegawai updated');
-        }catch(Exception $e){
-            return ResponseFormatter::error($e->getMessage(), 500);
-        }
-        }
+        return ResponseFormatter::success($gajiuniv, 'Data Gaji Universitas Dosen Tetap updated');
+    }
+    catch(Exception $e){
+        return ResponseFormatter::error($e->getMessage(), 500);
+    }
+ }
 
     public function destroy($id){
         try{
             // Get Data Gaji Universitas
-            $gajiuniv = Gaji_Universitas::find($id);
+            $gajiuniv = Dostap_Gaji_Universitas::find($id);
 
             // Check if Data Gaji Universitas exists
             if(!$gajiuniv){
-                throw new Exception('Data Gaji Universitas Pegawai not found');
+                throw new Exception('Data Gaji Universitas Dosen Tetap not found');
             }
 
             // Delete Data Gaji Universitas
             $gajiuniv->delete();
 
-            return ResponseFormatter::success('Data Gaji Universitas Pegawai deleted');
+            return ResponseFormatter::success('Data Gaji Universitas Dosen Tetap deleted');
 
         }catch(Exception $e){
             return ResponseFormatter::error($e->getMessage(), 500);
         }
     }
     }
-
 

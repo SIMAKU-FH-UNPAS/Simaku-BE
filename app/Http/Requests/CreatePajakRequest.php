@@ -29,17 +29,20 @@ class CreatePajakRequest extends FormRequest
             'bruto_pajak' => 'nullable|integer',
             'bruto_murni' => 'nullable|integer',
             'biaya_jabatan' => 'nullable|integer',
-            'as_bumi_putera' => 'nullable|integer',
+            'aksa_mandiri' => 'nullable|integer',
             'dplk_pensiun' => 'nullable|integer',
             'jml_pot_kn_pajak' => 'nullable|integer',
-            'set_potongan_kn_pajak' => 'nullable|integer',
+            'jml_set_pot_kn_pajak' => 'nullable|integer',
             'ptkp' => 'nullable|integer',
             'pkp' => 'nullable|integer',
             'pajak_pph21' => 'nullable|integer',
             'jml_set_pajak' => 'nullable|integer',
             'pot_tk_kena_pajak' => 'nullable|integer',
-            'total_pajak' => 'nullable|integer',
-            'pegawai_id' => 'required|integer|exists:pegawai,id'
+            'pendapatan_bersih' => 'nullable|integer',
+            'dosen_tetap_id' => 'required|integer|exists:dosen_tetap,id',
+            'dostap_gaji_universitas_id' => 'required|integer|exists:dostap_gaji_universitas,id',
+            'dostap_gaji_fakultas_id' => 'required|integer|exists:dostap_gaji_fakultas,id',
+            'dostap_potongan_id' => 'required|integer|exists:dostap_potongan,id'
 
 
         ];

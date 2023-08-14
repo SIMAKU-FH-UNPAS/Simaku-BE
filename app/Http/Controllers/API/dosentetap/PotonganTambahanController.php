@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\dosentetap;
 
 use Exception;
-use App\Models\Potongan;
+use App\Models\dosentetap\Dostap_Potongan;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreatePotonganTambahanRequest;
 use App\Http\Requests\UpdatePotonganTambahanRequest;
-use App\Models\Potongan_Tambahan;
+use App\Models\dosentetap\Dostap_Potongan_Tambahan;
 
 class PotonganTambahanController extends Controller
 {
@@ -17,10 +17,10 @@ class PotonganTambahanController extends Controller
         $id = $request->input('id');
         $nama_potongan= $request->input('nama_potongan');
         $besar_potongan = $request->input('besar_potongan');
-        $potongan_id= $request->input('potongan_id');
+        $dostap_potongan_id= $request->input('dostap_potongan_id');
         $limit = $request->input('limit', 10);
 
-        $potongantambahanQuery = Potongan_Tambahan::query();
+        $potongantambahanQuery = Dostap_Potongan_Tambahan::query();
 
            // Get single data
     if($id)
@@ -28,9 +28,9 @@ class PotonganTambahanController extends Controller
         $potongantambahan= $potongantambahanQuery->find($id);
 
         if($potongantambahan){
-            return ResponseFormatter::success($potongantambahan, 'Data Potongan Tambahan Pegawai found');
+            return ResponseFormatter::success($potongantambahan, 'Data Potongan Tambahan Dosen Tetap found');
         }
-            return ResponseFormatter::error('Data Potongan Tambahan Pegawai not found', 404);
+            return ResponseFormatter::error('Data Potongan Tambahan Dosen Tetap not found', 404);
     }
 
     //    Get multiple Data
@@ -46,90 +46,94 @@ class PotonganTambahanController extends Controller
     {
         $potongantambahan->where('besar_potongan', 'like', '%'.$besar_potongan.'%');
     }
-    if ($potongan_id) {
-        $potongantambahan->where('potongan_id', $potongan_id);
+    if ($dostap_potongan_id) {
+        $potongantambahan->where('potongan_id', $dostap_potongan_id);
     }
 
 
 
     return ResponseFormatter::success(
         $potongantambahan->paginate($limit),
-        'Data Potongan Tambahan Pegawai Found'
+        'Data Potongan Tambahan Dosen Tetap Found'
     );
     }
 
 
 
-    public function create(CreatePotonganTambahanRequest $request, $potongan_id){
+    public function create(CreatePotonganTambahanRequest $request){
         try{
-            $potongan = Potongan::findOrFail($potongan_id);
             // Create Potongan
-            $potongantambahan = Potongan_Tambahan::create([
+            $potongantambahan = Dostap_Potongan_Tambahan::create([
                 'nama_potongan' => $request-> nama_potongan,
                 'besar_potongan' => $request-> besar_potongan,
-                'potongan_id' => $request-> potongan_id
+                'dostap_potongan_id' => $request-> dostap_potongan_id
             ]);
+            $potongan = Dostap_Potongan::findOrFail($request-> dostap_potongan_id);
             $totalpotongan = $potongan->total_potongan + $request->besar_potongan;
             $potongan->update([
                'total_potongan' => $totalpotongan
            ]);
+            // Memanggil Controller Hitung Pajak untuk update value rumus pajak
+            $hitungPajakController = new HitungPajakController();
+            $hitungPajakController->Hitung_Pajak_Pot($request,$potongantambahan->dostap_potongan_id); // Memanggil method Hitung_Pajak
 
             if(!$potongantambahan){
-                throw new Exception('Data Potongan Tambahan Pegawai not created');
+                throw new Exception('Data Potongan Tambahan Dosen Tetap not created');
             }
-            return ResponseFormatter::success($potongantambahan, 'Data Potongan Tambahan Pegawai created');
+            return ResponseFormatter::success($potongantambahan, 'Data Potongan Tambahan Dosen Tetap created');
         }catch(Exception $e){
             return ResponseFormatter::error($e->getMessage(), 500);
         }
         }
 
-        public function update(UpdatePotonganTambahanRequest $request, $id, $potongan_id)
+        public function update(UpdatePotonganTambahanRequest $request, $id)
         {
             try {
 
                 // Get Potongan
-                $potongantambahan = Potongan_Tambahan::find($id);
+                $potongantambahan = Dostap_Potongan_Tambahan::find($id);
 
                 // Check if potongan exists
                 if(!$potongantambahan){
-                    throw new Exception('Data Potongan Tambahan Pegawai not found');
+                    throw new Exception('Data Potongan Tambahan Dosen Tetap not found');
                 }
 
                 // Update potongan
                 $potongantambahan -> update([
-                    'potongan_id' => $request-> potongan_id,
+                    'dostap_potongan_id' => $request-> dostap_potongan_id,
                     'nama_potongan' => $request-> nama_potongan,
                     'besar_potongan' => $request-> besar_potongan
             ]);
 
-            $potongan = Potongan::findOrFail($potongan_id);
+            $potongan = Dostap_Potongan::findOrFail($request->dostap_potongan_id);
+            $besar_potongan = Dostap_Potongan_Tambahan::where('dostap_potongan_id', $request->dostap_potongan_id)
+            ->sum('besar_potongan');
             $totalpotongan =
             $potongan->sp_FH +
-            $potongan->iiku +
-            $potongan->iid +
             $potongan->infaq +
-            $potongan->abt +
-            $request->besar_potongan;
+            $besar_potongan;
 
             $potongan->update([
                'total_potongan' => $totalpotongan
            ]);
+             // Memanggil Controller Hitung Pajak untuk update value rumus pajak
+             $hitungPajakController = new HitungPajakController();
+             $hitungPajakController->Hitung_Pajak_Pot($request,$potongantambahan->dostap_potongan_id); // Memanggil method Hitung_Pajak
 
-
-            return ResponseFormatter::success($potongantambahan, 'Data Potongan Tambahan Pegawai updated');
+            return ResponseFormatter::success($potongantambahan, 'Data Potongan Tambahan Dosen Tetap updated');
         }catch(Exception $e){
             return ResponseFormatter::error($e->getMessage(), 500);
         }
         }
 
-    public function destroy($id){
+    public function destroy(Request $request,$id){
         try{
             // Get Data Potongan
-            $potongantambahan = Potongan_Tambahan::find($id);
+            $potongantambahan = Dostap_Potongan_Tambahan::find($id);
 
             // Check if Potongan exists
             if(!$potongantambahan){
-                throw new Exception('Data Potongan Tambahan Pegawai not found');
+                throw new Exception('Data Potongan Tambahan Dosen Tetap not found');
             }
 
             $potongan = $potongantambahan->potongan;
@@ -137,16 +141,17 @@ class PotonganTambahanController extends Controller
                $potongan->update([
                 'total_potongan' => $totalpotongan
             ]);
-
+              // Memanggil Controller Hitung Pajak untuk update value rumus pajak
+              $hitungPajakController = new HitungPajakController();
+              $hitungPajakController->Hitung_Pajak_Pot($request,$potongan->id); // Memanggil method Hitung_Pajak
             // Delete Data Potongan
             $potongantambahan->delete();
 
-            return ResponseFormatter::success('Data Potongan Tambahan Pegawai deleted');
+            return ResponseFormatter::success('Data Potongan Tambahan Dosen Tetap deleted');
 
         }catch(Exception $e){
             return ResponseFormatter::error($e->getMessage(), 500);
         }
     }
     }
-
 

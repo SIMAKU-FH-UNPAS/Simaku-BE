@@ -25,7 +25,7 @@ class CreateHonorFakTambahanRequest extends FormRequest
     public function rules()
     {
         return [
-            'gaji_fakultas_id' => 'required|integer|exists:gaji_fakultas,id',
+            'dostap_gaji_fakultas_id' => 'required|integer|exists:dostap_gaji_fakultas,id',
             'nama_honor_FH' => 'required|string|max:255',
             'besar_honor_FH' => 'required|integer'
         ];

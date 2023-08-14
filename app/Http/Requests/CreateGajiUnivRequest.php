@@ -25,7 +25,7 @@ class CreateGajiUnivRequest extends FormRequest
     public function rules()
     {
         return [
-            'pegawai_id' => 'required|integer|exists:pegawai,id',
+            'dosen_tetap_id' => 'required|integer|exists:dosen_tetap,id',
             'gaji_pokok' => 'required|integer',
             'tj_struktural' => 'required|integer',
             'tj_pres_kerja' => 'required|integer',

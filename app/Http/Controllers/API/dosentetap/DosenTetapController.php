@@ -1,25 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\dosentetap;
 
 use Exception;
-use App\Models\Pegawai;
+use App\Models\dosentetap\Dosen_Tetap;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreatePegawaiRequest;
-use App\Http\Requests\UpdatePegawaiRequest;
+use App\Http\Requests\CreateDosenTetapRequest;
+use App\Http\Requests\UpdateDosenTetapRequest;
 
-
-class PegawaiController extends Controller
+class DosenTetapController extends Controller
 {
-
     public function fetch(Request $request ){
         $id = $request->input('id');
         $nama = $request->input('nama');
         $no_pegawai = $request->input('no_pegawai');
         $status = $request->input('status');
-        $posisi = $request->input('posisi');
         $golongan = $request->input('golongan');
         $jabatan = $request->input('jabatan');
         $alamat_KTP = $request->input('alamat_KTP');
@@ -28,90 +25,84 @@ class PegawaiController extends Controller
         $norek_bank = $request->input('norek_bank');
         $limit = $request->input('limit', 10);
 
-        $pegawaiQuery = Pegawai::query();
+        $dosentetapQuery = Dosen_Tetap::query();
 
 
      // Get single data
     if($id)
     {
-        $pegawai= $pegawaiQuery->find($id);
+        $dosentetap= $dosentetapQuery->find($id);
 
-        if($pegawai){
-            return ResponseFormatter::success($pegawai, 'Data Pegawai found');
+        if($dosentetap){
+            return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap found');
         }
-            return ResponseFormatter::error('Data Pegawai not found', 404);
+            return ResponseFormatter::error('Data Dosen Tetap not found', 404);
     }
 
     //    Get multiple Data
-    $pegawai = $pegawaiQuery;
+    $dosentetap = $dosentetapQuery;
 
     // Get by attribute
     if($nama)
     {
-        $pegawai->where('nama', 'like', '%'.$nama.'%');
+        $dosentetap->where('nama', 'like', '%'.$nama.'%');
 
     }
     if($no_pegawai)
     {
-        $pegawai->where('no_pegawai', 'like', '%'.$no_pegawai.'%');
-
-    }
-    if($posisi)
-    {
-        $pegawai->where('posisi', 'like', '%'.$posisi.'%');
+        $dosentetap->where('no_pegawai', 'like', '%'.$no_pegawai.'%');
 
     }
     if($status)
     {
-        $pegawai->where('status', 'like', '%'.$status.'%');
+        $dosentetap->where('status', 'like', '%'.$status.'%');
 
     }
     if($jabatan)
     {
-        $pegawai->where('jabatan', 'like', '%'.$jabatan.'%');
+        $dosentetap->where('jabatan', 'like', '%'.$jabatan.'%');
 
     }
     if($alamat_KTP)
     {
-        $pegawai->where('alamat_KTP', 'like', '%'.$alamat_KTP.'%');
+        $dosentetap->where('alamat_KTP', 'like', '%'.$alamat_KTP.'%');
 
     }
     if($alamat_saatini)
     {
-        $pegawai->where('alamat_saatini', 'like', '%'.$alamat_saatini.'%');
+        $dosentetap->where('alamat_saatini', 'like', '%'.$alamat_saatini.'%');
 
     }
     if($nama_bank)
     {
-        $pegawai->where('nama_bank', 'like', '%'.$nama_bank.'%');
+        $dosentetap->where('nama_bank', 'like', '%'.$nama_bank.'%');
 
     }
     if($norek_bank)
     {
-        $pegawai->where('norek_bank', 'like', '%'.$norek_bank.'%');
+        $dosentetap->where('norek_bank', 'like', '%'.$norek_bank.'%');
 
     }
     if ($golongan) {
-        $pegawai->where('golongan', 'like', '%'.$golongan.'%');
+        $dosentetap->where('golongan', 'like', '%'.$golongan.'%');
     }
 
 
     return ResponseFormatter::success(
-        $pegawai->paginate($limit),
+        $dosentetap->paginate($limit),
         'Data Pegawai Found'
     );
     }
 
 
 
-    public function create(CreatePegawaiRequest $request){
+    public function create(CreateDosenTetapRequest $request){
        try {
 
            // Create Dosen Luar Biasa
-        $pegawai = Pegawai::create([
+           $dosentetap = Dosen_Tetap::create([
             'nama' => $request-> nama,
             'no_pegawai' => $request-> no_pegawai,
-            'posisi' => $request-> posisi,
             'status' => $request-> status,
             'golongan' => $request-> golongan,
             'jabatan' => $request-> jabatan,
@@ -122,32 +113,31 @@ class PegawaiController extends Controller
 
         ]);
 
-        if(!$pegawai){
-            throw new Exception('Data Pegawai not created');
+        if(!$dosentetap){
+            throw new Exception('Data Dosen Tetap not created');
         }
-        return ResponseFormatter::success($pegawai, 'Data Pegawai created');
+        return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap created');
     }catch(Exception $e){
         return ResponseFormatter::error($e->getMessage(), 500);
     }
 }
 
-    public function update(UpdatePegawaiRequest $request, $id)
+    public function update(UpdateDosenTetapRequest $request, $id)
     {
         try {
 
             // Get Dosen Luar Biasa
-            $pegawai = Pegawai::find($id);
+            $dosentetap = Dosen_Tetap::find($id);
 
             // Check if Dosen Luar Biasa exists
-            if(!$pegawai){
-                throw new Exception('Data Pegawai not found');
+            if(!$dosentetap){
+                throw new Exception('Data Dosen Tetap not found');
             }
 
             // Update Dosen Luar Biasa
-            $pegawai -> update([
+            $dosentetap -> update([
                 'nama' => $request-> nama,
                 'no_pegawai' => $request-> no_pegawai,
-                'posisi' => $request-> posisi,
                 'status' => $request-> status,
                 'golongan' => $request-> golongan,
                 'jabatan' => $request-> jabatan,
@@ -159,7 +149,7 @@ class PegawaiController extends Controller
         ]);
 
 
-        return ResponseFormatter::success($pegawai, 'Data Pegawai updated');
+        return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap updated');
     }catch(Exception $e){
         return ResponseFormatter::error($e->getMessage(), 500);
     }
@@ -168,20 +158,22 @@ class PegawaiController extends Controller
 public function destroy($id){
     try{
         // Get Data Dosen Luar Biasa
-        $pegawai = Pegawai::find($id);
+        $dosentetap = Dosen_Tetap::find($id);
 
         // Check if Data Dosen Luar Biasa exists
-        if(!$pegawai){
-            throw new Exception('Data Pegawai not found');
+        if(!$dosentetap){
+            throw new Exception('Data Dosen Tetap not found');
         }
 
         // Delete Data Dosen Luar Biasa
-        $pegawai->delete();
+        $dosentetap->delete();
 
-        return ResponseFormatter::success('Data Pegawai deleted');
+        return ResponseFormatter::success('Data Dosen Tetap deleted');
 
     }catch(Exception $e){
         return ResponseFormatter::error($e->getMessage(), 500);
     }
 }
 }
+
+

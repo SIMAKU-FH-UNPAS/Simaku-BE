@@ -13,18 +13,23 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gaji_fakultas', function (Blueprint $table) {
+        Schema::create('dostap_gaji_fakultas', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('pegawai_id')->unsigned();
             $table->integer('tj_tambahan')->nullable();
             $table->integer('honor_kinerja')->nullable();
             $table->integer('honor_klb_mengajar')->nullable();
             $table->integer('honor_mengajar_DPK')->nullable();
             $table->integer('peny_honor_mengajar')->nullable();
             $table->integer('tj_guru_besar')->nullable();
+            $table->integer('honor')->nullable();
             $table->integer('total_gaji_fakultas')->nullable();
+            $table->unsignedBigInteger('dosen_tetap_id');
             $table->softDeletes();
             $table->timestamps();
+
+        });
+            Schema::table('dostap_gaji_fakultas', function(Blueprint $table){
+            $table->foreign('dosen_tetap_id')->references('id')->on('dosen_tetap');
         });
     }
 

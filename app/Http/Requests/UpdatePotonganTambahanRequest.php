@@ -27,7 +27,7 @@ class UpdatePotonganTambahanRequest extends FormRequest
         return [
             'nama_potongan' => 'required|string|max:255',
             'besar_potongan' => 'required|integer',
-            'potongan_id' => 'required|integer|exists:potongan,id'
+            'dostap_potongan_id' => 'required|integer|exists:dostap_potongan,id'
 
         ];
     }

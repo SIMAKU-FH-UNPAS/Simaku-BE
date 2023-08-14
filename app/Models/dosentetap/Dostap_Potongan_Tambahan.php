@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\dosentetap;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\dosentetap\Dostap_Potongan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Potongan_Tambahan extends Model
+class Dostap_Potongan_Tambahan extends Model
 {
     use HasFactory,SoftDeletes;
 
@@ -16,16 +17,16 @@ class Potongan_Tambahan extends Model
    * @var array<int, string>
    */
 
-   public $table = "potongan_tambahan";
+   public $table = "dostap_potongan_tambahan";
    protected $primaryKey = 'id';
    protected $dates = ['deleted_at'];
    protected $fillable = [
-       'potongan_id',
+       'dostap_potongan_id',
        'nama_potongan',
        'besar_potongan'
    ];
 
    public function potongan(){
-       return $this->belongsTo(Potongan::class, 'potongan_id', 'id');
+       return $this->belongsTo(Dostap_Potongan::class, 'dostap_potongan_id', 'id');
    }
 }

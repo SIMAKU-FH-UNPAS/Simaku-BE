@@ -26,12 +26,10 @@ class UpdatePotonganRequest extends FormRequest
     {
         return [
             'sp_FH' => 'nullable|integer',
-            'iiku' => 'nullable|integer',
-            'iid' => 'nullable|integer',
             'infaq' => 'nullable|integer',
-            'abt' => 'nullable|integer',
             'total_potongan' => 'nullable|integer',
-            'pegawai_id' => 'required|integer|exists:pegawai,id'
+            'dosen_tetap_id' => 'required|integer|exists:dosen_tetap,id'
+
 
         ];
     }
