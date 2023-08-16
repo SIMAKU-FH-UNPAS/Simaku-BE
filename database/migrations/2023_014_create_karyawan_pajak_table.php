@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('dostap_pajak', function (Blueprint $table) {
+        Schema::create('karyawan_pajak', function (Blueprint $table) {
             $table->id();
             $table->integer('pensiun')->nullable(); //.
             $table->integer('bruto_pajak')->nullable();
@@ -29,22 +29,21 @@ return new class extends Migration
             $table->integer('jml_set_pajak')->nullable();
             $table->integer('pot_tk_kena_pajak')->nullable();
             $table->integer('pendapatan_bersih')->nullable();
-            $table->unsignedBigInteger('dosen_tetap_id');
-            $table->unsignedBigInteger('dostap_gaji_universitas_id');
-            $table->unsignedBigInteger('dostap_gaji_fakultas_id');
-            $table->unsignedBigInteger('dostap_potongan_id');
+            $table->unsignedBigInteger('karyawan_id');
+            $table->unsignedBigInteger('karyawan_gaji_universitas_id');
+            $table->unsignedBigInteger('karyawan_gaji_fakultas_id');
+            $table->unsignedBigInteger('karyawan_potongan_id');
             $table->softDeletes();
             $table->timestamps();
         });
-
-            Schema::table('dostap_pajak', function(Blueprint $table){
-            $table->foreign('dosen_tetap_id')->references('id')->on('dosen_tetap');
-            $table->foreign('dostap_gaji_universitas_id')->references('id')->on('dostap_gaji_universitas');
-            $table->foreign('dostap_gaji_fakultas_id')->references('id')->on('dostap_gaji_fakultas');
-            $table->foreign('dostap_potongan_id')->references('id')->on('dostap_potongan');
+        Schema::table('karyawan_pajak', function(Blueprint $table){
+            $table->foreign('karyawan_id')->references('id')->on('karyawan');
+            $table->foreign('karyawan_gaji_universitas_id')->references('id')->on('karyawan_gaji_universitas');
+            $table->foreign('karyawan_gaji_fakultas_id')->references('id')->on('karyawan_gaji_fakultas');
+            $table->foreign('karyawan_potongan_id')->references('id')->on('karyawan_potongan');
             });
+    }
 
-        }
     /**
      * Reverse the migrations.
      *
@@ -52,6 +51,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dostap_pajak');
+        Schema::dropIfExists('karyawan_pajak');
     }
 };

@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('dostap_gaji_universitas', function (Blueprint $table) {
+        Schema::create('karyawan_gaji_universitas', function (Blueprint $table) {
             $table->id();
             $table->integer('gaji_pokok');
             $table->integer('tj_struktural');
@@ -28,13 +28,12 @@ return new class extends Migration
             $table->integer('tj_suami_istri');
             $table->integer('tj_anak');
             $table->integer('total_gaji_univ')->nullable();
-            $table->unsignedBigInteger('dosen_tetap_id');
+            $table->unsignedBigInteger('karyawan_id');
             $table->softDeletes();
             $table->timestamps();
-
         });
-            Schema::table('dostap_gaji_universitas', function(Blueprint $table){
-            $table->foreign('dosen_tetap_id')->references('id')->on('dosen_tetap');
+        Schema::table('karyawan_gaji_universitas', function(Blueprint $table){
+            $table->foreign('karyawan_id')->references('id')->on('karyawan');
         });
     }
 
@@ -45,6 +44,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('dostap_gaji_universitas');
+        Schema::dropIfExists('karyawan_gaji_universitas');
     }
 };

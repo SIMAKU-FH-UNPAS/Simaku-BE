@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\dosentetap;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class UpdatePotonganRequest extends FormRequest
+class CreatePotonganRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

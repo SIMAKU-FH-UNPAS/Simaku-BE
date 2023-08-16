@@ -30,8 +30,8 @@ class Dosen_Tetap extends Model
         'alamat_KTP',
         'alamat_saatini',
         'nama_bank',
-        'norek_bank'
-
+        'norek_bank',
+        'nomor_hp'
     ];
 
 
@@ -43,7 +43,7 @@ class Dosen_Tetap extends Model
         return $this->hasMany(Dostap_Gaji_Fakultas::class,'dosen_tetap_id', 'id');
     }
     public function pajak(){
-        return $this->hasMany(DOstap_Pajak::class,'dosen_tetap_id', 'id');
+        return $this->hasMany(Dostap_Pajak::class,'dosen_tetap_id', 'id');
     }
     public function potongan(){
         return $this->hasMany(Dostap_Potongan::class,'dosen_tetap_id', 'id');

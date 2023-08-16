@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\karyawan;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class CreateHonorFakTambahanRequest extends FormRequest
+class UpdateGajiFakRequest extends FormRequest
 {
-    /**
+   /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -25,9 +25,11 @@ class CreateHonorFakTambahanRequest extends FormRequest
     public function rules()
     {
         return [
-            'dostap_gaji_fakultas_id' => 'required|integer|exists:dostap_gaji_fakultas,id',
-            'nama_honor_FH' => 'required|string|max:255',
-            'besar_honor_FH' => 'required|integer'
+            'tj_tambahan' => 'nullable|integer',
+            'honor_kinerja' => 'nullable|integer',
+            'honor' => 'nullable|integer',
+            'total_gaji_fakultas' => 'nullable|integer',
+            'karyawan_id' => 'required|integer|exists:karyawan,id'
         ];
     }
 }

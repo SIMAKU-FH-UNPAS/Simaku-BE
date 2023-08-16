@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\dosentetap;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Foundation\Http\FormRequest;
 
-class CreateDosenTetapRequest extends FormRequest
+class UpdateDosenTetapRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -33,8 +33,8 @@ class CreateDosenTetapRequest extends FormRequest
             'alamat_KTP' => 'required|string|max:255',
             'alamat_saatini' => 'required|string|max:255',
             'nama_bank' => 'required|string|max:255',
-            'norek_bank' => 'required|string|max:255'
-
+            'norek_bank' => 'required|string|max:255',
+            'nomor_hp' => 'required|string|max:255',
         ];
     }
 }

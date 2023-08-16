@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\karyawan;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class UpdateGajiUnivRequest extends FormRequest
+class CreateGajiUnivRequest extends FormRequest
 {
-    /**
+  /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -25,7 +25,7 @@ class UpdateGajiUnivRequest extends FormRequest
     public function rules()
     {
         return [
-            'dosen_tetap_id' => 'required|integer|exists:dosen_tetap,id',
+            'karyawan_id' => 'required|integer|exists:karyawan,id',
             'gaji_pokok' => 'required|integer',
             'tj_struktural' => 'required|integer',
             'tj_pres_kerja' => 'required|integer',

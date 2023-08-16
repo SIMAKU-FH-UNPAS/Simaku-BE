@@ -126,7 +126,6 @@ class Dostap_Pajak extends Model
     return $pkp;
    }
    public function hitung_pajak_pph21($request){
-    $pegawai = Dosen_tetap::findOrFail($request->dosen_tetap_id);
         $pkp = $this->pkp;
         $pajak_pph21 = $pkp * 0.05; // Pajak PPh21 = PKP x 5%
 

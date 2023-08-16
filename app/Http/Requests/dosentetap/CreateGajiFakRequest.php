@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\dosentetap;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class UpdateGajiFakRequest extends FormRequest
+class CreateGajiFakRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -35,6 +35,7 @@ class UpdateGajiFakRequest extends FormRequest
             'honor' => 'nullable|integer',
             'total_gaji_fakultas' => 'nullable|integer',
             'dosen_tetap_id' => 'required|integer|exists:dosen_tetap,id'
+
 
         ];
     }

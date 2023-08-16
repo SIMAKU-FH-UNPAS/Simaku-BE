@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\API\dosentetap;
+namespace App\Http\Controllers\API\karyawan;
+
 use Exception;
-use App\Models\dosentetap\Dostap_Pajak;
-use App\Models\dosentetap\Dosen_Tetap;
+use App\Models\karyawan\Karyawan_Pajak;
+use App\Models\karyawan\Karyawan;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\dosentetap\CreatePajakRequest;
-use App\Http\Requests\dosentetap\UpdatePajakRequest;
+use App\Http\Requests\karyawan\CreatePajakRequest;
+use App\Http\Requests\karyawan\UpdatePajakRequest;
 
 class PajakController extends Controller
 {
@@ -28,13 +29,13 @@ class PajakController extends Controller
         $jml_set_pajak = $request->input('jml_set_pajak');
         $pot_tk_kena_pajak = $request->input('pot_tk_kena_pajak');
         $pendapatan_bersih= $request->input('pendapatan_bersih');
-        $dosen_tetap_id= $request->input('dosen_tetap_id');
-        $dostap_gaji_universitas_id= $request->input('dostap_gaji_universitas_id');
-        $dostap_gaji_fakultas_id = $request->input('dostap_gaji_fakultas_id');
-        $dostap_potongan_id = $request->input('dostap_potongan_id');
+        $karyawan_id= $request->input('karyawan_id');
+        $karyawan_gaji_universitas_id= $request->input('karyawan_gaji_universitas_id');
+        $karyawan_gaji_fakultas_id = $request->input('karyawan_gaji_fakultas_id');
+        $karyawan_potongan_id = $request->input('karyawan_potongan_id');
         $limit = $request->input('limit', 10);
 
-        $PajakQuery = Dostap_Pajak::query();
+        $PajakQuery = Karyawan_Pajak::query();
 
     // Get single data
     if($id)
@@ -42,9 +43,9 @@ class PajakController extends Controller
         $pajak=  $PajakQuery->find($id);
 
         if($pajak){
-            return ResponseFormatter::success($pajak, 'Data Pajak Dosen Tetap found');
+            return ResponseFormatter::success($pajak, 'Data Pajak Karyawan found');
         }
-            return ResponseFormatter::error('Data Pajak Dosen Tetap not found', 404);
+            return ResponseFormatter::error('Data Pajak Karyawan not found', 404);
     }
 
     //    Get multiple Data
@@ -126,29 +127,29 @@ class PajakController extends Controller
         $pajak->where('pendapatan_bersih', 'like', '%'.$pendapatan_bersih.'%');
 
     }
-    if ($dosen_tetap_id) {
-        $pajak->where('dosen_tetap_id', $dosen_tetap_id);
+    if ($karyawan_id) {
+        $pajak->where('karyawan_id', $karyawan_id);
     }
-    if ($dostap_gaji_universitas_id) {
-        $pajak->where('dostap_gaji_universitas_id', $dostap_gaji_universitas_id);
+    if ($karyawan_gaji_universitas_id) {
+        $pajak->where('karyawan_gaji_universitas_id', $karyawan_gaji_universitas_id);
     }
-    if ($dostap_gaji_fakultas_id) {
-        $pajak->where('dostap_gaji_fakultas_id', $dostap_gaji_fakultas_id);
+    if ($karyawan_gaji_fakultas_id) {
+        $pajak->where('karyawan_gaji_fakultas_id', $karyawan_gaji_fakultas_id);
     }
-    if ($dostap_potongan_id) {
-        $pajak->where('dostap_potongan_id', $dostap_potongan_id);
+    if ($karyawan_potongan_id) {
+        $pajak->where('karyawan_potongan_id', $karyawan_potongan_id);
     }
 
 
 
     return ResponseFormatter::success(
         $pajak->paginate($limit),
-        'Data Pajak Dosen Tetap Found'
+        'Data Pajak Karyawan Found'
     );
 }
 public function create(CreatePajakRequest $request){
     try{
-        $dosen_tetap_id = $request->dosen_tetap_id;
+        $karyawan_id = $request->karyawan_id;
 
         // Get the current month and year
         $currentMonth = now()->month;
@@ -156,20 +157,20 @@ public function create(CreatePajakRequest $request){
 
 
         // Check if data already exists for the current month and year
-        $existingpajak= Dostap_Pajak::where('dosen_tetap_id', $dosen_tetap_id)
+        $existingpajak= Karyawan_Pajak::where('karyawan_id', $karyawan_id)
         ->whereMonth('created_at', $currentMonth)
         ->whereYear('created_at', $currentYear)
         ->first();
 
     if ($existingpajak) {
-        return ResponseFormatter::error('Data Pajak Dosen Tetap for this month already exists', 400);
+        return ResponseFormatter::error('Data Pajak Karyawan for this month already exists', 400);
     }
         // Get Data Pegawai
-        $dosen_tetap = Dosen_Tetap::findOrFail($request->dosen_tetap_id);
+        $karyawan = Karyawan::findOrFail($request->karyawan_id);
 
-        if ($dosen_tetap->gaji_universitas->isNotEmpty() && $dosen_tetap->gaji_fakultas->isNotEmpty() && $dosen_tetap->potongan->isNotEmpty()){
+        if ($karyawan->gaji_universitas->isNotEmpty() && $karyawan->gaji_fakultas->isNotEmpty() && $karyawan->potongan->isNotEmpty()){
         // Rumus Perhitungan menggunakan metode pada model Pajak
-        $pajak = new Dostap_Pajak;
+        $pajak = new Karyawan_Pajak;
         $bruto_pajak = $pajak->hitung_bruto_pajak($request);
         $bruto_murni = $pajak->hitung_bruto_murni($request);
         $biaya_jabatan = $pajak->hitung_biaya_jabatan();
@@ -182,7 +183,7 @@ public function create(CreatePajakRequest $request){
         $pendapatan_bersih = $pajak->hitung_pendapatan_bersih();
 
         // Create Pajak Pegawai
-        $pajakdosentetap = Dostap_Pajak::create([
+        $pajakkaryawan = Karyawan_Pajak::create([
             'pensiun' => $request-> pensiun,
             'bruto_pajak' => $bruto_pajak,
             'bruto_murni' => $bruto_murni,
@@ -197,16 +198,16 @@ public function create(CreatePajakRequest $request){
             'jml_set_pajak' => $jml_set_pajak,
             'pot_tk_kena_pajak' => $pot_tk_kena_pajak,
             'pendapatan_bersih' => $pendapatan_bersih,
-            'dosen_tetap_id' => $dosen_tetap->id,
-            'dostap_gaji_universitas_id'=>$request->dostap_gaji_universitas_id,
-            'dostap_gaji_fakultas_id'=>$request->dostap_gaji_fakultas_id,
-            'dostap_potongan_id'=>$request->dostap_potongan_id
+            'karyawan_id' => $karyawan->id,
+            'karyawan_gaji_universitas_id'=>$request->karyawan_gaji_universitas_id,
+            'karyawan_gaji_fakultas_id'=>$request->karyawan_gaji_fakultas_id,
+            'karyawan_potongan_id'=>$request->karyawan_potongan_id
         ]);
-        return ResponseFormatter::success($pajakdosentetap, 'Data Pajak Dosen Tetap created');
+        return ResponseFormatter::success($pajakkaryawan, 'Data Pajak Karyawan created');
     }else{
          return ResponseFormatter::error('Gaji Universitas or Gaji Fakultas or Potongan is empty ');
     }
-    throw new Exception('Data Pajak Dosen Tetap not created');
+    throw new Exception('Data Pajak Karyawan not created');
     }catch(Exception $e){
         return ResponseFormatter::error($e->getMessage(), 500);
     }
@@ -217,14 +218,14 @@ public function create(CreatePajakRequest $request){
         try {
 
             // Get Pajak Pegawai
-            $pajakdosentetap = Dostap_Pajak::find($id);
+            $pajakkaryawan = Karyawan_Pajak::find($id);
 
             // Check if Pajak Pegawai exists
-            if(!$pajakdosentetap){
-                throw new Exception('Data Pajak Dosen Tetap not found');
+            if(!$pajakkaryawan){
+                throw new Exception('Data Pajak Karyawan not found');
             }
         // Rumus Perhitungan menggunakan metode pada model Pajak
-        $pajak = new Dostap_Pajak;
+        $pajak = new Karyawan_Pajak;
         $bruto_pajak = $pajak->hitung_bruto_pajak($request);
         $bruto_murni = $pajak->hitung_bruto_murni($request);
         $biaya_jabatan = $pajak->hitung_biaya_jabatan();
@@ -246,7 +247,7 @@ public function create(CreatePajakRequest $request){
             // }
 
             // Update Pajak Pegawai
-            $pajakdosentetap -> update([
+            $pajakkaryawan -> update([
                 'pensiun' => $request-> pensiun,
                 'bruto_pajak' => $bruto_pajak,
                 'bruto_murni' => $bruto_murni,
@@ -261,15 +262,15 @@ public function create(CreatePajakRequest $request){
                 'jml_set_pajak' => $jml_set_pajak,
                 'pot_tk_kena_pajak' => $pot_tk_kena_pajak,
                 'pendapatan_bersih' => $pendapatan_bersih,
-                'dosen_tetap_id' => $request->dosen_tetap_id,
-                'dostap_gaji_universitas_id'=>$request->dostap_gaji_universitas_id,
-                'dostap_gaji_fakultas_id'=>$request->dostap_gaji_fakultas_id,
-                'dostap_potongan_id'=>$request->dostap_potongan_id
+                'karyawan_id' => $request->karyawan_id,
+                'karyawan_gaji_universitas_id'=>$request->karyawan_gaji_universitas_id,
+                'karyawan_gaji_fakultas_id'=>$request->karyawan_gaji_fakultas_id,
+                'karyawan_potongan_id'=>$request->karyawan_potongan_id
 
         ]);
 
 
-        return ResponseFormatter::success($pajakdosentetap, 'Data Pajak Dosen Tetap updated');
+        return ResponseFormatter::success($pajakkaryawan, 'Data Pajak Karyawan updated');
     }catch(Exception $e){
         return ResponseFormatter::error($e->getMessage(), 500);
     }
@@ -277,23 +278,22 @@ public function create(CreatePajakRequest $request){
     public function destroy($id){
         try{
             // Get Data Pajak Pegawai
-            $pajakdosentetap = Dostap_Pajak::findorFail($id);
+            $pajakkaryawan = Karyawan_Pajak::findorFail($id);
 
             // Check if Data Pajak Pegawai exists
-            if(!$pajakdosentetap){
-                throw new Exception('Data Pajak Dosen Tetap not found');
+            if(!$pajakkaryawan){
+                throw new Exception('Data Pajak Karyawan not found');
             }
 
             // Delete the related Pajak_Tambahan records
-            $pajakdosentetap->pajaktambahan()->delete();
+            $pajakkaryawan->pajaktambahan()->delete();
             // Delete Data Pajak Pegawai
-            $pajakdosentetap->delete();
+            $pajakkaryawan->delete();
 
-            return ResponseFormatter::success('Data Pajak Dosen Tetap deleted');
+            return ResponseFormatter::success('Data Pajak Karyawan deleted');
 
         }catch(Exception $e){
             return ResponseFormatter::error($e->getMessage(), 500);
         }
     }
 }
-
