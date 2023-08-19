@@ -1,5 +1,6 @@
 <?php
 
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
@@ -17,7 +18,12 @@ use App\Http\Controllers\API\karyawan\PotonganController as KaryawanPotonganCont
 use App\Http\Controllers\API\karyawan\PotonganTambahanController as KaryawanPotonganTambahanController;
 use App\Http\Controllers\API\karyawan\PajakController as KaryawanPajakController;
 use App\Http\Controllers\API\karyawan\KaryawanController;
-
+use App\Http\Controllers\API\dosenlb\DosenLuarBiasaController;
+use App\Http\Controllers\API\dosenlb\KomponenPendapatanController;
+use App\Http\Controllers\API\dosenlb\KomponenPendapatanTambahanController;
+use App\Http\Controllers\API\dosenlb\PotonganController as DosenlbPotonganController;
+use App\Http\Controllers\API\dosenlb\PotonganTambahanController as DosenlbPotonganTambahanController;
+use App\Http\Controllers\API\dosenlb\PajakController as DosenlbPajakController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -185,6 +191,60 @@ Route::prefix('karyawan-pajak')->middleware('auth:sanctum')->name('karyawan-paja
         Route::post('create', [KaryawanPajakController::class, 'create'])->name('create');
         Route::post('update/{id}', [KaryawanPajakController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanPajakController::class, 'destroy'])->name('delete');
+    });
+
+// Dosen Luar Biasa
+Route::prefix('dosenlb')->middleware('auth:sanctum')->name('dosenlb.')->group(
+function(){
+    Route::get('', [DosenLuarBiasaController::class, 'fetch'])->name('fetch');
+    Route::get('/{id}', [DosenLuarBiasaController::class, 'fetch'])->name('fetch');
+    Route::post('create', [DosenLuarBiasaController::class, 'create'])->name('create');
+    Route::post('update/{id}', [DosenLuarBiasaController::class, 'update'])->name('update');
+    Route::delete('delete/{id}', [DosenLuarBiasaController::class, 'destroy'])->name('delete');
+});
+//Komponen Pendapatan Dosen Luar Biasa
+Route::prefix('dosenlb-komponenpendapatan')->middleware('auth:sanctum')->name('dosenlb-komponenpendapatan.')->group(
+    function(){
+        Route::get('', [KomponenPendapatanController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [KomponenPendapatanController::class, 'fetch'])->name('fetch');
+        Route::post('create', [KomponenPendapatanController::class, 'create'])->name('create');
+        Route::post('update/{id}', [KomponenPendapatanController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [KomponenPendapatanController::class, 'destroy'])->name('delete');
+    });
+//Komponen Pendapatan Dosen Luar Biasa
+Route::prefix('dosenlb-komponenpendapatantambahan')->middleware('auth:sanctum')->name('dosenlb-komponenpendapatantambahan.')->group(
+    function(){
+        Route::get('', [KomponenPendapatanTambahanController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [KomponenPendapatanTambahanController::class, 'fetch'])->name('fetch');
+        Route::post('create', [KomponenPendapatanTambahanController::class, 'create'])->name('create');
+        Route::post('update/{id}', [KomponenPendapatanTambahanController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [KomponenPendapatanTambahanController::class, 'destroy'])->name('delete');
+    });
+//Potongan Dosen Luar Biasa
+Route::prefix('dosenlb-potongan')->middleware('auth:sanctum')->name('dosenlb-potongan.')->group(
+    function(){
+        Route::get('', [DosenlbPotonganController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [DosenlbPotonganController::class, 'fetch'])->name('fetch');
+        Route::post('create', [DosenlbPotonganController::class, 'create'])->name('create');
+        Route::post('update/{id}', [DosenlbPotonganController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [DosenlbPotonganController::class, 'destroy'])->name('delete');
+    });
+//Potongan Tambahan Dosen Luar Biasa
+Route::prefix('dosenlb-potongantambahan')->middleware('auth:sanctum')->name('dosenlb-potongantambahan.')->group(
+    function(){
+        Route::get('', [DosenlbPotonganTambahanController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [DosenlbPotonganTambahanController::class, 'fetch'])->name('fetch');
+        Route::post('create', [DosenlbPotonganTambahanController::class, 'create'])->name('create');
+        Route::post('update/{id}', [DosenlbPotonganTambahanController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [DosenlbPotonganTambahanController::class, 'destroy'])->name('delete');
+    });
+// Pajak Dosen Luar Biasa
+Route::prefix('dosenlb-pajak')->middleware('auth:sanctum')->name('dosenlb-pajak.')->group(
+    function(){
+        Route::get('', [DosenlbPajakController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [DosenlbPajakController::class, 'fetch'])->name('fetch');
+        Route::post('create', [DosenlbPajakController::class, 'create'])->name('create');
+        Route::delete('delete/{id}', [DosenlbPajakController::class, 'destroy'])->name('delete');
     });
 
     // Coba
