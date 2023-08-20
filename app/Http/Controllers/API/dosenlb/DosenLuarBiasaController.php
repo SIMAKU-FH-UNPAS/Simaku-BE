@@ -56,8 +56,13 @@ class DosenLuarBiasaController extends Controller
     }
     if($status)
     {
-        $dosenlb->where('status', 'like', '%'.$status.'%');
-
+         // Filter berdasarkan status "aktif" atau "tidak aktif"
+    if ($status === 'Aktif' || $status === 'Tidak Aktif') {
+        $dosenlb->where('status', $status);
+    } else {
+        // Jika nilai status tidak valid, berikan respon error
+        return ResponseFormatter::error('Data Dosen Luar Biasa not Found', 400);
+    }
     }
     if($jabatan)
     {

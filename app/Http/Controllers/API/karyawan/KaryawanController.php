@@ -56,7 +56,14 @@ class KaryawanController extends Controller
     }
     if($status)
     {
-        $karyawan->where('status', 'like', '%'.$status.'%');
+             // Filter berdasarkan status "aktif" atau "tidak aktif"
+    if ($status === 'Aktif' || $status === 'Tidak Aktif') {
+        $karyawan->where('status', $status);
+    } else {
+        // Jika nilai status tidak valid, berikan respon error
+        return ResponseFormatter::error('Data Karyawan not Found', 400);
+    }
+
 
     }
     if($jabatan)

@@ -59,7 +59,13 @@ class DosenTetapController extends Controller
     }
     if($status)
     {
-        $dosentetap->where('status', 'like', '%'.$status.'%');
+        // Filter berdasarkan status "aktif" atau "tidak aktif"
+    if ($status === 'Aktif' || $status === 'Tidak Aktif') {
+        $dosentetap->where('status', $status);
+    } else {
+        // Jika nilai status tidak valid, berikan respon error
+        return ResponseFormatter::error('Data Dosen Tetap not Found', 400);
+    }
 
     }
     if($jabatan)
