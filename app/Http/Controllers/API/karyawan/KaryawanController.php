@@ -172,7 +172,19 @@ public function destroy($id){
         if(!$karyawan){
             throw new Exception('Data Karyawan not found');
         }
-
+        // Delete the related records with Karyawan
+        $karyawan->gaji_universitas()->delete();
+        $karyawan->gaji_fakultas->each(function ($gajiFakultas) {
+            // Delete related Karyawan_Honor_Fakultas records
+            $gajiFakultas->honorfakultastambahan()->delete();
+            $gajiFakultas->delete();
+        });
+        $karyawan->potongan->each(function ($potongan) {
+            // Delete related Karyawan_Potongan records
+            $potongan->potongantambahan()->delete();
+            $potongan->delete();
+        });
+        $karyawan->pajak()->delete();
         // Delete Data Karyawan
         $karyawan->delete();
 

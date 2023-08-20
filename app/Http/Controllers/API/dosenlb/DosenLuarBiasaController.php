@@ -172,7 +172,17 @@ public function destroy($id){
         if(!$dosenlb){
             throw new Exception('Data Dosen Luar Biasa not found');
         }
-
+        // Delete the related records with Dosen Luar Biasa
+        $dosenlb->komponen_pendapatan->each(function ($pendapatan){
+            // Delete related Doslb_Komponen_Pendapatan_Tambahan records
+            $pendapatan->komponenpendapatantambahan()->delete();
+            $pendapatan->delete();
+        });
+        $dosenlb->potongan->each(function($potongan){
+            $potongan->potongantambahan()->delete();
+            $potongan->delete();
+        });
+        $dosenlb->pajak()->delete();
         // Delete Data Dosen Luar Biasa
         $dosenlb->delete();
 

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\API\dosentetap;
 
 use Exception;
-use App\Models\dosentetap\Dosen_Tetap;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\dosentetap\Dosen_Tetap;
+use App\Models\dosentetap\Dostap_Honor_Fakultas;
+use App\Models\dosentetap\Dostap_Potongan_Tambahan;
 use App\Http\Requests\dosentetap\CreateDosenTetapRequest;
 use App\Http\Requests\dosentetap\UpdateDosenTetapRequest;
 
@@ -165,6 +168,7 @@ class DosenTetapController extends Controller
 
 public function destroy($id){
     try{
+        DB::beginTransaction();
         // Get Data Dosen Tetap
         $dosentetap = Dosen_Tetap::find($id);
 
@@ -172,9 +176,23 @@ public function destroy($id){
         if(!$dosentetap){
             throw new Exception('Data Dosen Tetap not found');
         }
-
+         // Delete the related records with Dosen Tetap
+         $dosentetap->gaji_universitas()->delete();
+         $dosentetap->gaji_fakultas->each(function ($gajiFakultas) {
+            // Delete related Dostap_Honor_Fakultas records
+            $gajiFakultas->honorfakultastambahan()->delete();
+            $gajiFakultas->delete();
+        });
+        $dosentetap->potongan->each(function ($potongan) {
+            // Delete related Dostap_Potongan records
+            $potongan->potongantambahan()->delete();
+            $potongan->delete();
+        });
+        $dosentetap->pajak()->delete();
         // Delete Data Dosen Tetap
         $dosentetap->delete();
+
+        DB::commit();
 
         return ResponseFormatter::success('Data Dosen Tetap deleted');
 
