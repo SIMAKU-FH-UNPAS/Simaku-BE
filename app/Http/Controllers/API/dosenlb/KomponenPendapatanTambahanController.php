@@ -140,7 +140,7 @@ public function destroy(Request $request,$id){
             throw new Exception('Data Komponen Pendapatan Tambahan Dosen Luar Biasa not found');
         }
 
-        $komponenpendapatan = $komponenpendapatantambahan->komponenpendapatan;
+        $komponenpendapatan = $komponenpendapatantambahan->komponen_pendapatan;
         $totalkomponenpendapatan =  $komponenpendapatan->total_komponen_pendapatan - $komponenpendapatantambahan->besar_komponen;
            $komponenpendapatan->update([
             'total_komponen_pendapatan' => $totalkomponenpendapatan

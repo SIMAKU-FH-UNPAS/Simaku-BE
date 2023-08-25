@@ -4,6 +4,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
+
+// Import Model Dosen Tetap
 use App\Http\Controllers\API\dosentetap\PajakController as DosenTetapPajakController;
 use App\Http\Controllers\API\dosentetap\GajiFakController as DosenTetapGajiFakController;
 use App\Http\Controllers\API\dosentetap\GajiUnivController as DosenTetapGajiUnivController;
@@ -11,6 +13,10 @@ use App\Http\Controllers\API\dosentetap\DosenTetapController;
 use App\Http\Controllers\API\dosentetap\HonorFakTambahanController as DosenTetapHonorFakTambahanController;
 use App\Http\Controllers\API\dosentetap\PotonganController as DosenTetapPotonganController;
 use App\Http\Controllers\API\dosentetap\PotonganTambahanController as DosenTetapPotonganTambahanController;
+use App\Http\Controllers\API\dosentetap\LaporanController as DosenTetapLaporanController;
+use App\Http\Controllers\API\dosentetap\TransaksiGajiController as DosenTetapTransaksiGajiController;
+
+// Import Model Karyawan
 use App\Http\Controllers\API\karyawan\GajiUnivController as KaryawanGajiUnivController;
 use App\Http\Controllers\API\karyawan\GajiFakController as KaryawanGajiFakController;
 use App\Http\Controllers\API\karyawan\HonorFakTambahanController as KaryawanHonorFakTambahanController;
@@ -18,13 +24,22 @@ use App\Http\Controllers\API\karyawan\PotonganController as KaryawanPotonganCont
 use App\Http\Controllers\API\karyawan\PotonganTambahanController as KaryawanPotonganTambahanController;
 use App\Http\Controllers\API\karyawan\PajakController as KaryawanPajakController;
 use App\Http\Controllers\API\karyawan\KaryawanController;
+use App\Http\Controllers\API\karyawan\LaporanController as KaryawanLaporanController;
+use App\Http\Controllers\API\karyawan\TransaksiGajiController as KaryawanTransaksiGajiController;
+
+
+// Import Model Dosen Luar Biasa
 use App\Http\Controllers\API\dosenlb\DosenLuarBiasaController;
 use App\Http\Controllers\API\dosenlb\KomponenPendapatanController;
 use App\Http\Controllers\API\dosenlb\KomponenPendapatanTambahanController;
 use App\Http\Controllers\API\dosenlb\PotonganController as DosenlbPotonganController;
 use App\Http\Controllers\API\dosenlb\PotonganTambahanController as DosenlbPotonganTambahanController;
 use App\Http\Controllers\API\dosenlb\PajakController as DosenlbPajakController;
-use App\Http\Controllers\API\TransaksiGajiController;
+use App\Http\Controllers\API\dosenlb\LaporanController as DosenlbLaporanController;
+use App\Http\Controllers\API\dosenlb\TransaksiGajiController as DosenlbTransaksiGajiController;
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -132,8 +147,18 @@ Route::prefix('dosentetap-pajak')->middleware('auth:sanctum')->name('dosentetap-
 // Transaksi Gaji Dosen Tetap
 Route::prefix('dosentetap-gaji')->middleware('auth:sanctum')->name('dosentetap-gaji.')->group(
     function(){
-        Route::get('monthyear', [TransaksiGajiController::class, 'getDataByMonthAndYearDostap'])->name('getDataByMonthAndYearDostap');
-        Route::delete('delete/{id}', [TransaksiGajiController::class, 'destroygajidostap'])->name('destroygajidostap');
+        Route::get('monthyear', [DosenTetapTransaksiGajiController::class, 'getDataByMonthAndYear'])->name('getDataByMonthAndYear');
+        Route::delete('delete/{id}', [DosenTetapTransaksiGajiController::class, 'destroygaji'])->name('destroygaji');
+    });
+
+// Laporan Dosen Tetap
+Route::prefix('dosentetap-laporan')->middleware('auth:sanctum')->name('dosentetap-laporan.')->group(
+    function(){
+        Route::get('rekapitulasipendapatan', [DosenTetapLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
+        Route::get('pendapatanbersih', [DosenTetapLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
+        Route::get('laporanpajak', [DosenTetapLaporanController::class, 'laporanpajak'])->name('laporanpajak');
+        Route::get('laporanpotongan', [DosenTetapLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
+        Route::get('rekapitulasibank', [DosenTetapLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
     });
 
 // Karyawan
@@ -204,9 +229,19 @@ Route::prefix('karyawan-pajak')->middleware('auth:sanctum')->name('karyawan-paja
 // Transaksi Gaji Karyawan
 Route::prefix('karyawan-gaji')->middleware('auth:sanctum')->name('karyawan-gaji.')->group(
     function(){
-        Route::get('monthyear', [TransaksiGajiController::class, 'getDataByMonthAndYearKaryawan'])->name('getDataByMonthAndYearKaryawan');
-        Route::delete('delete/{id}', [TransaksiGajiController::class, 'destroygajikaryawan'])->name('destroygajikaryawan');
+        Route::get('monthyear', [KaryawanTransaksiGajiController::class, 'getDataByMonthAndYear'])->name('getDataByMonthAndYear');
+        Route::delete('delete/{id}', [KaryawanTransaksiGajiController::class, 'destroygaji'])->name('destroygaji');
     });
+// Laporan Karyawan
+Route::prefix('karyawan-laporan')->middleware('auth:sanctum')->name('karyawan-laporan.')->group(
+    function(){
+        Route::get('rekapitulasipendapatan', [KaryawanLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
+        Route::get('pendapatanbersih', [KaryawanLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
+        Route::get('laporanpajak', [KaryawanLaporanController::class, 'laporanpajak'])->name('laporanpajak');
+        Route::get('laporanpotongan', [KaryawanLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
+        Route::get('rekapitulasibank', [KaryawanLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
+    });
+
 
 // Dosen Luar Biasa
 Route::prefix('dosenlb')->middleware('auth:sanctum')->name('dosenlb.')->group(
@@ -264,9 +299,20 @@ Route::prefix('dosenlb-pajak')->middleware('auth:sanctum')->name('dosenlb-pajak.
 // Transaksi Gaji Dosen Luar Biasa
 Route::prefix('dosenlb-gaji')->middleware('auth:sanctum')->name('dosenlb-gaji.')->group(
     function(){
-        Route::get('monthyear', [TransaksiGajiController::class, 'getDataByMonthAndYearDoslb'])->name('getDataByMonthAndYearDoslb');
-        Route::delete('delete/{id}', [TransaksiGajiController::class, 'destroygajidoslb'])->name('destroygajidoslb');
+        Route::get('monthyear', [DosenlbTransaksiGajiController::class, 'getDataByMonthAndYear'])->name('getDataByMonthAndYear');
+        Route::delete('delete/{id}', [DosenlbTransaksiGajiController::class, 'destroygaji'])->name('destroygaji');
     });
+// Laporan Dosen Luar Biasa
+Route::prefix('dosenlb-laporan')->middleware('auth:sanctum')->name('dosenlb-laporan.')->group(
+    function(){
+        Route::get('rekapitulasipendapatan', [DosenlbLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
+        Route::get('pendapatanbersih', [DosenlbLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
+        Route::get('laporanpajak', [DosenlbLaporanController::class, 'laporanpajak'])->name('laporanpajak');
+        Route::get('laporanpotongan', [DosenlbLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
+        Route::get('rekapitulasibank', [DosenlbLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
+    });
+
+
 
     // Coba
     Route::prefix('transaksi')->middleware('auth:sanctum')->name('transaksi.')->group(

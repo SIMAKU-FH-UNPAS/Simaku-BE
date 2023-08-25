@@ -25,7 +25,7 @@ class CreateDosenTetapRequest extends FormRequest
     public function rules()
     {
         return [
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:255|unique:dosen_tetap',
             'no_pegawai' => 'required|string|max:255',
             'status' => 'required|string|in:Aktif,Tidak Aktif',
             'golongan' =>'required|string|in:IIA,IIB,IIC,IID,IIIA,IIIB,IIIC,IIID,IVA,IVB,IVC,IVD,IVE',
