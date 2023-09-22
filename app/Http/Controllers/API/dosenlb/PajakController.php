@@ -17,6 +17,8 @@ class PajakController extends Controller
         $id = $request->input('id');
         $pajak_pph25 = $request->input('pajak_pph25');
         $pendapatan_bersih= $request->input('pendapatan_bersih');
+        $month = $request->input('month');
+        $year = $request->input('year');
         $dosen_luar_biasa_id= $request->input('dosen_luar_biasa_id');
         $doslb_pendapatan_id= $request->input('doslb_pendapatan_id');
         $doslb_potongan_id = $request->input('doslb_potongan_id');
@@ -48,6 +50,10 @@ class PajakController extends Controller
     {
         $pajak->where('pendapatan_bersih', 'like', '%'.$pendapatan_bersih.'%');
 
+    }
+    if($month && $year){
+        $pajak->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year);
     }
     if ($dosen_luar_biasa_id) {
         $pajak->where('dosen_luar_biasa_id', $dosen_luar_biasa_id);

@@ -29,6 +29,8 @@ class GajiUnivController extends Controller
         $tj_suami_istri= $request->input('tj_suami_istri');
         $tj_anak= $request->input('tj_anak');
         $total_gaji_univ= $request->input('total_gaji_univ');
+        $month = $request->input('month');
+        $year = $request->input('year');
         $limit = $request->input('limit', 10);
 
         $gajiunivQuery = Dostap_Gaji_Universitas::query();
@@ -111,6 +113,10 @@ class GajiUnivController extends Controller
     {
         $gajiuniv->where('total_gaji_univ', 'like', '%'.$total_gaji_univ.'%');
 
+    }
+    if($month && $year){
+        $gajiuniv->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year);
     }
     if ($dosen_tetap_id) {
         $gajiuniv->where('dosen_tetap_id', $dosen_tetap_id);

@@ -24,6 +24,8 @@ use App\Http\Controllers\API\dosenlb\KomponenPendapatanTambahanController;
 use App\Http\Controllers\API\dosenlb\PotonganController as DosenlbPotonganController;
 use App\Http\Controllers\API\dosenlb\PotonganTambahanController as DosenlbPotonganTambahanController;
 use App\Http\Controllers\API\dosenlb\PajakController as DosenlbPajakController;
+use App\Http\Controllers\API\TransaksiGajiController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -127,6 +129,12 @@ Route::prefix('dosentetap-pajak')->middleware('auth:sanctum')->name('dosentetap-
         Route::delete('delete/{id}', [DosenTetapPajakController::class, 'destroy'])->name('delete');
     });
 
+// Transaksi Gaji Dosen Tetap
+Route::prefix('dosentetap-gaji')->middleware('auth:sanctum')->name('dosentetap-gaji.')->group(
+    function(){
+        Route::get('monthyear', [TransaksiGajiController::class, 'getDataByMonthAndYearDostap'])->name('getDataByMonthAndYearDostap');
+    });
+
 // Karyawan
 Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
     function(){
@@ -192,6 +200,11 @@ Route::prefix('karyawan-pajak')->middleware('auth:sanctum')->name('karyawan-paja
         Route::post('update/{id}', [KaryawanPajakController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanPajakController::class, 'destroy'])->name('delete');
     });
+// Transaksi Gaji Karyawan
+Route::prefix('karyawan-gaji')->middleware('auth:sanctum')->name('karyawan-gaji.')->group(
+    function(){
+        Route::get('monthyear', [TransaksiGajiController::class, 'getDataByMonthAndYearKaryawan'])->name('getDataByMonthAndYearKaryawan');
+    });
 
 // Dosen Luar Biasa
 Route::prefix('dosenlb')->middleware('auth:sanctum')->name('dosenlb.')->group(
@@ -245,6 +258,11 @@ Route::prefix('dosenlb-pajak')->middleware('auth:sanctum')->name('dosenlb-pajak.
         Route::get('/{id}', [DosenlbPajakController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenlbPajakController::class, 'create'])->name('create');
         Route::delete('delete/{id}', [DosenlbPajakController::class, 'destroy'])->name('delete');
+    });
+// Transaksi Gaji Dosen Luar Biasa
+Route::prefix('dosenlb-gaji')->middleware('auth:sanctum')->name('dosenlb-gaji.')->group(
+    function(){
+        Route::get('monthyear', [TransaksiGajiController::class, 'getDataByMonthAndYearDoslb'])->name('getDataByMonthAndYearDoslb');
     });
 
     // Coba

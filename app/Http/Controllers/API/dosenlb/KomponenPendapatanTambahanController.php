@@ -19,6 +19,8 @@ class KomponenPendapatanTambahanController extends Controller
         $doslb_pendapatan_id= $request->input('doslb_pendapatan_id');
         $nama_komponen = $request->input('nama_komponen');
         $besar_komponen = $request->input('besar_komponen');
+        $month = $request->input('month');
+        $year = $request->input('year');
         $limit = $request->input('limit', 10);
 
         $komponenpendapatantambahanQuery = Doslb_Komponen_Pendapatan_Tambahan::query();
@@ -46,6 +48,10 @@ class KomponenPendapatanTambahanController extends Controller
     $komponenpendapatantambahan->where('besar_komponen', 'like', '%'.$besar_komponen.'%');
 
   }
+  if($month && $year){
+    $komponenpendapatantambahan->whereMonth('created_at', $month)
+    ->whereYear('created_at', $year);
+}
   if($doslb_pendapatan_id)
   {
     $komponenpendapatantambahan->where('doslb_pendapatan_id', $doslb_pendapatan_id);

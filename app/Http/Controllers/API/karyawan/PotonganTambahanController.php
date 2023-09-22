@@ -18,6 +18,8 @@ class PotonganTambahanController extends Controller
         $nama_potongan= $request->input('nama_potongan');
         $besar_potongan = $request->input('besar_potongan');
         $karyawan_potongan_id= $request->input('karyawan_potongan_id');
+        $month = $request->input('month');
+        $year = $request->input('year');
         $limit = $request->input('limit', 10);
 
         $potongantambahanQuery = Karyawan_Potongan_Tambahan::query();
@@ -45,6 +47,10 @@ class PotonganTambahanController extends Controller
     if($besar_potongan)
     {
         $potongantambahan->where('besar_potongan', 'like', '%'.$besar_potongan.'%');
+    }
+    if($month && $year){
+        $potongantambahan->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year);
     }
     if ($karyawan_potongan_id) {
         $potongantambahan->where('karyawan_potongan_id', $karyawan_potongan_id);

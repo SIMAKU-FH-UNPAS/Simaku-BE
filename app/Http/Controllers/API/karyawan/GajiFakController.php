@@ -21,6 +21,8 @@ class GajiFakController extends Controller
         $honor_kinerja = $request->input('honor_kinerja');
         $honor = $request->input('honor');
         $total_gaji_fakultas= $request->input('total_gaji_fakultas');
+        $month = $request->input('month');
+        $year = $request->input('year');
         $limit = $request->input('limit', 10);
 
         $gajifakQuery = Karyawan_Gaji_Fakultas::query();
@@ -59,6 +61,10 @@ class GajiFakController extends Controller
     {
         $gajifak->where('total_gaji_fakultas', 'like', '%'.$total_gaji_fakultas.'%');
 
+    }
+    if($month && $year){
+        $gajifak->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year);
     }
     if ($karyawan_id) {
         $gajifak->where('karyawan_id', $karyawan_id);

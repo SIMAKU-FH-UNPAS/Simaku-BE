@@ -19,6 +19,8 @@ class PotonganController extends Controller
         $sp_FH= $request->input('sp_FH');
         $infaq= $request->input('infaq');
         $total_potongan= $request->input('total_potongan');
+        $month = $request->input('month');
+        $year = $request->input('year');
         $limit = $request->input('limit', 10);
 
         $potonganQuery = Karyawan_Potongan::query();
@@ -51,6 +53,10 @@ class PotonganController extends Controller
     {
         $potongan->where('total_potongan', 'like', '%'.$total_potongan.'%');
 
+    }
+    if($month && $year){
+        $potongan->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year);
     }
     if ($karyawan_id) {
         $potongan->where('karyawan_id', $karyawan_id);

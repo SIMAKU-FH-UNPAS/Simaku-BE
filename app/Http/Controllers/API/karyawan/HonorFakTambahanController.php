@@ -19,6 +19,8 @@ class HonorFakTambahanController extends Controller
         $karyawan_gaji_fakultas_id= $request->input('karyawan_gaji_fakultas_id');
         $nama_honor_FH = $request->input('nama_honor_FH');
         $besar_honor_FH = $request->input('besar_honor_FH');
+        $month = $request->input('month');
+        $year = $request->input('year');
         $limit = $request->input('limit', 10);
 
         $honorfaktambahanQuery = Karyawan_Honor_Fakultas::query();
@@ -46,6 +48,10 @@ class HonorFakTambahanController extends Controller
     $honorfaktambahan->where('besar_honor_FH', 'like', '%'.$besar_honor_FH.'%');
 
   }
+  if($month && $year){
+    $honorfaktambahan->whereMonth('created_at', $month)
+    ->whereYear('created_at', $year);
+}
   if($karyawan_gaji_fakultas_id)
   {
       $honorfaktambahan->where('karyawan_gaji_fakultas_id', $karyawan_gaji_fakultas_id);

@@ -29,6 +29,8 @@ class PajakController extends Controller
         $jml_set_pajak = $request->input('jml_set_pajak');
         $pot_tk_kena_pajak = $request->input('pot_tk_kena_pajak');
         $pendapatan_bersih= $request->input('pendapatan_bersih');
+        $month = $request->input('month');
+        $year = $request->input('year');
         $karyawan_id= $request->input('karyawan_id');
         $karyawan_gaji_universitas_id= $request->input('karyawan_gaji_universitas_id');
         $karyawan_gaji_fakultas_id = $request->input('karyawan_gaji_fakultas_id');
@@ -126,6 +128,10 @@ class PajakController extends Controller
     {
         $pajak->where('pendapatan_bersih', 'like', '%'.$pendapatan_bersih.'%');
 
+    }
+    if($month && $year){
+        $pajak->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year);
     }
     if ($karyawan_id) {
         $pajak->where('karyawan_id', $karyawan_id);

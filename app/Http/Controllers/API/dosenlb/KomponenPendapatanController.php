@@ -22,6 +22,8 @@ class KomponenPendapatanController extends Controller
         $honor_mengajar = $request->input('honor_mengajar');
         $tj_guru_besar = $request->input('tj_guru_besar');
         $total_komponen_pendapatan= $request->input('total_komponen_pendapatan');
+        $month = $request->input('month');
+        $year = $request->input('year');
         $limit = $request->input('limit', 10);
 
         $komponenpendapatanQuery = Doslb_Komponen_Pendapatan::query();
@@ -65,6 +67,10 @@ class KomponenPendapatanController extends Controller
     {
         $komponenpendapatan->where('total_komponen_pendapatan', 'like', '%'.$total_komponen_pendapatan.'%');
 
+    }
+    if($month && $year){
+        $komponenpendapatan->whereMonth('created_at', $month)
+        ->whereYear('created_at', $year);
     }
     if ($dosen_luar_biasa_id) {
         $komponenpendapatan->where('dosen_luar_biasa_id', $dosen_luar_biasa_id);
