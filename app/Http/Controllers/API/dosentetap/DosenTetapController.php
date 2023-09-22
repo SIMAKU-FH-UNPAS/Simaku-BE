@@ -174,7 +174,6 @@ class DosenTetapController extends Controller
 
 public function destroy($id){
     try{
-        DB::beginTransaction();
         // Get Data Dosen Tetap
         $dosentetap = Dosen_Tetap::find($id);
 
@@ -198,7 +197,6 @@ public function destroy($id){
         // Delete Data Dosen Tetap
         $dosentetap->delete();
 
-        DB::commit();
 
         return ResponseFormatter::success('Data Dosen Tetap deleted');
 

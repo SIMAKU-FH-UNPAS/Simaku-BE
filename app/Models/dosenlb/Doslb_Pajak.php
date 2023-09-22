@@ -32,7 +32,7 @@ protected $fillable = [
 public function dosen_luar_biasa(){
     return $this->belongsTo(Dosen_Luar_Biasa::class, 'dosen_luar_biasa_id', 'id');
 }
-public function komponenpendapatan(){
+public function komponen_pendapatan(){
     return $this->belongsTo(Doslb_Komponen_Pendapatan::class, 'doslb_pendapatan_id', 'id');
 }
 public function potongan(){

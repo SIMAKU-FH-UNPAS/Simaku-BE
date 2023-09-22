@@ -181,12 +181,12 @@ public function destroy($id){
         }
         // Delete the related records with Karyawan
         $karyawan->gaji_universitas()->delete();
-        $karyawan->gaji_fakultas->each(function ($gajiFakultas) {
+        $karyawan->gaji_fakultas()->each(function ($gajiFakultas) {
             // Delete related Karyawan_Honor_Fakultas records
             $gajiFakultas->honorfakultastambahan()->delete();
             $gajiFakultas->delete();
         });
-        $karyawan->potongan->each(function ($potongan) {
+        $karyawan->potongan()->each(function ($potongan) {
             // Delete related Karyawan_Potongan records
             $potongan->potongantambahan()->delete();
             $potongan->delete();

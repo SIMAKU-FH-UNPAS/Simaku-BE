@@ -133,6 +133,7 @@ Route::prefix('dosentetap-pajak')->middleware('auth:sanctum')->name('dosentetap-
 Route::prefix('dosentetap-gaji')->middleware('auth:sanctum')->name('dosentetap-gaji.')->group(
     function(){
         Route::get('monthyear', [TransaksiGajiController::class, 'getDataByMonthAndYearDostap'])->name('getDataByMonthAndYearDostap');
+        Route::delete('delete/{id}', [TransaksiGajiController::class, 'destroygajidostap'])->name('destroygajidostap');
     });
 
 // Karyawan
@@ -204,6 +205,7 @@ Route::prefix('karyawan-pajak')->middleware('auth:sanctum')->name('karyawan-paja
 Route::prefix('karyawan-gaji')->middleware('auth:sanctum')->name('karyawan-gaji.')->group(
     function(){
         Route::get('monthyear', [TransaksiGajiController::class, 'getDataByMonthAndYearKaryawan'])->name('getDataByMonthAndYearKaryawan');
+        Route::delete('delete/{id}', [TransaksiGajiController::class, 'destroygajikaryawan'])->name('destroygajikaryawan');
     });
 
 // Dosen Luar Biasa
@@ -263,6 +265,7 @@ Route::prefix('dosenlb-pajak')->middleware('auth:sanctum')->name('dosenlb-pajak.
 Route::prefix('dosenlb-gaji')->middleware('auth:sanctum')->name('dosenlb-gaji.')->group(
     function(){
         Route::get('monthyear', [TransaksiGajiController::class, 'getDataByMonthAndYearDoslb'])->name('getDataByMonthAndYearDoslb');
+        Route::delete('delete/{id}', [TransaksiGajiController::class, 'destroygajidoslb'])->name('destroygajidoslb');
     });
 
     // Coba

@@ -26,7 +26,7 @@ class Doslb_Komponen_Pendapatan_Tambahan extends Model
         'besar_komponen'
     ];
 
-    public function komponenpendapatan(){
+    public function komponen_pendapatan(){
         return $this->belongsTo(Doslb_Komponen_Pendapatan::class, 'doslb_pendapatan_id', 'id');
     }
 }
