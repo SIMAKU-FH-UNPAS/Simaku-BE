@@ -37,26 +37,31 @@ class TransaksiGajiController extends Controller
          $month = $request->input('month');
          $year = $request->input('year');
 
+         $transaksigaji = []; // Inisialisasi array kosong
          // Request by month & year
          if(isset($month) && isset ($year)){
                  // Get ALL DATA gaji univ and gaji fak with condition
                  $gajiuniversitas = Dostap_Gaji_Universitas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
+                 if ($gajiuniversitas->isNotEmpty()) {
                  $gajifakultas = Dostap_Gaji_Fakultas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
+                 $honorfakultas = []; // Inisialisasi array kosong sebelum loop
              foreach($gajifakultas as $key=> $gajifak){
                      // Get ALL DATA honor fakultas tambahan with condition
                  $honorfakultas = Dostap_Honor_Fakultas::where('dostap_gaji_fakultas_id', $gajifak->id)
                      ->whereMonth('created_at', $month)
                      ->whereYear('created_at', $year)
                      ->get();
+             }
                     // Get ALL DATA potongan with condition
                  $potongan = Dostap_Potongan::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-            foreach($potongan as $key=> $pot){
+                 $potongantambahan = []; // Inisialisasi array kosong sebelum loop
+                 foreach($potongan as $key=> $pot){
                 // Get ALL DATA potongan tambahan with condition
                 $potongantambahan = Dostap_Potongan_Tambahan::where('dostap_potongan_id', $pot->id)
                 ->whereMonth('created_at', $month)
                 ->whereYear('created_at', $year)
                 ->get();
-
+                 }
                 // Get ALL DATA pajak with condition
                 $pajak = Dostap_Pajak::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
 
@@ -86,8 +91,6 @@ class TransaksiGajiController extends Controller
                  ];
                 }
              }
-             }
-
              // Check if the transaksi gaji array is empty
          if (empty($transaksigaji)) {
              return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
@@ -101,7 +104,15 @@ class TransaksiGajiController extends Controller
     public function GetALLTransaksiGaji($id){
        // Get Dosen LB
     $dosentetap = Dosen_Tetap::find($id);
-
+     // Inisialisasi data dosen luar biasa
+     $transaksigaji[] = [
+        'dosen_tetap_id' => $dosentetap->id,
+        'no_pegawai' => $dosentetap->no_pegawai,
+        'nama' => $dosentetap->nama,
+        'golongan' => $dosentetap->golongan,
+        'jabatan' => $dosentetap->jabatan,
+        'nama_bank' => $dosentetap->nama_bank,
+    ];
     // Get ALL DATA Gaji Universitas
     $gajiuniversitasALL = Dostap_Gaji_Universitas::where('dosen_tetap_id', $dosentetap->id)->get();
 
@@ -124,6 +135,7 @@ class TransaksiGajiController extends Controller
          ->whereYear('created_at', $periode['year'])
          ->get();
 
+         $honorfakultas = []; // Inisialisasi array kosong sebelum loop
          foreach ($gajifakultas as $gajifak){
         // Get ALL DATA honor fakultas tambahan with condition
         $honorfakultas = Dostap_Honor_Fakultas::where('dostap_gaji_fakultas_id', $gajifak->id)
@@ -137,6 +149,7 @@ class TransaksiGajiController extends Controller
             ->whereYear('created_at', $periode['year'])
             ->get();
 
+        $potongantambahan = []; // Inisialisasi array kosong sebelum loop
         // Get ALL DATA potongan tambahan with condition
         foreach ($potongan as $pot) {
             $potongantambahan = Dostap_Potongan_Tambahan::where('dostap_potongan_id', $pot->id)
@@ -153,12 +166,6 @@ class TransaksiGajiController extends Controller
 
         // menampilkan data dalam bentuk array
         $transaksigaji[] = [
-            'dosen_tetap_id' => $dosentetap->id,
-            'no_pegawai' => $dosentetap->no_pegawai,
-            'nama' => $dosentetap->nama,
-            'golongan' => $dosentetap->golongan,
-            'jabatan' => $dosentetap->jabatan,
-            'nama_bank' => $dosentetap->nama_bank,
            'periode' => [
                         'month' => $gajiuniv->created_at->format('F'), // Nama bulan (contoh: Januari, Februari)
                         'year' => $gajiuniv->created_at->format('Y'),  // Tahun (contoh: 2023)

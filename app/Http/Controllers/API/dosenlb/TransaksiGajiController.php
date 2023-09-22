@@ -37,25 +37,29 @@ class TransaksiGajiController extends Controller
          $month = $request->input('month');
          $year = $request->input('year');
 
+         $transaksigaji = []; // Inisialisasi array kosong
          // Request by month & year
          if(isset($month) && isset ($year)){
                  // Get ALL DATA komponen pendapatan with condition
                  $komponenpendapatan = Doslb_Komponen_Pendapatan::where('dosen_luar_biasa_id', $dosenluarbiasa->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-             foreach($komponenpendapatan as $key=> $kompen){
+                 $komponenpendapatantambahan = []; // Inisialisasi array kosong sebelum loop
+                 foreach($komponenpendapatan as $key=> $kompen){
                      // Get ALL DATA komponen pendapatan tambahan with condition
                  $komponenpendapatantambahan = Doslb_Komponen_Pendapatan_Tambahan::where('doslb_pendapatan_id', $kompen->id)
                      ->whereMonth('created_at', $month)
                      ->whereYear('created_at', $year)
                      ->get();
+
                     // Get ALL DATA potongan with condition
                  $potongan = Doslb_Potongan::where('dosen_luar_biasa_id', $dosenluarbiasa->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-            foreach($potongan as $key=> $pot){
+                 $potongantambahan = []; // Inisialisasi array kosong sebelum loop
+                 foreach($potongan as $key=> $pot){
                 // Get ALL DATA potongan tambahan with condition
                 $potongantambahan = Doslb_Potongan_Tambahan::where('doslb_potongan_id', $pot->id)
                 ->whereMonth('created_at', $month)
                 ->whereYear('created_at', $year)
                 ->get();
-
+                 }
                 // Get ALL DATA pajak with condition
                 $pajak = Doslb_Pajak::where('dosen_luar_biasa_id', $dosenluarbiasa->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
 
@@ -83,8 +87,7 @@ class TransaksiGajiController extends Controller
 
                  ];
                 }
-             }
-             }
+            }
 
              // Check if the transaksi gaji array is empty
          if (empty($transaksigaji)) {
@@ -99,6 +102,19 @@ class TransaksiGajiController extends Controller
     public function GetALLTransaksiGaji($id){
        // Get Dosen LB
     $dosenluarbiasa = Dosen_Luar_Biasa::find($id);
+     // Inisialisasi data dosen luar biasa
+     $transaksigaji[] = [
+        'dosen_luar_biasa_id' => $dosenluarbiasa->id,
+        'no_pegawai' => $dosenluarbiasa->no_pegawai,
+        'nama' => $dosenluarbiasa->nama,
+        'golongan' => $dosenluarbiasa->golongan,
+        'jabatan' => $dosenluarbiasa->jabatan,
+        'nama_bank' => $dosenluarbiasa->nama_bank,
+    ];
+     // Periksa apakah data dosen luar biasa ditemukan
+     if (!$dosenluarbiasa) {
+        return ResponseFormatter::error(null, 'Data Dosen Luar Biasa Not Found', 404);
+    }
 
     // Get ALL DATA komponen pendapatan
     $komponenpendapatanALL = Doslb_Komponen_Pendapatan::where('dosen_luar_biasa_id', $dosenluarbiasa->id)->get();
@@ -110,12 +126,14 @@ class TransaksiGajiController extends Controller
             'year' => $kompen->created_at->format('Y'),  // Tahun (misal: 2023)
         ];
 
+
          // Get ALL DATA komponen pendapatan  with condition
          $komponenpendapatan = Doslb_Komponen_Pendapatan::where('dosen_luar_biasa_id', $dosenluarbiasa->id)
          ->whereMonth('created_at', $periode['month'])
          ->whereYear('created_at', $periode['year'])
          ->get();
 
+         $komponenpendapatantambahan = []; // Inisialisasi array kosong sebelum loop
          foreach ($komponenpendapatan as $kp){
         // Get ALL DATA komponen pendapatan tambahan with condition
         $komponenpendapatantambahan = Doslb_Komponen_Pendapatan_Tambahan::where('doslb_pendapatan_id', $kp->id)
@@ -129,6 +147,7 @@ class TransaksiGajiController extends Controller
             ->whereYear('created_at', $periode['year'])
             ->get();
 
+        $potongantambahan = []; // Inisialisasi array kosong sebelum loop
         // Get ALL DATA potongan tambahan with condition
         foreach ($potongan as $pot) {
             $potongantambahan = Doslb_Potongan_Tambahan::where('doslb_potongan_id', $pot->id)
@@ -145,12 +164,6 @@ class TransaksiGajiController extends Controller
 
         // menampilkan data dalam bentuk array
         $transaksigaji[] = [
-            'dosen_luar_biasa_id' => $dosenluarbiasa->id,
-            'no_pegawai' => $dosenluarbiasa->no_pegawai,
-            'nama' => $dosenluarbiasa->nama,
-            'golongan' => $dosenluarbiasa->golongan,
-            'jabatan' => $dosenluarbiasa->jabatan,
-            'nama_bank' => $dosenluarbiasa->nama_bank,
            'periode' => [
                         'month' => $kompen->created_at->format('F'), // Nama bulan (contoh: Januari, Februari)
                         'year' => $kompen->created_at->format('Y'),  // Tahun (contoh: 2023)
