@@ -60,7 +60,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::name('auth.')->group(function(){
     Route::post('login', [UserController::class, 'login']);
     Route::post('register', [UserController::class, 'register']);
-
     Route::middleware('auth:sanctum')->group(function(){
         Route::post('logout', [UserController::class, 'logout'])->name('logout');
         Route::get('user', [UserController::class, 'fetch'])->name('fetch');
@@ -74,7 +73,7 @@ function(){
     Route::get('', [DosenTetapController::class, 'fetch'])->name('fetch');
     Route::get('/{id}', [DosenTetapController::class, 'fetch'])->name('fetch');
     Route::post('create', [DosenTetapController::class, 'create'])->name('create');
-    Route::post('update/{id}', [DosenTetapController::class, 'update'])->name('update');
+    Route::put('update/{id}', [DosenTetapController::class, 'update'])->name('update');
     Route::delete('delete/{id}', [DosenTetapController::class, 'destroy'])->name('delete');
 
 });
@@ -85,7 +84,7 @@ Route::prefix('dosentetap-gajiuniv')->middleware('auth:sanctum')->name('dosentet
         Route::get('', [DosenTetapGajiUnivController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenTetapGajiUnivController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenTetapGajiUnivController::class, 'create'])->name('create');
-        Route::post('update/{id}', [DosenTetapGajiUnivController::class, 'update'])->name('update');
+        Route::put('update/{id}', [DosenTetapGajiUnivController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenTetapGajiUnivController::class, 'destroy'])->name('delete');
 
     });
@@ -97,7 +96,7 @@ Route::prefix('dosentetap-gajifak')->middleware('auth:sanctum')->name('dosenteta
         Route::get('', [DosenTetapGajiFakController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenTetapGajiFakController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenTetapGajiFakController::class, 'create'])->name('create');
-        Route::post('update/{id}', [DosenTetapGajiFakController::class, 'update'])->name('update');
+        Route::put('update/{id}', [DosenTetapGajiFakController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenTetapGajiFakController::class, 'destroy'])->name('delete');
     });
 
@@ -107,7 +106,7 @@ Route::prefix('dosentetap-honorfaktambahan')->middleware('auth:sanctum')->name('
         Route::get('', [DosenTetapHonorFakTambahanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenTetapHonorFakTambahanController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenTetapHonorFakTambahanController::class, 'create'])->name('create');
-        Route::post('update/{id}', [DosenTetapHonorFakTambahanController::class, 'update'])->name('update');
+        Route::put('update/{id}', [DosenTetapHonorFakTambahanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenTetapHonorFakTambahanController::class, 'destroy'])->name('delete');
     });
 
@@ -118,7 +117,7 @@ Route::prefix('dosentetap-potongan')->middleware('auth:sanctum')->name('dosentet
         Route::get('', [DosenTetapPotonganController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenTetapPotonganController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenTetapPotonganController::class, 'create'])->name('create');
-        Route::post('update/{id}', [DosenTetapPotonganController::class, 'update'])->name('update');
+        Route::put('update/{id}', [DosenTetapPotonganController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenTetapPotonganController::class, 'destroy'])->name('delete');
 
     });
@@ -129,7 +128,7 @@ Route::prefix('dosentetap-potongantambahan')->middleware('auth:sanctum')->name('
         Route::get('', [DosenTetapPotonganTambahanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenTetapPotonganTambahanController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenTetapPotonganTambahanController::class, 'create'])->name('create');
-        Route::post('update/{id}', [DosenTetapPotonganTambahanController::class, 'update'])->name('update');
+        Route::put('update/{id}', [DosenTetapPotonganTambahanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenTetapPotonganTambahanController::class, 'destroy'])->name('delete');
     });
 
@@ -140,7 +139,7 @@ Route::prefix('dosentetap-pajak')->middleware('auth:sanctum')->name('dosentetap-
         Route::get('', [DosenTetapPajakController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenTetapPajakController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenTetapPajakController::class, 'create'])->name('create');
-        Route::post('update/{id}', [DosenTetapPajakController::class, 'update'])->name('update');
+        Route::put('update/{id}', [DosenTetapPajakController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenTetapPajakController::class, 'destroy'])->name('delete');
     });
 
@@ -167,7 +166,7 @@ Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
         Route::get('', [KaryawanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KaryawanController::class, 'fetch'])->name('fetch');
         Route::post('create', [KaryawanController::class, 'create'])->name('create');
-        Route::post('update/{id}', [KaryawanController::class, 'update'])->name('update');
+        Route::put('update/{id}', [KaryawanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanController::class, 'destroy'])->name('delete');
 
     });
@@ -177,7 +176,7 @@ Route::prefix('karyawan-gajiuniv')->middleware('auth:sanctum')->name('karyawan-g
         Route::get('', [KaryawanGajiUnivController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KaryawanGajiUnivController::class, 'fetch'])->name('fetch');
         Route::post('create', [KaryawanGajiUnivController::class, 'create'])->name('create');
-        Route::post('update/{id}', [KaryawanGajiUnivController::class, 'update'])->name('update');
+        Route::put('update/{id}', [KaryawanGajiUnivController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanGajiUnivController::class, 'destroy'])->name('delete');
     });
 // Gaji Fakultas Karyawan
@@ -186,7 +185,7 @@ Route::prefix('karyawan-gajifak')->middleware('auth:sanctum')->name('karyawan-ga
         Route::get('', [KaryawanGajiFakController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KaryawanGajiFakController::class, 'fetch'])->name('fetch');
         Route::post('create', [KaryawanGajiFakController::class, 'create'])->name('create');
-        Route::post('update/{id}', [KaryawanGajiFakController::class, 'update'])->name('update');
+        Route::put('update/{id}', [KaryawanGajiFakController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanGajiFakController::class, 'destroy'])->name('delete');
     });
 // Honor Fakultas Tambahan Karyawan
@@ -195,7 +194,7 @@ Route::prefix('karyawan-honorfaktambahan')->middleware('auth:sanctum')->name('ka
         Route::get('', [KaryawanHonorFakTambahanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KaryawanHonorFakTambahanController::class, 'fetch'])->name('fetch');
         Route::post('create', [KaryawanHonorFakTambahanController::class, 'create'])->name('create');
-        Route::post('update/{id}', [KaryawanHonorFakTambahanController::class, 'update'])->name('update');
+        Route::put('update/{id}', [KaryawanHonorFakTambahanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanHonorFakTambahanController::class, 'destroy'])->name('delete');
     });
 //Potongan Gaji Karyawan
@@ -204,7 +203,7 @@ Route::prefix('karyawan-potongan')->middleware('auth:sanctum')->name('karyawan-p
         Route::get('', [KaryawanPotonganController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KaryawanPotonganController::class, 'fetch'])->name('fetch');
         Route::post('create', [KaryawanPotonganController::class, 'create'])->name('create');
-        Route::post('update/{id}', [KaryawanPotonganController::class, 'update'])->name('update');
+        Route::put('update/{id}', [KaryawanPotonganController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanPotonganController::class, 'destroy'])->name('delete');
 
     });
@@ -214,7 +213,7 @@ Route::prefix('karyawan-potongantambahan')->middleware('auth:sanctum')->name('ka
         Route::get('', [KaryawanPotonganTambahanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KaryawanPotonganTambahanController::class, 'fetch'])->name('fetch');
         Route::post('create', [KaryawanPotonganTambahanController::class, 'create'])->name('create');
-        Route::post('update/{id}', [KaryawanPotonganTambahanController::class, 'update'])->name('update');
+        Route::put('update/{id}', [KaryawanPotonganTambahanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanPotonganTambahanController::class, 'destroy'])->name('delete');
     });
 //Pajak Karyawan
@@ -223,7 +222,7 @@ Route::prefix('karyawan-pajak')->middleware('auth:sanctum')->name('karyawan-paja
         Route::get('', [KaryawanPajakController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KaryawanPajakController::class, 'fetch'])->name('fetch');
         Route::post('create', [KaryawanPajakController::class, 'create'])->name('create');
-        Route::post('update/{id}', [KaryawanPajakController::class, 'update'])->name('update');
+        Route::put('update/{id}', [KaryawanPajakController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanPajakController::class, 'destroy'])->name('delete');
     });
 // Transaksi Gaji Karyawan
@@ -249,7 +248,7 @@ function(){
     Route::get('', [DosenLuarBiasaController::class, 'fetch'])->name('fetch');
     Route::get('/{id}', [DosenLuarBiasaController::class, 'fetch'])->name('fetch');
     Route::post('create', [DosenLuarBiasaController::class, 'create'])->name('create');
-    Route::post('update/{id}', [DosenLuarBiasaController::class, 'update'])->name('update');
+    Route::put('update/{id}', [DosenLuarBiasaController::class, 'update'])->name('update');
     Route::delete('delete/{id}', [DosenLuarBiasaController::class, 'destroy'])->name('delete');
 });
 //Komponen Pendapatan Dosen Luar Biasa
@@ -258,7 +257,7 @@ Route::prefix('dosenlb-komponenpendapatan')->middleware('auth:sanctum')->name('d
         Route::get('', [KomponenPendapatanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KomponenPendapatanController::class, 'fetch'])->name('fetch');
         Route::post('create', [KomponenPendapatanController::class, 'create'])->name('create');
-        Route::post('update/{id}', [KomponenPendapatanController::class, 'update'])->name('update');
+        Route::put('update/{id}', [KomponenPendapatanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KomponenPendapatanController::class, 'destroy'])->name('delete');
     });
 //Komponen Pendapatan Dosen Luar Biasa
@@ -267,7 +266,7 @@ Route::prefix('dosenlb-komponenpendapatantambahan')->middleware('auth:sanctum')-
         Route::get('', [KomponenPendapatanTambahanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KomponenPendapatanTambahanController::class, 'fetch'])->name('fetch');
         Route::post('create', [KomponenPendapatanTambahanController::class, 'create'])->name('create');
-        Route::post('update/{id}', [KomponenPendapatanTambahanController::class, 'update'])->name('update');
+        Route::put('update/{id}', [KomponenPendapatanTambahanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KomponenPendapatanTambahanController::class, 'destroy'])->name('delete');
     });
 //Potongan Dosen Luar Biasa
@@ -276,7 +275,7 @@ Route::prefix('dosenlb-potongan')->middleware('auth:sanctum')->name('dosenlb-pot
         Route::get('', [DosenlbPotonganController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenlbPotonganController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenlbPotonganController::class, 'create'])->name('create');
-        Route::post('update/{id}', [DosenlbPotonganController::class, 'update'])->name('update');
+        Route::put('update/{id}', [DosenlbPotonganController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenlbPotonganController::class, 'destroy'])->name('delete');
     });
 //Potongan Tambahan Dosen Luar Biasa
@@ -285,7 +284,7 @@ Route::prefix('dosenlb-potongantambahan')->middleware('auth:sanctum')->name('dos
         Route::get('', [DosenlbPotonganTambahanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenlbPotonganTambahanController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenlbPotonganTambahanController::class, 'create'])->name('create');
-        Route::post('update/{id}', [DosenlbPotonganTambahanController::class, 'update'])->name('update');
+        Route::put('update/{id}', [DosenlbPotonganTambahanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenlbPotonganTambahanController::class, 'destroy'])->name('delete');
     });
 // Pajak Dosen Luar Biasa

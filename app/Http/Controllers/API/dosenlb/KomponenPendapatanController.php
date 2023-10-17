@@ -43,7 +43,7 @@ class KomponenPendapatanController extends Controller
     $komponenpendapatan = $komponenpendapatanQuery;
 
     // // Get by attribute
-    if($tj_tambahan )
+    if($tj_tambahan)
     {
         $komponenpendapatan->where('tj_tambahan ', 'like', '%'.$tj_tambahan .'%');
 
