@@ -147,6 +147,8 @@ Route::prefix('dosentetap-pajak')->middleware('auth:sanctum')->name('dosentetap-
 Route::prefix('dosentetap-gaji')->middleware('auth:sanctum')->name('dosentetap-gaji.')->group(
     function(){
         Route::get('monthyear', [DosenTetapTransaksiGajiController::class, 'getDataByMonthAndYear'])->name('getDataByMonthAndYear');
+        Route::get('/{id}', [DosenTetapTransaksiGajiController::class, 'GetALLTransaksiGaji'])->name('GetALLTransaksiGaji');
+        Route::get('/{id}/periode', [DosenTetapTransaksiGajiController::class, 'GetTransaksiGajibyPeriode'])->name('GetTransaksiGajibyPeriode');
         Route::delete('delete/{id}', [DosenTetapTransaksiGajiController::class, 'destroygaji'])->name('destroygaji');
     });
 
@@ -229,6 +231,8 @@ Route::prefix('karyawan-pajak')->middleware('auth:sanctum')->name('karyawan-paja
 Route::prefix('karyawan-gaji')->middleware('auth:sanctum')->name('karyawan-gaji.')->group(
     function(){
         Route::get('monthyear', [KaryawanTransaksiGajiController::class, 'getDataByMonthAndYear'])->name('getDataByMonthAndYear');
+        Route::get('/{id}', [KaryawanTransaksiGajiController::class, 'GetALLTransaksiGaji'])->name('GetALLTransaksiGaji');
+        Route::get('/{id}/periode', [KaryawanTransaksiGajiController::class, 'GetTransaksiGajibyPeriode'])->name('GetTransaksiGajibyPeriode');
         Route::delete('delete/{id}', [KaryawanTransaksiGajiController::class, 'destroygaji'])->name('destroygaji');
     });
 // Laporan Karyawan
@@ -299,6 +303,8 @@ Route::prefix('dosenlb-pajak')->middleware('auth:sanctum')->name('dosenlb-pajak.
 Route::prefix('dosenlb-gaji')->middleware('auth:sanctum')->name('dosenlb-gaji.')->group(
     function(){
         Route::get('monthyear', [DosenlbTransaksiGajiController::class, 'getDataByMonthAndYear'])->name('getDataByMonthAndYear');
+        Route::get('/{id}', [DosenlbTransaksiGajiController::class, 'GetALLTransaksiGaji'])->name('GetALLTransaksiGaji');
+        Route::get('/{id}/periode', [DosenlbTransaksiGajiController::class, 'GetTransaksiGajibyPeriode'])->name('GetTransaksiGajibyPeriode');
         Route::delete('delete/{id}', [DosenlbTransaksiGajiController::class, 'destroygaji'])->name('destroygaji');
     });
 // Laporan Dosen Luar Biasa
