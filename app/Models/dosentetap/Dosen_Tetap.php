@@ -2,12 +2,10 @@
 
 namespace App\Models\dosentetap;
 
-use App\Models\dosentetap\Dostap_Pajak;
-use App\Models\dosentetap\Dostap_Potongan;
-use App\Models\dosentetap\Dostap_Gaji_Fakultas;
-use App\Models\dosentetap\Dostap_Gaji_Universitas;
+use App\Models\dosentetap\Dostap_Bank;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\dosentetap\Dostap_Master_Transaksi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Dosen_Tetap extends Model
@@ -29,29 +27,15 @@ class Dosen_Tetap extends Model
         'golongan',
         'jabatan',
         'alamat_KTP',
-        'alamat_saatini',
-        'nama_bank_utama',
-        'nama_bank_tambahan',
-        'norek_bank_utama',
-        'norek_bank_tambahan',
+        'alamat_saat_ini',
         'nomor_hp'
     ];
 
 
-    public function gaji_universitas(){
-        return $this->hasMany(Dostap_Gaji_Universitas::class,'dosen_tetap_id', 'id');
+    public function banks(){
+        return $this->hasMany(Dostap_Bank::class,'dosen_tetap_id', 'id');
     }
-
-    public function gaji_fakultas(){
-        return $this->hasMany(Dostap_Gaji_Fakultas::class,'dosen_tetap_id', 'id');
-    }
-    public function pajak(){
-        return $this->hasMany(Dostap_Pajak::class,'dosen_tetap_id', 'id');
-    }
-    public function potongan(){
-        return $this->hasMany(Dostap_Potongan::class,'dosen_tetap_id', 'id');
-    }
-    public function total_pendapatan(){
-        return $this->hasMany(Total_Pendapatan::class);
+    public function master_transaksi(){
+        return $this->hasMany(Dostap_Master_Transaksi::class,'dosen_tetap_id', 'id');
     }
 }

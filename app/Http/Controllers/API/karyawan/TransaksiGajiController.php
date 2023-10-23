@@ -6,214 +6,425 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\karyawan\CreateGajiFakRequest;
+use App\Http\Requests\karyawan\CreateGajiUnivRequest;
+use App\Http\Requests\karyawan\CreateMasterTransaksiRequest;
+use App\Http\Requests\karyawan\CreatePajakRequest;
+use App\Http\Requests\karyawan\CreatePotonganRequest;
+use App\Http\Requests\karyawan\UpdateGajiFakRequest;
+use App\Http\Requests\karyawan\UpdateGajiUnivRequest;
+use App\Http\Requests\karyawan\UpdateMasterTransaksiRequest;
+use App\Http\Requests\karyawan\UpdatePajakRequest;
+use App\Http\Requests\karyawan\UpdatePotonganRequest;
 use App\Models\karyawan\Karyawan;
 use App\Models\karyawan\Karyawan_Gaji_Fakultas;
 use App\Models\karyawan\Karyawan_Gaji_Universitas;
-use App\Models\karyawan\Karyawan_Honor_Fakultas;
+use App\Models\karyawan\Karyawan_Master_Transaksi;
 use App\Models\karyawan\Karyawan_Pajak;
 use App\Models\karyawan\Karyawan_Potongan;
-use App\Models\karyawan\Karyawan_Potongan_Tambahan;
+use Illuminate\Support\Facades\DB;
+
 
 class TransaksiGajiController extends Controller
 {
-    // Get Data Bulan dan Tahun Transaksi Gaji Karyawan
-    public function getDataByMonthAndYear()
-    {
-        $gaji = Karyawan_Gaji_Universitas::selectRaw('MONTH(created_at) as month, YEAR(created_at) as year')
-        ->groupByRaw('YEAR(created_at), MONTH(created_at)')
-        ->get();
+   // Ambil Data Transaksi Gaji sesuai id karyawan
+   public function fetch($karyawanId)
+{
+    // Get Karyawan
+    $karyawan = Karyawan::find($karyawanId);
 
-          // $gaji->transform(function ($item, $key) {
-        //     $item->bulan = date("F", mktime(0, 0, 0, $item->bulan, 1)); // Mengubah angka bulan menjadi nama bulan
-        //     return $item;
-        // });
-
-        return ResponseFormatter::success($gaji);
+    if (!$karyawan) {
+        return ResponseFormatter::error(null, 'Karyawan Not Found', 404);
     }
 
-     // Get Data Gaji Univ, Gaji Fak, Honor Fak, Potongan, Potongan Tambahan, Pajak Karyawan by periode
-     public function GetTransaksiGajibyPeriode(Request $request, $id){
-        // Get ALL Karyawan attribute by month & year
-         $karyawan = Karyawan::find($id);
-         $month = $request->input('month');
-         $year = $request->input('year');
+    // Inisialisasi data karyawan
+    $transaksi = [
+        'karyawan_id' => $karyawan->id,
+        'no_pegawai' => $karyawan->no_pegawai,
+        'nama' => $karyawan->nama,
+        'npwp' => $karyawan->npwp,
+        'golongan' => $karyawan->golongan,
+        'jabatan' => $karyawan->jabatan,
+        'transaksi' => [],
+    ];
 
-         $transaksigaji = []; // Inisialisasi array kosong
-         // Request by month & year
-         if(isset($month) && isset ($year)){
-                 // Get ALL DATA gaji univ and gaji fak with condition
-                 $gajiuniversitas = Karyawan_Gaji_Universitas::where('karyawan_id', $karyawan->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-                 if ($gajiuniversitas->isNotEmpty()) {
-                 $gajifakultas = Karyawan_Gaji_Fakultas::where('karyawan_id', $karyawan->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-                 $honorfakultas = []; // Inisialisasi array kosong sebelum loop
-                 foreach($gajifakultas as $key=> $gajifak){
-                     // Get ALL DATA honor fakultas tambahan with condition
-                 $honorfakultas = Karyawan_Honor_Fakultas::where('karyawan_gaji_fakultas_id', $gajifak->id)
-                     ->whereMonth('created_at', $month)
-                     ->whereYear('created_at', $year)
-                     ->get();
-             }
-                    // Get ALL DATA potongan with condition
-                 $potongan = Karyawan_Potongan::where('karyawan_id', $karyawan->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                 $potongantambahan = []; // Inisialisasi array kosong sebelum loop
-                 foreach($potongan as $key=> $pot){
-                // Get ALL DATA potongan tambahan with condition
-                $potongantambahan = Karyawan_Potongan_Tambahan::where('karyawan_potongan_id', $pot->id)
-                ->whereMonth('created_at', $month)
-                ->whereYear('created_at', $year)
-                ->get();
-            }
-                // Get ALL DATA pajak with condition
-                $pajak = Karyawan_Pajak::where('karyawan_id', $karyawan->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
+    // Get ALL DATA Master Transaksi
+    $transaksigaji = Karyawan_Master_Transaksi::where('karyawan_id', $karyawan->id)->get();
 
-                if ($gajiuniversitas) {
-                    $periode = [
-                        'month' => $gajiuniversitas->first()->created_at->format('F'), // Nama bulan (contoh: Januari, Februari)
-                        'year' => $gajiuniversitas->first()->created_at->format('Y'), // Tahun (contoh: 2023)
-                    ];
-                }
-
-             // menampilkan data dalam bentuk array
-                 $transaksigaji[] = [
-                    'karyawan_id' => $karyawan->id,
-                     'no_pegawai' => $karyawan->no_pegawai,
-                     'nama' => $karyawan->nama,
-                     'golongan' => $karyawan->golongan,
-                     'jabatan' => $karyawan->jabatan,
-                     'nama_bank' => $karyawan->nama_bank,
-                     'periode' => $periode,
-                     'karyawan_gaji_univ' => $gajiuniversitas,
-                     'karyawan_gaji_fakultas' => $gajifakultas,
-                     'karyawan_honor_fakultas' => $honorfakultas,
-                     'karyawan_potongan' => $potongan,
-                     'karyawan_potongan_tambahan' => $potongantambahan,
-                     'karyawan_pajak' => $pajak
-
-                 ];
-                }
-             }
-
-             // Check if the transaksi gaji array is empty
-         if (empty($transaksigaji)) {
-             return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
-         }
-
-         return ResponseFormatter::success($transaksigaji, 'Data  Transaksi Gaji Karyawan Found');
-     }
-
-
-    // Get Data Gaji Univ, Gaji Fak, Honor Fak, Potongan, Potongan Tambahan, Pajak Karyawan
-    public function GetALLTransaksiGaji($id){
-       // Get Dosen LB
-    $karyawan = Karyawan::find($id);
-  // Inisialisasi data dosen luar biasa
-  $transaksigaji[] = [
-    'karyawan_id' => $karyawan->id,
-    'no_pegawai' => $karyawan->no_pegawai,
-    'nama' => $karyawan->nama,
-    'golongan' => $karyawan->golongan,
-    'jabatan' => $karyawan->jabatan,
-    'nama_bank' => $karyawan->nama_bank,
-];
-    // Get ALL DATA Gaji Universitas
-    $gajiuniversitasALL = Karyawan_Gaji_Universitas::where('karyawan_id', $karyawan->id)->get();
-
-    foreach ($gajiuniversitasALL as $gajiuniv) {
+    foreach ($transaksigaji as $gaji) {
         // Get data created_at dari Gaji Universitas saat ini
         $periode = [
-            'month' => $gajiuniv->created_at->format('m'), // Bulan (misal: 01, 02, dst.)
-            'year' => $gajiuniv->created_at->format('Y'),  // Tahun (misal: 2023)
+            'month' => $gaji->created_at->format('m'),
+            'year' => $gaji->created_at->format('Y'),
         ];
 
-          // Get ALL DATA gaji universitas  with condition
-          $gajiuniversitas = Karyawan_Gaji_Universitas::where('karyawan_id', $karyawan->id)
-          ->whereMonth('created_at', $periode['month'])
-          ->whereYear('created_at', $periode['year'])
-          ->get();
-
-         // Get ALL DATA gaji fakultas  with condition
-         $gajifakultas = Karyawan_Gaji_Fakultas::where('karyawan_id', $karyawan->id)
-         ->whereMonth('created_at', $periode['month'])
-         ->whereYear('created_at', $periode['year'])
-         ->get();
-
-         $honorfakultas = []; // Inisialisasi array kosong sebelum loop
-         foreach ($gajifakultas as $gajifak){
-        // Get ALL DATA honor fakultas tambahan with condition
-        $honorfakultas = Karyawan_Honor_Fakultas::where('karyawan_gaji_fakultas_id', $gajifak->id)
-            ->whereMonth('created_at', $periode['month'])
-            ->whereYear('created_at', $periode['year'])
-            ->get();
-         }
-        // Get ALL DATA potongan with condition
-        $potongan = Karyawan_Potongan::where('karyawan_id', $karyawan->id)
+        $bankMasterTransaksi = Karyawan_Master_Transaksi::with(['bank'])
+            ->where('karyawan_id', $karyawan->id)
             ->whereMonth('created_at', $periode['month'])
             ->whereYear('created_at', $periode['year'])
             ->get();
 
-        $potongantambahan = []; // Inisialisasi array kosong sebelum loop
-        // Get ALL DATA potongan tambahan with condition
-        foreach ($potongan as $pot) {
-            $potongantambahan = Karyawan_Potongan_Tambahan::where('karyawan_potongan_id', $pot->id)
-                ->whereMonth('created_at', $periode['month'])
-                ->whereYear('created_at', $periode['year'])
-                ->get();
-        }
-
-        // Get ALL DATA pajak with condition
-        $pajak = Karyawan_Pajak::where('karyawan_id', $karyawan->id)
+        $gajiunivMasterTransaksi = Karyawan_Master_Transaksi::with(['gaji_universitas'])
+            ->where('karyawan_id', $karyawan->id)
             ->whereMonth('created_at', $periode['month'])
             ->whereYear('created_at', $periode['year'])
             ->get();
 
-        // menampilkan data dalam bentuk array
-        $transaksigaji[] = [
-           'periode' => [
-                        'month' => $gajiuniv->created_at->format('F'), // Nama bulan (contoh: Januari, Februari)
-                        'year' => $gajiuniv->created_at->format('Y'),  // Tahun (contoh: 2023)
-                    ],
-            'karyawan_gaji_univ' => $gajiuniversitas,
-            'karyawan_gaji_fakultas' => $gajifakultas,
-            'karyawan_honor_fakultas' => $honorfakultas,
-            'karyawan_potongan' => $potongan,
-            'karyawan_potongan_tambahan' => $potongantambahan,
-            'karyawan_pajak' => $pajak
+        $gajifakMasterTransaksi = Karyawan_Master_Transaksi::with('gaji_fakultas')
+            ->where('karyawan_id', $karyawan->id)
+            ->whereMonth('created_at', $periode['month'])
+            ->whereYear('created_at', $periode['year'])
+            ->get();
+            $gajifakMasterTransaksi->transform(function ($item) {
+            $item->gaji_fakultas->gaji_fakultas = json_decode($item->gaji_fakultas->gaji_fakultas);
+            return $item;
+        });
+
+        $potonganMasterTransaksi = Karyawan_Master_Transaksi::with('potongan')
+            ->where('karyawan_id', $karyawan->id)
+            ->whereMonth('created_at', $periode['month'])
+            ->whereYear('created_at', $periode['year'])
+            ->get();
+        $potonganMasterTransaksi->transform(function ($item) {
+            $item->potongan->potongan = json_decode($item->potongan->potongan);
+            return $item;
+        });
+
+        $pajakMasterTransaksi = Karyawan_Master_Transaksi::with(['pajak'])
+            ->where('karyawan_id', $karyawan->id)
+            ->whereMonth('created_at', $periode['month'])
+            ->whereYear('created_at', $periode['year'])
+            ->get();
+
+        // Transformasi data transaksi
+        $transaksiData = [
+            'id'=>$gaji->id,
+            'periode' => [
+                'month' => $gaji->created_at->format('F'),
+                'year' => $gaji->created_at->format('Y'),
+            ],
+            'bank' => $bankMasterTransaksi->pluck('bank')->toArray(),
+            'gaji_universitas' => $gajiunivMasterTransaksi->pluck('gaji_universitas')->toArray(),
+            'gaji_fakultas' => $gajifakMasterTransaksi->pluck('gaji_fakultas')->toArray(),
+            'potongan' => $potonganMasterTransaksi->pluck('potongan')->toArray(),
+            'pajak' => $pajakMasterTransaksi->pluck('pajak')->toArray()
         ];
+
+        // Menambahkan data transaksi ke dalam array transaksi utama
+        $transaksi['transaksi'][] = $transaksiData;
     }
 
     // Check if the transaksi gaji array is empty
-    if (empty($transaksigaji)) {
+    if (empty($transaksi['transaksi'])) {
         return ResponseFormatter::error(null, 'Data Transaksi Gaji Karyawan Not Found', 404);
     }
 
-    return ResponseFormatter::success($transaksigaji, 'Data Transaksi Gaji Karyawan Found');
+    return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Karyawan Found');
+
 }
-     //  Hapus Transaksi Gaji Karyawan melalui relasi dari Pajak
-  public function destroygaji($id){
-    try{
-        // Get Data Pajak
-        $pajak = Karyawan_Pajak::find($id);
-         // Check if Data Pajak exists
-         if(!$pajak){
-            throw new Exception('Data Pajak not found');
+
+// Ambil Data Transaksi Gaji sesuai id transaksi
+public function fetchById($transaksiId)
+{
+    // Get Master Transaksi
+    $masterTransaksi = Karyawan_Master_Transaksi::find($transaksiId);
+
+    if (!$masterTransaksi) {
+        return ResponseFormatter::error('Master Transaksi Not Found', 404);
+    }
+
+    // Get data created_at dari Gaji Universitas saat ini
+    $periode = [
+        'month' => $masterTransaksi->created_at->format('m'),
+        'year' => $masterTransaksi->created_at->format('Y'),
+    ];
+
+    // Get Karyawan
+    $karyawan = Karyawan::with('banks')->find($masterTransaksi->karyawan_id);
+    if (!$karyawan) {
+        return ResponseFormatter::error(null, 'Karyawan Not Found', 404);
+    }
+
+    // Inisialisasi data karyawan
+        $transaksi = [
+            'karyawan_id' => $karyawan->id,
+            'no_pegawai' => $karyawan->no_pegawai,
+            'nama' => $karyawan->nama,
+            'npwp' => $karyawan->npwp,
+            'golongan' => $karyawan->golongan,
+            'jabatan' => $karyawan->jabatan,
+            'banks' => $karyawan->banks,
+            'transaksi' => [],
+        ];
+
+    $bankMasterTransaksi = Karyawan_Master_Transaksi::with(['bank'])
+        ->where('karyawan_id', $karyawan->id)
+        ->whereMonth('created_at', $periode['month'])
+        ->whereYear('created_at', $periode['year'])
+        ->get();
+
+    $gajiunivMasterTransaksi = Karyawan_Master_Transaksi::with(['gaji_universitas'])
+        ->where('karyawan_id', $karyawan->id)
+        ->whereMonth('created_at', $periode['month'])
+        ->whereYear('created_at', $periode['year'])
+        ->get();
+
+    $gajifakMasterTransaksi = Karyawan_Master_Transaksi::with('gaji_fakultas')
+        ->where('karyawan_id', $karyawan->id)
+        ->whereMonth('created_at', $periode['month'])
+        ->whereYear('created_at', $periode['year'])
+        ->get();
+    $gajifakMasterTransaksi->transform(function ($item) {
+        $item->gaji_fakultas->gaji_fakultas = json_decode($item->gaji_fakultas->gaji_fakultas);
+        return $item;
+    });
+
+    $potonganMasterTransaksi = Karyawan_Master_Transaksi::with('potongan')
+        ->where('karyawan_id', $karyawan->id)
+        ->whereMonth('created_at', $periode['month'])
+        ->whereYear('created_at', $periode['year'])
+        ->get();
+    $potonganMasterTransaksi->transform(function ($item) {
+        $item->potongan->potongan = json_decode($item->potongan->potongan);
+        return $item;
+    });
+
+    $pajakMasterTransaksi = Karyawan_Master_Transaksi::with(['pajak'])
+        ->where('karyawan_id', $karyawan->id)
+        ->whereMonth('created_at', $periode['month'])
+        ->whereYear('created_at', $periode['year'])
+        ->get();
+
+    // Transformasi data transaksi
+    $transaksiData = [
+        'id' => $masterTransaksi->id,
+        'periode' => [
+            'month' => $masterTransaksi->created_at->format('F'),
+            'year' => $masterTransaksi->created_at->format('Y'),
+        ],
+        'bank' => $bankMasterTransaksi->pluck('bank')->toArray(),
+        'gaji_universitas' => $gajiunivMasterTransaksi->pluck('gaji_universitas')->toArray(),
+        'gaji_fakultas' => $gajifakMasterTransaksi->pluck('gaji_fakultas')->toArray(),
+        'potongan' => $potonganMasterTransaksi->pluck('potongan')->toArray(),
+        'pajak' => $pajakMasterTransaksi->pluck('pajak')->toArray()
+    ];
+
+
+        // Menambahkan data transaksi ke dalam array transaksi utama
+        $transaksi['transaksi'][] = $transaksiData;
+
+    return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Karyawan Found');
+}
+
+public function create(CreateGajiUnivRequest $gajiunivRequest, CreateGajiFakRequest $gajifakRequest, CreatePotonganRequest $potonganRequest, CreatePajakRequest $pajakRequest, CreateMasterTransaksiRequest $transaksiRequest){
+    // Memulai transaksi database
+    DB::beginTransaction();
+   try{
+    // Check kondisi transaksi gaji hanya bisa dilakukan 1x/bulan
+    $existingTransaction = Karyawan_Master_Transaksi::where('karyawan_id', $transaksiRequest->karyawan_id)
+        ->whereMonth('created_at', now()->month)
+        ->whereYear('created_at', now()->year)
+        ->first();
+
+    if ($existingTransaction) {
+        throw new Exception('Data Transaksi Gaji Karyawan already exists for the current month and year');
+    }
+
+       // Create Gaji Universitas
+       $gajiuniv = Karyawan_Gaji_Universitas::create([
+        'gaji_pokok' => $gajiunivRequest-> gaji_pokok,
+        'tunjangan_fungsional' => $gajiunivRequest-> tunjangan_fungsional,
+        'tunjangan_struktural' => $gajiunivRequest-> tunjangan_struktural,
+        'tunjangan_khusus_istimewa' => $gajiunivRequest-> tunjangan_khusus_istimewa,
+        'tunjangan_presensi_kerja' => $gajiunivRequest-> tunjangan_presensi_kerja,
+        'tunjangan_tambahan' => $gajiunivRequest-> tunjangan_tambahan,
+        'tunjangan_suami_istri' => $gajiunivRequest-> tunjangan_suami_istri,
+        'tunjangan_anak' => $gajiunivRequest-> tunjangan_anak,
+        'uang_lembur_hk' => $gajiunivRequest-> uang_lembur_hk,
+        'uang_lembur_hl' => $gajiunivRequest-> uang_lembur_hl,
+        'transport_kehadiran' => $gajiunivRequest-> transport_kehadiran,
+        'honor_universitas' => $gajiunivRequest-> honor_universitas,
+       ]);
+
+       //Create Gaji Fakultas
+       $gajifak = Karyawan_Gaji_Fakultas::create([
+           'gaji_fakultas' => json_encode($gajifakRequest->gaji_fakultas)
+       ]);
+        // Decode "gaji_fakultas" data before sending the response
+        $gajifak->gaji_fakultas = json_decode($gajifak->gaji_fakultas);
+
+       //Create Potongan
+       $potongan = Karyawan_Potongan::create([
+           'potongan' => json_encode($potonganRequest->potongan)
+       ]);
+        // Decode "potongan" data before sending the response
+        $potongan->potongan = json_decode($potongan->potongan);
+
+       //Create Pajak
+       $pajak = Karyawan_Pajak::create([
+        'pensiun' => $pajakRequest-> pensiun,
+        'bruto_pajak' =>  $pajakRequest->bruto_pajak,
+        'bruto_murni' =>  $pajakRequest->bruto_murni,
+        'biaya_jabatan' =>  $pajakRequest->biaya_jabatan,
+        'aksa_mandiri' => $pajakRequest-> aksa_mandiri,
+        'dplk_pensiun' => $pajakRequest-> dplk_pensiun,
+        'jumlah_potongan_kena_pajak' =>  $pajakRequest->jumlah_potongan_kena_pajak,
+        'jumlah_set_potongan_kena_pajak' =>  $pajakRequest->jumlah_set_potongan_kena_pajak,
+        'ptkp' => $pajakRequest-> ptkp,
+        'pkp' =>  $pajakRequest->pkp,
+        'pajak_pph21' =>  $pajakRequest->pajak_pph21,
+        'jumlah_set_pajak' =>  $pajakRequest->jumlah_set_pajak,
+        'potongan_tak_kena_pajak' =>  $pajakRequest->potongan_tak_kena_pajak,
+        'pendapatan_bersih' =>  $pajakRequest->pendapatan_bersih,
+       ]);
+
+       // Master Transaksi
+       $mastertransaksi = Karyawan_Master_Transaksi::create([
+       'karyawan_id'=> $transaksiRequest->karyawan_id,
+       'karyawan_bank_id'=>  $transaksiRequest->karyawan_bank_id,
+       'karyawan_gaji_universitas_id'=> $gajiuniv->id,
+       'karyawan_gaji_fakultas_id'=> $gajifak->id,
+       'karyawan_potongan_id'=>$potongan->id,
+       'karyawan_pajak_id'=>$pajak->id
+       ]);
+
+   // Commit transaksi jika berhasil
+    DB::commit();
+
+
+   if(!$gajiuniv && !$gajifak && !$potongan && !$pajak){
+       throw new Exception('Data Transaksi Gaji Karyawan not created');
+   }
+
+    return ResponseFormatter::success('Data Transaksi Gaji Karyawan created',[
+       'gaji_universitas' => $gajiuniv,
+       'gaji_fakultas' => $gajifak,
+       'potongan' => $potongan,
+       'pajak' => $pajak,
+       'transaksi' => $mastertransaksi,
+   ]);
+   }
+   catch(Exception $e){
+       DB::rollback();
+       return ResponseFormatter::error($e->getMessage(), 500);
+   }
+}
+
+// Update Transaksi Gaji Karyawan
+public function update(UpdateGajiUnivRequest $gajiunivRequest, UpdateGajiFakRequest $gajifakRequest, UpdatePotonganRequest $potonganRequest, UpdatePajakRequest $pajakRequest, UpdateMasterTransaksiRequest $transaksiRequest, $transaksiId){
+    // Memulai transaksi database
+    DB::beginTransaction();
+   try{
+    // Get Master Transaksi
+    $mastertransaksi = Karyawan_Master_Transaksi::find($transaksiId);
+    if ($mastertransaksi) {
+        // Update Gaji Universitas
+        $gajiuniv = $mastertransaksi->gaji_universitas;
+        if ($gajiuniv) {
+        // Update Gaji Universitas
+        $gajiuniv->update([
+            'gaji_pokok' => $gajiunivRequest-> gaji_pokok,
+            'tunjangan_fungsional' => $gajiunivRequest-> tunjangan_fungsional,
+            'tunjangan_struktural' => $gajiunivRequest-> tunjangan_struktural,
+            'tunjangan_khusus_istimewa' => $gajiunivRequest-> tunjangan_khusus_istimewa,
+            'tunjangan_presensi_kerja' => $gajiunivRequest-> tunjangan_presensi_kerja,
+            'tunjangan_tambahan' => $gajiunivRequest-> tunjangan_tambahan,
+            'tunjangan_suami_istri' => $gajiunivRequest-> tunjangan_suami_istri,
+            'tunjangan_anak' => $gajiunivRequest-> tunjangan_anak,
+            'uang_lembur_hk' => $gajiunivRequest-> uang_lembur_hk,
+            'uang_lembur_hl' => $gajiunivRequest-> uang_lembur_hl,
+            'transport_kehadiran' => $gajiunivRequest-> transport_kehadiran,
+            'honor_universitas' => $gajiunivRequest-> honor_universitas,
+        ]);
         }
-        //Delete the related records with Pajak
-        $pajak->gaji_universitas()->delete();
-        $pajak->gaji_fakultas()->each(function ($gajiFakultas) {
-            // Delete related Dostap_Honor_Fakultas records
-            $gajiFakultas->honorfakultastambahan()->delete();
-            $gajiFakultas->delete();
-        });
-        $pajak->potongan()->each(function ($potongan) {
-            // Delete related Potongan records
-            $potongan->potongantambahan()->delete();
-            $potongan->delete();
-        });
-         // Delete Data Pajak
-         $pajak->delete();
 
+         // Update Gaji Fakultas
+         $gajifak = $mastertransaksi->gaji_fakultas;
+         if ($gajifak) {
+            $gajifak->update([
+                'gaji_fakultas' => json_encode($gajifakRequest->gaji_fakultas)
+            ]);
+        // Decode "gaji_fakultas" data before sending the response
+        $gajifak->gaji_fakultas = json_decode($gajifak->gaji_fakultas);
+        }
 
-        return ResponseFormatter::success('Data Transaksi Gaji deleted');
+        // Update Potongan
+        $potongan = $mastertransaksi->potongan;
+        if ($potongan) {
+            $potongan->update([
+                'potongan' => json_encode($potonganRequest->potongan)
+            ]);
+        // Decode "potongan" data before sending the response
+        $potongan->potongan = json_decode($potongan->potongan);
+        }
+
+         // Update Pajak
+         $pajak = $mastertransaksi->pajak;
+         if ($pajak) {
+             $pajak->update([
+                'pensiun' => $pajakRequest-> pensiun,
+                'bruto_pajak' =>  $pajakRequest->bruto_pajak,
+                'bruto_murni' =>  $pajakRequest->bruto_murni,
+                'biaya_jabatan' =>  $pajakRequest->biaya_jabatan,
+                'aksa_mandiri' => $pajakRequest-> aksa_mandiri,
+                'dplk_pensiun' => $pajakRequest-> dplk_pensiun,
+                'jumlah_potongan_kena_pajak' =>  $pajakRequest->jumlah_potongan_kena_pajak,
+                'jumlah_set_potongan_kena_pajak' =>  $pajakRequest->jumlah_set_potongan_kena_pajak,
+                'ptkp' => $pajakRequest-> ptkp,
+                'pkp' =>  $pajakRequest->pkp,
+                'pajak_pph21' =>  $pajakRequest->pajak_pph21,
+                'jumlah_set_pajak' =>  $pajakRequest->jumlah_set_pajak,
+                'potongan_tak_kena_pajak' =>  $pajakRequest->potongan_tak_kena_pajak,
+                'pendapatan_bersih' =>  $pajakRequest->pendapatan_bersih,
+               ]);
+         }
+
+       // Update Master Transaksi
+       $mastertransaksi->update([
+       'karyawan_id'=> $mastertransaksi->karyawan_id,
+       'karyawan_bank_id'=>  $transaksiRequest->karyawan_bank_id,
+       'karyawan_gaji_universitas_id'=> $mastertransaksi->karyawan_gaji_universitas_id,
+       'karyawan_gaji_fakultas_id'=> $mastertransaksi->karyawan_gaji_fakultas_id,
+       'karyawan_potongan_id'=>$mastertransaksi->karyawan_potongan_id,
+       'karyawan_pajak_id'=>$mastertransaksi->karyawan_pajak_id
+       ]);
+
+   // Commit transaksi jika berhasil
+    DB::commit();
+} else {
+    // Handle jika master transaksi dengan ID $id tidak ditemukan
+    return ResponseFormatter::error('Master Transaksi not found', 404);
+}
+    return ResponseFormatter::success('Data Transaksi Gaji Karyawan updated',[
+       'transaksi' => $mastertransaksi,
+   ]);
+   }
+   catch(Exception $e){
+       DB::rollback();
+       return ResponseFormatter::error($e->getMessage(), 500);
+   }
+}
+
+  //  Hapus Transaksi Gaji Karyawan
+  public function destroy($transaksiId){
+    try{
+       // Get Master Transaksi
+    $masterTransaksi = Karyawan_Master_Transaksi::find($transaksiId);
+    // Check if Dosen Luar Biasa exists
+        if(!$masterTransaksi){
+            throw new Exception('Data Transaksi Gaji Karyawan not found');
+        }
+
+    // Hapus gaji universitas, gaji fakultas, potongan, dan pajak berdasarkan kriteria
+    $masterTransaksi->gaji_universitas()->delete();
+    $masterTransaksi->gaji_fakultas()->delete();
+    $masterTransaksi->potongan()->delete();
+    $masterTransaksi->pajak()->delete();
+
+    // Hapus Master Transaksi
+    $masterTransaksi->delete();
+
+        return ResponseFormatter::success('Data Transaksi Gaji Karyawan deleted');
 
     }catch(Exception $e){
         return ResponseFormatter::error($e->getMessage(), 500);

@@ -25,12 +25,9 @@ class UpdatePotonganRequest extends FormRequest
     public function rules()
     {
         return [
-            'sp_FH' => 'nullable|integer',
-            'infaq' => 'nullable|integer',
-            'total_potongan' => 'nullable|integer',
-            'dosen_tetap_id' => 'required|integer|exists:dosen_tetap,id'
-
-
+            'potongan' => 'required|array',
+             // Validate each key in "gaji_fakultas" to be integer
+             'potongan.*' => 'integer'
         ];
     }
 }

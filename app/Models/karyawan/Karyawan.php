@@ -2,13 +2,11 @@
 
 namespace App\Models\karyawan;
 
-use App\Models\karyawan\Karyawan_Pajak;
-use App\Models\karyawan\Karyawan_Potongan;
-use App\Models\karyawan\Karyawan_Gaji_Fakultas;
-use App\Models\karyawan\Karyawan_Gaji_Universitas;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\karyawan\Karyawan_Bank;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\karyawan\Karyawan_Master_Transaksi;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Karyawan extends Model
 {
@@ -29,7 +27,7 @@ class Karyawan extends Model
         'golongan',
         'jabatan',
         'alamat_KTP',
-        'alamat_saatini',
+        'alamat_saat_ini',
         'nama_bank_utama',
         'nama_bank_tambahan',
         'norek_bank_utama',
@@ -37,18 +35,10 @@ class Karyawan extends Model
         'nomor_hp'
     ];
 
-
-    public function gaji_universitas(){
-        return $this->hasMany(Karyawan_Gaji_Universitas::class,'karyawan_id', 'id');
+    public function banks(){
+        return $this->hasMany(Karyawan_Bank::class,'karyawan_id', 'id');
     }
-
-    public function gaji_fakultas(){
-        return $this->hasMany(Karyawan_Gaji_Fakultas::class,'karyawan_id', 'id');
-    }
-    public function pajak(){
-        return $this->hasMany(Karyawan_Pajak::class,'karyawan_id', 'id');
-    }
-    public function potongan(){
-        return $this->hasMany(Karyawan_Potongan::class,'karyawan_id', 'id');
+    public function master_transaksi(){
+        return $this->hasMany(Karyawan_Master_Transaksi::class,'karyawan_id', 'id');
     }
 }

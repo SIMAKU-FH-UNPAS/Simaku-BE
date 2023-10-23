@@ -25,10 +25,9 @@ class CreatePotonganRequest extends FormRequest
     public function rules()
     {
         return [
-            'sp_FH' => 'nullable|integer',
-            'infaq' => 'nullable|integer',
-            'total_potongan' => 'nullable|integer',
-            'karyawan_id' => 'required|integer|exists:karyawan,id'
+            'potongan' => 'required|array',
+             // Validate each key in "gaji_fakultas" to be integer
+             'potongan.*' => 'integer'
         ];
 
     }

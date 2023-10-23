@@ -15,15 +15,9 @@ return new class extends Migration
     {
         Schema::create('doslb_potongan', function (Blueprint $table) {
             $table->id();
-            $table->integer('sp_FH')->nullable();
-            $table->integer('infaq')->nullable();
-            $table->integer('total_potongan')->nullable();
-            $table->unsignedBigInteger('dosen_luar_biasa_id');
+            $table->json('potongan');
             $table->softDeletes();
             $table->timestamps();
-        });
-        Schema::table('doslb_potongan', function(Blueprint $table){
-            $table->foreign('dosen_luar_biasa_id')->references('id')->on('dosen_luar_biasa');
         });
     }
 

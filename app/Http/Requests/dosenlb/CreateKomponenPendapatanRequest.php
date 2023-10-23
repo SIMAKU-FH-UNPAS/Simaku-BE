@@ -25,12 +25,9 @@ class CreateKomponenPendapatanRequest extends FormRequest
     public function rules()
     {
         return [
-            'tj_tambahan' => 'nullable|integer',
-            'honor_kinerja' => 'nullable|integer',
-            'tj_guru_besar' => 'nullable|integer',
-            'honor_mengajar' => 'nullable|integer',
-            'total_komponen_pendapatan' => 'nullable|integer',
-            'dosen_luar_biasa_id' => 'required|integer|exists:dosen_luar_biasa,id'
+            'komponen_pendapatan' => 'required|array',
+            // Validate each key in "gaji_fakultas" to be integer
+            'komponen_pendapatan.*' => 'integer'
         ];
     }
 }

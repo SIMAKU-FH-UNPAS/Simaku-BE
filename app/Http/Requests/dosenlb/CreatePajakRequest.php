@@ -26,10 +26,7 @@ class CreatePajakRequest extends FormRequest
     {
         return [
             'pajak_pph25' => 'nullable|integer',
-            'pendapatan_bersih' => 'nullable|integer',
-            'dosen_luar_biasa_id' => 'required|integer|exists:dosen_luar_biasa,id',
-            'doslb_pendapatan_id' => 'required|integer|exists:doslb_komponen_pendapatan,id',
-            'doslb_potongan_id' => 'required|integer|exists:doslb_potongan,id'
+            'pendapatan_bersih' => 'nullable|integer'
         ];
     }
 }

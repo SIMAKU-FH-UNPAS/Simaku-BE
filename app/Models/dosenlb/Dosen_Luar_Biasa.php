@@ -2,12 +2,11 @@
 
 namespace App\Models\dosenlb;
 
-use App\Models\dosenlb\Doslb_Potongan;
-use App\Models\dosenlb\Doslb_Komponen_Pendapatan;
-use App\Models\dosenlb\Doslb_Pajak;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\dosenlb\Doslb_Bank;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\dosenlb\Doslb_Master_Transaksi;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Dosen_Luar_Biasa extends Model
 {
@@ -28,22 +27,14 @@ class Dosen_Luar_Biasa extends Model
         'golongan',
         'jabatan',
         'alamat_KTP',
-        'alamat_saatini',
-        'nama_bank_utama',
-        'nama_bank_tambahan',
-        'norek_bank_utama',
-        'norek_bank_tambahan',
+        'alamat_saat_ini',
         'nomor_hp'
     ];
 
-
-    public function komponen_pendapatan(){
-        return $this->hasMany(Doslb_Komponen_Pendapatan::class,'dosen_luar_biasa_id', 'id');
+    public function banks(){
+        return $this->hasMany(Doslb_Bank::class,'dosen_luar_biasa_id', 'id');
     }
-    public function pajak(){
-        return $this->hasMany(Doslb_Pajak::class,'dosen_luar_biasa_id', 'id');
-    }
-    public function potongan(){
-        return $this->hasMany(Doslb_Potongan::class,'dosen_luar_biasa_id', 'id');
+    public function master_transaksi(){
+        return $this->hasMany(Doslb_Master_Transaksi::class,'dosen_luar_biasa_id', 'id');
     }
 }

@@ -25,20 +25,18 @@ class CreateGajiUnivRequest extends FormRequest
     public function rules()
     {
         return [
-            'karyawan_id' => 'required|integer|exists:karyawan,id',
             'gaji_pokok' => 'required|integer',
-            'tj_struktural' => 'required|integer',
-            'tj_pres_kerja' => 'required|integer',
-            'u_lembur_hk' => 'required|integer',
-            'u_lembur_hl' => 'required|integer',
-            'trans_kehadiran' => 'required|integer',
-            'tj_fungsional' => 'required|integer',
-            'tj_khs_istimewa' => 'required|integer',
-            'tj_tambahan' => 'required|integer',
-            'honor_univ' => 'required|integer',
-            'tj_suami_istri' => 'required|integer',
-            'tj_anak' => 'required|integer',
-            'total_gaji_univ' => 'nullable'
+            'tunjangan_fungsional' => 'required|integer',
+            'tunjangan_struktural' => 'required|integer',
+            'tunjangan_khusus_istimewa' => 'required|integer',
+            'tunjangan_presensi_kerja' => 'required|integer',
+            'tunjangan_tambahan' => 'required|integer',
+            'tunjangan_suami_istri' => 'required|integer',
+            'tunjangan_anak' => 'required|integer',
+            'uang_lembur_hk' => 'required|integer',
+            'uang_lembur_hl' => 'required|integer',
+            'transport_kehadiran' => 'required|integer',
+            'honor_universitas' => 'required|integer',
         ];
     }
 }

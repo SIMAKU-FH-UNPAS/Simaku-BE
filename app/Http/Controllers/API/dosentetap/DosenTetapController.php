@@ -8,10 +8,12 @@ use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\dosentetap\Dosen_Tetap;
-use App\Models\dosentetap\Dostap_Honor_Fakultas;
-use App\Models\dosentetap\Dostap_Potongan_Tambahan;
+use App\Models\dosentetap\Dostap_Bank;
+use App\Http\Requests\dosentetap\CreateBankRequest;
+use App\Http\Requests\dosentetap\UpdateBankRequest;
 use App\Http\Requests\dosentetap\CreateDosenTetapRequest;
 use App\Http\Requests\dosentetap\UpdateDosenTetapRequest;
+
 
 class DosenTetapController extends Controller
 {
@@ -24,11 +26,7 @@ class DosenTetapController extends Controller
         $golongan = $request->input('golongan');
         $jabatan = $request->input('jabatan');
         $alamat_KTP = $request->input('alamat_KTP');
-        $alamat_saatini = $request->input('alamat_saatini');
-        $nama_bank_utama = $request->input('nama_bank_utama');
-        $nama_bank_tambahan = $request->input('nama_bank_tambahan');
-        $norek_bank_utama = $request->input('norek_bank_utama');
-        $norek_bank_tambahan = $request->input('norek_bank_tambahan');
+        $alamat_saat_ini = $request->input('alamat_saat_ini');
         $nomor_hp = $request->input('nomor_hp');
         $limit = $request->input('limit', 10);
 
@@ -37,30 +35,10 @@ class DosenTetapController extends Controller
 
     // Get single data
     if ($id) {
-        $dosentetap = $dosentetapQuery->find($id);
+        $dosentetap = $dosentetapQuery->with('banks')->find($id);
 
         if ($dosentetap) {
-            // Modifikasi Array bank
-            $dosentetap->bank = [
-                "nama_bank_utama" => $dosentetap->nama_bank_utama,
-                "norek_bank_utama" => $dosentetap->norek_bank_utama,
-                "nama_bank_tambahan" => $dosentetap->nama_bank_tambahan,
-                "norek_bank_tambahan" => $dosentetap->norek_bank_tambahan,
-            ];
-            // Menghapus field array
-            unset($dosentetap->nama_bank_utama, $dosentetap->norek_bank_utama, $dosentetap->nama_bank_tambahan, $dosentetap->norek_bank_tambahan);
-            $deletedAt = $dosentetap->deleted_at;
-            $createdAt = $dosentetap->created_at;
-            $updatedAt = $dosentetap->updated_at;
-            unset($dosentetap->deleted_at, $dosentetap->created_at, $dosentetap->updated_at);
-
-            // Mengganti posisi field array
-            $dosentetap->deleted_at = $deletedAt;
-            $dosentetap->created_at = $createdAt;
-            $dosentetap->updated_at = $updatedAt;
-
-
-            return ResponseFormatter::success([$dosentetap], 'Data Dosen Tetap found');
+            return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap found');
         }
         return ResponseFormatter::error('Data Dosen Tetap not found', 404);
     }
@@ -105,29 +83,9 @@ class DosenTetapController extends Controller
         $dosentetap->where('alamat_KTP', 'like', '%'.$alamat_KTP.'%');
 
     }
-    if($alamat_saatini)
+    if($alamat_saat_ini)
     {
-        $dosentetap->where('alamat_saatini', 'like', '%'.$alamat_saatini.'%');
-
-    }
-    if($nama_bank_utama)
-    {
-        $dosentetap->where('nama_bank_utama', 'like', '%'.$nama_bank_utama.'%');
-
-    }
-    if($norek_bank_utama)
-    {
-        $dosentetap->where('norek_bank_utama', 'like', '%'.$norek_bank_utama.'%');
-
-    }
-    if($nama_bank_tambahan)
-    {
-        $dosentetap->where('nama_bank_tambahan', 'like', '%'.$nama_bank_tambahan.'%');
-
-    }
-    if($norek_bank_tambahan)
-    {
-        $dosentetap->where('norek_bank_tambahan', 'like', '%'.$norek_bank_tambahan.'%');
+        $dosentetap->where('alamat_saat_ini', 'like', '%'.$alamat_saat_ini.'%');
 
     }
     if ($golongan) {
@@ -139,73 +97,67 @@ class DosenTetapController extends Controller
 
     }
 
- // Fetch Data ALL
- $dosentetapData = $dosentetap->paginate($limit);
- $ArrayDosenTetap = [];
+    //Fetch All Data
+    $dosentetap->with('banks');
 
- foreach ($dosentetapData as $dosentetap) {
-     $data = [
-         'id' => $dosentetap->id,
-         'nama' => $dosentetap->nama,
-         'no_pegawai' => $dosentetap->no_pegawai,
-         'npwp' => $dosentetap->npwp,
-         'status' => $dosentetap->status,
-         'golongan' => $dosentetap->golongan,
-         'jabatan' => $dosentetap->jabatan,
-         'alamat_KTP' => $dosentetap->alamat_KTP,
-         'alamat_saatini' => $dosentetap->alamat_saatini,
-         'nomor_hp' => $dosentetap->nomor_hp,
-         'bank' => [
-             'nama_bank_utama' => $dosentetap->nama_bank_utama,
-             'norek_bank_utama' => $dosentetap->norek_bank_utama,
-             'nama_bank_tambahan' => $dosentetap->nama_bank_tambahan,
-             'norek_bank_tambahan' => $dosentetap->norek_bank_tambahan,
-         ],
-         'deleted_at' => $dosentetap->deleted_at,
-         'created_at' => $dosentetap->created_at,
-         'updated_at' => $dosentetap->updated_at,
-     ];
+    return ResponseFormatter::success(
+        $dosentetap->paginate($limit),
+        'Data Dosen Luar Biasa Found'
+    );
 
-     $ArrayDosenTetap[] = $data;
- }
-
- return ResponseFormatter::success($ArrayDosenTetap, 'Data Dosen Tetap Found');
+ return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap Found');
 }
 
 
 
-    public function create(CreateDosenTetapRequest $request){
-       try {
+public function create(CreateDosenTetapRequest $dosentetapRequest, CreateBankRequest $bankRequest){
 
+        // Memulai transaksi database
+        DB::beginTransaction();
+
+        try {
            // Create Dosen Tetap
            $dosentetap = Dosen_Tetap::create([
-            'nama' => $request-> nama,
-            'no_pegawai' => $request-> no_pegawai,
-            'npwp' => $request-> npwp,
-            'status' => $request-> status,
-            'golongan' => $request-> golongan,
-            'jabatan' => $request-> jabatan,
-            'alamat_KTP' => $request-> alamat_KTP,
-            'alamat_saatini' => $request->  alamat_saatini,
-            'nama_bank_utama' => $request-> nama_bank_utama,
-            'norek_bank_utama' => $request-> norek_bank_utama,
-            'nama_bank_tambahan' => $request-> nama_bank_tambahan,
-            'norek_bank_tambahan' => $request-> norek_bank_tambahan,
-            'nomor_hp' => $request-> nomor_hp
-
+            'nama' => $dosentetapRequest-> nama,
+            'no_pegawai' => $dosentetapRequest-> no_pegawai,
+            'npwp' => $dosentetapRequest-> npwp,
+            'status' => $dosentetapRequest-> status,
+            'golongan' => $dosentetapRequest-> golongan,
+            'jabatan' => $dosentetapRequest-> jabatan,
+            'alamat_KTP' => $dosentetapRequest-> alamat_KTP,
+            'alamat_saat_ini' => $dosentetapRequest->  alamat_saat_ini,
+            'nomor_hp' => $dosentetapRequest-> nomor_hp
         ]);
 
-        if(!$dosentetap){
+        // Create Data Bank
+        //array bank
+        $dostapBanks = [];
+        foreach ($bankRequest->input('banks') as $bank) {
+           $dostapBank = Dostap_Bank::create([
+                'nama_bank' => $bank['nama_bank'],
+                'no_rekening' => $bank['no_rekening'],
+                'dosen_tetap_id' => $dosentetap->id,
+            ]);
+            $dostapBanks[] = $dostapBank;
+        }
+
+         // Commit transaksi jika berhasil
+         DB::commit();
+
+        if(!$dosentetap && !$dostapBank){
             throw new Exception('Data Dosen Tetap not created');
         }
-        return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap created');
+        return ResponseFormatter::success(['dosentetap' => $dosentetap, 'banks' => $dostapBanks], 'Data Dosen Tetap created');
     }catch(Exception $e){
+        DB::rollback();
         return ResponseFormatter::error($e->getMessage(), 500);
     }
 }
 
-    public function update(UpdateDosenTetapRequest $request, $id)
+    public function update(UpdateDosenTetapRequest $dosentetapRequest, UpdateBankRequest $bankRequest, $id)
     {
+         // Memulai transaksi database
+         DB::beginTransaction();
         try {
 
             // Get Dosen Tetap
@@ -218,25 +170,45 @@ class DosenTetapController extends Controller
 
             // Update Dosen Tetap
             $dosentetap -> update([
-                'nama' => $request-> nama,
-                'no_pegawai' => $request-> no_pegawai,
-                'npwp' => $request-> npwp,
-                'status' => $request-> status,
-                'golongan' => $request-> golongan,
-                'jabatan' => $request-> jabatan,
-                'alamat_KTP' => $request-> alamat_KTP,
-                'alamat_saatini' => $request->  alamat_saatini,
-                'nama_bank_utama' => $request-> nama_bank_utama,
-                'norek_bank_utama' => $request-> norek_bank_utama,
-                'nama_bank_tambahan' => $request-> nama_bank_tambahan,
-                'norek_bank_tambahan' => $request-> norek_bank_tambahan,
-                'nomor_hp' => $request-> nomor_hp
+                'nama' => $dosentetapRequest-> nama,
+                'no_pegawai' => $dosentetapRequest-> no_pegawai,
+                'npwp' => $dosentetapRequest-> npwp,
+                'status' => $dosentetapRequest-> status,
+                'golongan' => $dosentetapRequest-> golongan,
+                'jabatan' => $dosentetapRequest-> jabatan,
+                'alamat_KTP' => $dosentetapRequest-> alamat_KTP,
+                'alamat_saat_ini' => $dosentetapRequest->  alamat_saat_ini,
+                'nomor_hp' => $dosentetapRequest-> nomor_hp
 
         ]);
 
+        // Update Data Bank
+        $dostapBanks = [];
+        foreach ($bankRequest->input('banks') as $bank) {
+            // Ambil ID bank dari objek bank yang diambil dari database
+             $dostapBank = Dostap_Bank::find($bank['id']);
 
-        return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap updated');
+            // Check if Bank exists
+            if (!$dostapBank) {
+                throw new Exception('Data Bank not found');
+            }
+
+            // Update data bank sesuai dengan ID
+            $dostapBank->update([
+                'nama_bank' => $bank['nama_bank'],
+                'no_rekening' => $bank['no_rekening'],
+                'dosen_tetap_id' => $dostapBank->dosen_tetap_id
+            ]);
+            $dostapBanks[] = $dostapBank;
+        }
+
+         // Commit transaksi jika berhasil
+         DB::commit();
+
+
+        return ResponseFormatter::success(['dosentetap' => $dosentetap, 'banks' => $dostapBanks], 'Data Dosen Tetap updated');
     }catch(Exception $e){
+        DB::rollback();
         return ResponseFormatter::error($e->getMessage(), 500);
     }
     }
@@ -251,18 +223,18 @@ public function destroy($id){
             throw new Exception('Data Dosen Tetap not found');
         }
          // Delete the related records with Dosen Tetap
-         $dosentetap->gaji_universitas()->delete();
-         $dosentetap->gaji_fakultas->each(function ($gajiFakultas) {
-            // Delete related Dostap_Honor_Fakultas records
-            $gajiFakultas->honorfakultastambahan()->delete();
-            $gajiFakultas->delete();
+         $dosentetap->banks()->delete();
+
+          // Delete the related records with karyawan
+          $dosentetap->master_transaksi()->each(function ($transaksi){
+            // Delete related records
+            $transaksi->gaji_universitas()->delete();
+            $transaksi->gaji_fakultas()->delete();
+            $transaksi->potongan()->delete();
+            $transaksi->pajak()->delete();
+            $transaksi->delete();
         });
-        $dosentetap->potongan->each(function ($potongan) {
-            // Delete related Dostap_Potongan records
-            $potongan->potongantambahan()->delete();
-            $potongan->delete();
-        });
-        $dosentetap->pajak()->delete();
+
         // Delete Data Dosen Tetap
         $dosentetap->delete();
 

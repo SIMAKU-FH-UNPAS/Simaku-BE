@@ -25,11 +25,9 @@ class CreateGajiFakRequest extends FormRequest
     public function rules()
     {
         return [
-            'tj_tambahan' => 'nullable|integer',
-            'honor_kinerja' => 'nullable|integer',
-            'honor' => 'nullable|integer',
-            'total_gaji_fakultas' => 'nullable|integer',
-            'karyawan_id' => 'required|integer|exists:karyawan,id'
+            'gaji_fakultas' => 'required|array',
+             // Validate each key in "gaji_fakultas" to be integer
+             'gaji_fakultas.*' => 'integer'
         ];
     }
 }

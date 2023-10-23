@@ -2,12 +2,11 @@
 
 namespace App\Models\karyawan;
 
-use App\Models\karyawan\Karyawan_Pajak;
-use App\Models\karyawan\Karyawan;
-use App\Models\karyawan\Karyawan_Potongan_Tambahan;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\karyawan\Karyawan_Master_Transaksi;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Karyawan_Potongan extends Model
 {
@@ -20,29 +19,14 @@ class Karyawan_Potongan extends Model
 */
 public $table = "karyawan_potongan";
 protected $dates = ['deleted_at'];
+protected $guarded = [
+    'id'
+];
 protected $fillable = [
- 'sp_FH',
- 'infaq',
- 'total_potongan',
- 'karyawan_id'
+ 'potongan'
 ];
 
-public function karyawan(){
-    return $this->belongsTo(Karyawan::class, 'karyawan_id', 'id');
+public function master_transaksi(){
+    return $this->hasOne(Karyawan_Master_Transaksi::class,'karyawan_potongan_id', 'id');
 }
-public function potongantambahan(){
- return $this->hasMany(Karyawan_Potongan_Tambahan::class,'karyawan_potongan_id', 'id');
-}
-public function pajak(){
- return $this->hasOne(Karyawan_Pajak::class,'karyawan_potongan_id', 'id');
-}
-
-public function total_potongan($request){
-     $sp_FH = $request-> sp_FH;
-     $infaq = $request-> infaq;
-     $total_potongan = $sp_FH+$infaq;
-
-     return $total_potongan;
- }
-
 }

@@ -15,15 +15,9 @@ return new class extends Migration
     {
         Schema::create('karyawan_potongan', function (Blueprint $table) {
             $table->id();
-            $table->integer('sp_FH')->nullable();
-            $table->integer('infaq')->nullable();
-            $table->integer('total_potongan')->nullable();
-            $table->unsignedBigInteger('karyawan_id');
+            $table->json('potongan')->nullable();
             $table->softDeletes();
             $table->timestamps();
-        });
-        Schema::table('karyawan_potongan', function(Blueprint $table){
-            $table->foreign('karyawan_id')->references('id')->on('karyawan');
         });
     }
 

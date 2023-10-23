@@ -25,18 +25,14 @@ class CreateDosenLuarBiasaRequest extends FormRequest
     public function rules()
     {
         return [
-            'nama' => 'required|string|max:255|unique:dosen_luar_biasa',
-            'no_pegawai' => 'required|string|max:255',
+            'nama' => 'required|string|max:255',
+            'no_pegawai' => 'required|string|max:255|unique:dosen_luar_biasa,no_pegawai,NULL,id,deleted_at,NULL',
             'npwp' => 'string|max:255',
             'status' => 'required|string|in:Aktif,Tidak Aktif',
             'golongan' =>'required|string|in:IIA,IIB,IIC,IID,IIIA,IIIB,IIIC,IIID,IVA,IVB,IVC,IVD,IVE',
             'jabatan' => 'required|string|max:255',
             'alamat_KTP' => 'required|string|max:255',
-            'alamat_saatini' => 'required|string|max:255',
-            'nama_bank_utama' => 'required|string|max:255',
-            'nama_bank_tambahan' => 'string|max:255',
-            'norek_bank_utama' => 'required|string|max:255',
-            'norek_bank_tambahan' => 'string|max:255',
+            'alamat_saat_ini' => 'required|string|max:255',
             'nomor_hp' => 'required|string|max:255',
         ];
     }

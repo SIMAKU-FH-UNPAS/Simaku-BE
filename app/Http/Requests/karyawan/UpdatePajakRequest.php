@@ -25,25 +25,20 @@ class UpdatePajakRequest extends FormRequest
     public function rules()
     {
         return [
-            'pensiun' => 'nullable|integer',
-            'bruto_pajak' => 'nullable|integer',
-            'bruto_murni' => 'nullable|integer',
-            'biaya_jabatan' => 'nullable|integer',
-            'aksa_mandiri' => 'nullable|integer',
-            'dplk_pensiun' => 'nullable|integer',
-            'jml_pot_kn_pajak' => 'nullable|integer',
-            'jml_set_pot_kn_pajak' => 'nullable|integer',
-            'ptkp' => 'nullable|integer',
-            'pkp' => 'nullable|integer',
-            'pajak_pph21' => 'nullable|integer',
-            'jml_set_pajak' => 'nullable|integer',
-            'pot_tk_kena_pajak' => 'nullable|integer',
-            'pendapatan_bersih' => 'nullable|integer',
-            'karyawan_id' => 'required|integer|exists:karyawan,id',
-            'karyawan_gaji_universitas_id' => 'required|integer|exists:karyawan_gaji_universitas,id',
-            'karyawan_gaji_fakultas_id' => 'required|integer|exists:karyawan_gaji_fakultas,id',
-            'karyawan_potongan_id' => 'required|integer|exists:karyawan_potongan,id'
-
+            'pensiun' => 'required|integer',
+            'bruto_pajak' => 'required|integer',
+            'bruto_murni' => 'required|integer',
+            'biaya_jabatan' => 'required|integer',
+            'aksa_mandiri' => 'required|integer',
+            'dplk_pensiun' => 'required|integer',
+            'jumlah_potongan_kena_pajak' => 'required|integer',
+            'jumlah_set_potongan_kena_pajak' => 'required|integer',
+            'ptkp' => 'required|integer',
+            'pkp' => 'required|integer',
+            'pajak_pph21' => 'required|integer',
+            'jumlah_set_pajak' => 'required|integer',
+            'potongan_tak_kena_pajak' => 'required|integer',
+            'pendapatan_bersih' => 'required|integer'
 
         ];
     }
