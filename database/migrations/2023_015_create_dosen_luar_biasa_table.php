@@ -17,13 +17,16 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('no_pegawai');
+            $table->string('npwp');
             $table->enum('status', ['Aktif', 'Tidak Aktif']);
             $table->enum('golongan', ['IIA','IIB','IIC','IID','IIIA','IIIB','IIIC','IIID','IVA','IVB','IVC','IVD','IVE']);
             $table->string('jabatan');
             $table->string('alamat_KTP');
             $table->string('alamat_saatini');
-            $table->string('nama_bank');
-            $table->string('norek_bank');
+            $table->string('nama_bank_utama');
+            $table->string('nama_bank_tambahan');
+            $table->string('norek_bank_utama');
+            $table->string('norek_bank_tambahan');
             $table->string('nomor_hp');
             $table->softDeletes();
             $table->timestamps();

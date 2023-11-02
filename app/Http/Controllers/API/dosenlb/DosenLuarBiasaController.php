@@ -16,13 +16,16 @@ class DosenLuarBiasaController extends Controller
         $id = $request->input('id');
         $nama = $request->input('nama');
         $no_pegawai = $request->input('no_pegawai');
+        $npwp = $request->input('npwp');
         $status = $request->input('status');
         $golongan = $request->input('golongan');
         $jabatan = $request->input('jabatan');
         $alamat_KTP = $request->input('alamat_KTP');
         $alamat_saatini = $request->input('alamat_saatini');
-        $nama_bank = $request->input('nama_bank');
-        $norek_bank = $request->input('norek_bank');
+        $nama_bank_utama = $request->input('nama_bank_utama');
+        $nama_bank_tambahan = $request->input('nama_bank_tambahan');
+        $norek_bank_utama = $request->input('norek_bank_utama');
+        $norek_bank_tambahan = $request->input('norek_bank_tambahan');
         $nomor_hp = $request->input('nomor_hp');
         $limit = $request->input('limit', 10);
 
@@ -35,9 +38,29 @@ class DosenLuarBiasaController extends Controller
         $dosenlb= $dosenlbQuery->find($id);
 
         if($dosenlb){
-            return ResponseFormatter::success($dosenlb, 'Data Dosen Luar Biasa found');
+            // Modifikasi Array bank
+            $dosenlb->bank = [
+                "nama_bank_utama" => $dosenlb->nama_bank_utama,
+                "norek_bank_utama" => $dosenlb->norek_bank_utama,
+                "nama_bank_tambahan" => $dosenlb->nama_bank_tambahan,
+                "norek_tambahan" => $dosenlb->norek_tambahan,
+            ];
+               // Menghapus field array
+               unset($dosenlb->nama_bank_utama, $dosenlb->norek_bank_utama, $dosenlb->nama_bank_tambahan, $dosenlb->norek_tambahan);
+               unset($dosenlb->nama_bank_utama, $dosenlb->norek_bank_utama, $dosenlb->nama_bank_tambahan, $dosenlb->norek_bank_tambahan);
+               $deletedAt = $dosenlb->deleted_at;
+               $createdAt = $dosenlb->created_at;
+               $updatedAt = $dosenlb->updated_at;
+               unset($dosenlb->deleted_at, $dosenlb->created_at, $dosenlb->updated_at);
+
+               // Mengganti posisi field array
+               $dosenlb->deleted_at = $deletedAt;
+               $dosenlb->created_at = $createdAt;
+               $dosenlb->updated_at = $updatedAt;
+
+            return ResponseFormatter::success([$dosenlb], 'Data Dosen Luar Biasa found');
         }
-            return ResponseFormatter::error('Data Dosen Luar Biasa not found', 404);
+        return ResponseFormatter::error('Data Dosen Luar Biasa not found', 404);
     }
 
     //    Get multiple Data
@@ -52,6 +75,11 @@ class DosenLuarBiasaController extends Controller
     if($no_pegawai)
     {
         $dosenlb->where('no_pegawai', 'like', '%'.$no_pegawai.'%');
+
+    }
+    if($npwp)
+    {
+        $dosenlb->where('npwp', 'like', '%'.$npwp.'%');
 
     }
     if($status)
@@ -79,14 +107,24 @@ class DosenLuarBiasaController extends Controller
         $dosenlb->where('alamat_saatini', 'like', '%'.$alamat_saatini.'%');
 
     }
-    if($nama_bank)
+    if($nama_bank_utama)
     {
-        $dosenlb->where('nama_bank', 'like', '%'.$nama_bank.'%');
+        $dosenlb->where('nama_bank_utama', 'like', '%'.$nama_bank_utama.'%');
 
     }
-    if($norek_bank)
+    if($norek_bank_utama)
     {
-        $dosenlb->where('norek_bank', 'like', '%'.$norek_bank.'%');
+        $dosenlb->where('norek_bank_utama', 'like', '%'.$norek_bank_utama.'%');
+
+    }
+    if($nama_bank_tambahan)
+    {
+        $dosenlb->where('nama_bank_tambahan', 'like', '%'.$nama_bank_tambahan.'%');
+
+    }
+    if($norek_bank_tambahan)
+    {
+        $dosenlb->where('norek_bank_utama', 'like', '%'.$norek_bank_utama.'%');
 
     }
     if ($golongan) {
@@ -94,16 +132,42 @@ class DosenLuarBiasaController extends Controller
     }
     if($nomor_hp)
     {
-        $dosenlb->where('nomor_hp', 'like', '%'.$norek_bank.'%');
+        $dosenlb->where('nomor_hp', 'like', '%'.$nomor_hp.'%');
 
     }
+    
+    // Fetch Data ALL
+ $dosenlbData = $dosenlb->paginate($limit);
+ $ArrayDosenLB = [];
 
+ foreach ($dosenlbData as $dosenlb) {
+     $data = [
+         'id' => $dosenlb->id,
+         'nama' => $dosenlb->nama,
+         'no_pegawai' => $dosenlb->no_pegawai,
+         'npwp' => $dosenlb->npwp,
+         'status' => $dosenlb->status,
+         'golongan' => $dosenlb->golongan,
+         'jabatan' => $dosenlb->jabatan,
+         'alamat_KTP' => $dosenlb->alamat_KTP,
+         'alamat_saatini' => $dosenlb->alamat_saatini,
+         'nomor_hp' => $dosenlb->nomor_hp,
+         'bank' => [
+             'nama_bank_utama' => $dosenlb->nama_bank_utama,
+             'norek_bank_utama' => $dosenlb->norek_bank_utama,
+             'nama_bank_tambahan' => $dosenlb->nama_bank_tambahan,
+             'norek_bank_tambahan' => $dosenlb->norek_bank_tambahan,
+         ],
+         'deleted_at' => $dosenlb->deleted_at,
+         'created_at' => $dosenlb->created_at,
+         'updated_at' => $dosenlb->updated_at,
+     ];
 
-    return ResponseFormatter::success(
-        $dosenlb->paginate($limit),
-        'Data Dosen Luar Biasa Found'
-    );
-    }
+     $ArrayDosenLB[] = $data;
+ }
+
+ return ResponseFormatter::success($ArrayDosenLB, 'Data Dosen Luar Biasa Found');
+}
 
 
 
@@ -114,13 +178,16 @@ class DosenLuarBiasaController extends Controller
            $dosenlb = Dosen_Luar_Biasa::create([
             'nama' => $request-> nama,
             'no_pegawai' => $request-> no_pegawai,
+            'npwp' => $request-> npwp,
             'status' => $request-> status,
             'golongan' => $request-> golongan,
             'jabatan' => $request-> jabatan,
             'alamat_KTP' => $request-> alamat_KTP,
             'alamat_saatini' => $request->  alamat_saatini,
-            'nama_bank' => $request-> nama_bank,
-            'norek_bank' => $request-> norek_bank,
+            'nama_bank_utama' => $request-> nama_bank_utama,
+            'norek_bank_utama' => $request-> norek_bank_utama,
+            'nama_bank_tambahan' => $request-> nama_bank_tambahan,
+            'norek_bank_tambahan' => $request-> norek_bank_tambahan,
             'nomor_hp' => $request-> nomor_hp
 
         ]);
@@ -150,13 +217,16 @@ class DosenLuarBiasaController extends Controller
             $dosenlb -> update([
                 'nama' => $request-> nama,
                 'no_pegawai' => $request-> no_pegawai,
+                'npwp' => $request-> npwp,
                 'status' => $request-> status,
                 'golongan' => $request-> golongan,
                 'jabatan' => $request-> jabatan,
                 'alamat_KTP' => $request-> alamat_KTP,
                 'alamat_saatini' => $request->  alamat_saatini,
-                'nama_bank' => $request-> nama_bank,
-                'norek_bank' => $request-> norek_bank,
+                'nama_bank_utama' => $request-> nama_bank_utama,
+                'norek_bank_utama' => $request-> norek_bank_utama,
+                'nama_bank_tambahan' => $request-> nama_bank_tambahan,
+                'norek_bank_tambahan' => $request-> norek_bank_tambahan,
                 'nomor_hp' => $request-> nomor_hp
 
         ]);

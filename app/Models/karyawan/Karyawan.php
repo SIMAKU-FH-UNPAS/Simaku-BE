@@ -24,13 +24,16 @@ class Karyawan extends Model
     protected $fillable = [
         'nama',
         'no_pegawai',
+        'npwp',
         'status',
         'golongan',
         'jabatan',
         'alamat_KTP',
         'alamat_saatini',
-        'nama_bank',
-        'norek_bank',
+        'nama_bank_utama',
+        'nama_bank_tambahan',
+        'norek_bank_utama',
+        'norek_bank_tambahan',
         'nomor_hp'
     ];
 
