@@ -13,9 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return ('Welcome to SIMAKU FH UNPAS Backend!');
-// });
+Route::get('/', function () {
+    return ('Welcome to SIMAKU FH UNPAS Backend!');
+});
 
 Route::middleware([
     'auth:sanctum',
