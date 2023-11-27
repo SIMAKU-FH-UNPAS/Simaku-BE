@@ -4,221 +4,261 @@ namespace App\Http\Controllers\API\dosenlb;
 
 use App\Http\Controllers\Controller;
 use App\Helpers\ResponseFormatter;
-use App\Models\dosenlb\Dosen_Luar_Biasa;
-use App\Models\dosenlb\Doslb_Komponen_Pendapatan;
-use App\Models\dosenlb\Doslb_Komponen_Pendapatan_Tambahan;
-use App\Models\dosenlb\Doslb_Pajak;
-use App\Models\dosenlb\Doslb_Potongan;
-use App\Models\dosenlb\Doslb_Potongan_Tambahan;
+use App\Models\dosenlb\Doslb_Master_Transaksi;
 use Illuminate\Http\Request;
 
 class LaporanController extends Controller
 {
-    public function rekapitulasipendapatan(Request $request){
-        // Get ALL Dosen LB attribute by month & year
-         $dosenlbALL = Dosen_Luar_Biasa::all();
-         $month = $request->input('month');
-         $year = $request->input('year');
+    public function rekapitulasipendapatan() {
+        // Get ALL Transaksi
+        $transaksigaji = Doslb_Master_Transaksi::all();
 
-         // Request by month & year
-         if(isset($month) && isset ($year)){
-             foreach($dosenlbALL as $dosenlb){
-                 // Get ALL DATA komponen pendapatan with condition
-                 $komponenpendapatan = Doslb_Komponen_Pendapatan::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-             foreach($komponenpendapatan as $key=> $kompen){
-                     // Get ALL DATA komponen pendapatan tambahan with condition
-                 $komponenpendapatantambahan = Doslb_Komponen_Pendapatan_Tambahan::where('doslb_pendapatan_id', $kompen->id)
-                     ->whereMonth('created_at', $month)
-                     ->whereYear('created_at', $year)
-                     ->get();
+        // Initialize the array to store the results
+        $rekapitulasipendapatan = [];
 
-             // Array Attribute
-             $komponenpendapatanarray = !empty($kompen) ? $kompen['total_komponen_pendapatan'] : 0;
+        foreach ($transaksigaji as $gaji) {
 
-             // menampilkan data dalam bentuk array
-                 $rekapitulasipendapatan[] = [
-                     'nama' => Dosen_Luar_Biasa::find($dosenlb->id)->nama,
-                     'golongan' => Dosen_Luar_Biasa::find($dosenlb->id)->golongan,
-                     'dosenlb_komponen_pendapatan' => $komponenpendapatan,
-                     'dosenlb_komponen_pendapatan_tambahan' => $komponenpendapatantambahan,
-                     'total_pendapatan' => $komponenpendapatanarray
+            $dosenluarbiasa = $gaji->dosen_luar_biasa;
+            $komponenpendapatan = $gaji->komponen_pendapatan;
+            $komponenpendapatan->komponen_pendapatan = json_decode($komponenpendapatan->komponen_pendapatan, true);
 
-                 ];
-             }
-             }
-             // Check if the rekapitulasipendapatan array is empty
-         if (empty($rekapitulasipendapatan)) {
-             return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
-         }
+            $totalPendapatan= array_sum($komponenpendapatan->komponen_pendapatan);
 
-         return ResponseFormatter::success($rekapitulasipendapatan, 'Data Laporan Rekapitulasi Pendapatan Dosen Luar Biasa Found');
-     }
-     }
+            $rekapitulasipendapatan[] = [
+                'periode' => [
+                    'month' => $gaji->created_at->format('F'),
+                    'year' => $gaji->created_at->format('Y'),
+                ],
+                'rekapitulasipendapatan' => [
+                    'no_pegawai' => $dosenluarbiasa->no_pegawai,
+                    'nama' => $dosenluarbiasa->nama,
+                    'golongan' => $dosenluarbiasa->golongan,
+                    'komponen_pendapatan' => $komponenpendapatan->komponen_pendapatan,
+                    'total' => $totalPendapatan
+                ],
+            ];
+        }
 
-         public function pendapatanbersih(Request $request){
-              // Get ALL Dosen LB attribute by month & year
-         $dosenlbALL = Dosen_Luar_Biasa::all();
-         $month = $request->input('month');
-         $year = $request->input('year');
+        // Group the data by unique month and year
+        $groupedData = [];
+        foreach ($rekapitulasipendapatan as $item) {
+            $groupKey = $item['periode']['year'] . $item['periode']['month'];
+            $groupedData[$groupKey]['periode'] = $item['periode'];
+            $groupedData[$groupKey]['rekapitulasipendapatan'][] = $item['rekapitulasipendapatan'];
+        }
 
+        // Check if the rekapitulasipendapatan array is empty
+        if (empty($groupedData)) {
+            return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
+        }
 
-             // Request by month & year
-             if(isset($month) && isset ($year)){
-                 foreach($dosenlbALL as $dosenlb){
-                     // Get ALL DATA komponen pendapatan with condition
-                 $komponenpendapatan = Doslb_Komponen_Pendapatan::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-                 foreach($komponenpendapatan as $key=> $kompen){
-                         // Get ALL DATA with condition
-                     $potongan = Doslb_Potongan::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                     $pajak = Doslb_Pajak::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
+        return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Rekapitulasi Pendapatan Dosen Luar Biasa Found');
+    }
 
 
-              // Array Attribute
-              $komponenpendapatanarray = !empty($kompen) ? $kompen['total_komponen_pendapatan'] : 0;
-             $potonganarray = !empty($potongan[$key]) ? $potongan[$key]['total_potongan'] : 0;
-             $pajakarray = !empty($pajak[$key]) ? $pajak[$key]['pendapatan_bersih'] : 0;
+    public function pendapatanbersih(Request $request)
+    {
+        // Get ALL Transaksi
+        $transaksigaji = Doslb_Master_Transaksi::all();
 
-              // menampilkan data dalam bentuk array
-              $pendapatanbersih[] = [
-                 'nama' => Dosen_Luar_Biasa::find($dosenlb->id)->nama,
-                 'golongan' => Dosen_Luar_Biasa::find($dosenlb->id)->golongan,
-                 'total_komponen_pendapatan' => $komponenpendapatanarray,
-                 'total_potongan' => $potonganarray,
-                 'pendapatan_bersih' => $pajakarray
+        // Initialize the array to store the results
+        $laporanpendapatanbersih = [];
 
-             ];
-         }
-     }
-         // Check if the pendapatanbersih array is empty
-         if (empty($pendapatanbersih)) {
-             return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
-         }
+        foreach ($transaksigaji as $gaji) {
+            $dosenluarbiasa = $gaji->dosen_luar_biasa;
+            $komponenpendapatan = $gaji->komponen_pendapatan;
+            $komponenpendapatan->komponen_pendapatan = json_decode($komponenpendapatan->komponen_pendapatan, true);
+            $potongan = $gaji->potongan;
+            $potongan->potongan = json_decode($potongan->potongan, true);
+            $pajak = $gaji->pajak;
 
-         return ResponseFormatter::success($pendapatanbersih, 'Data Laporan Pendapatan Bersih Dosen Luar Biasa Found');
- }
- }
+            $totalPotongan = array_sum($potongan->potongan);
+            $totalPendapatan= array_sum($komponenpendapatan->komponen_pendapatan);
 
-     public function laporanpajak(Request $request){
-         // Get ALL Dosen LB attribute by month & year
-         $dosenlbALL = Dosen_Luar_Biasa::all();
-         $month = $request->input('month');
-         $year = $request->input('year');
+            $laporanpendapatanbersih[] = [
+                'periode' => [
+                    'month' => $gaji->created_at->format('F'),
+                    'year' => $gaji->created_at->format('Y'),
+                ],
+                'pendapatanbersih' => [
+                    'no_pegawai' => $dosenluarbiasa->no_pegawai,
+                    'nama' => $dosenluarbiasa->nama,
+                    'golongan' => $dosenluarbiasa->golongan,
+                    'jumlah_pendapatan' => $totalPendapatan,
+                    'jumlah_potongan' => $totalPotongan,
+                    'pendapatan_bersih' => $pajak->pendapatan_bersih,
+                ],
+            ];
+        }
 
-         // Request by month & year
-         if(isset($month) && isset ($year)){
-            foreach($dosenlbALL as $dosenlb){
-                // Get ALL DATA komponen pendapatan with condition
-            $komponenpendapatan = Doslb_Komponen_Pendapatan::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-            foreach($komponenpendapatan as $key=> $kompen){
-                     // Get ALL DATA with condition
-                     $potongan = Doslb_Potongan::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                     $pajak = Doslb_Pajak::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
+        // Group the data by unique month and year
+        $groupedData = [];
+        foreach ($laporanpendapatanbersih as $item) {
+            $groupKey = $item['periode']['year'] . $item['periode']['month'];
+            $groupedData[$groupKey]['periode'] = $item['periode'];
+            $groupedData[$groupKey]['pendapatanbersih'][] = $item['pendapatanbersih'];
+        }
 
-             // Array Attribute
-             $komponenpendapatanarray = !empty($kompen) ? $kompen['total_komponen_pendapatan'] : 0;
-             $potonganarray = !empty($potongan[$key]) ? $potongan[$key]['total_potongan'] : 0;
+        // Check if the rekapitulasipendapatan array is empty
+        if (empty($groupedData)) {
+            return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
+        }
 
-              // menampilkan data dalam bentuk array
-              $laporanpajak[] = [
-                 'nama' => Dosen_Luar_Biasa::find($dosenlb->id)->nama,
-                 'golongan' => Dosen_Luar_Biasa::find($dosenlb->id)->golongan,
-                 'total_komponen_pendapatan' => $komponenpendapatanarray,
-                 'total_potongan' => $potonganarray,
-                 'dosenlb_pajak' => $pajak
-
-                 ];
-         }
-     }
-     // Check if the laporanpajak array is empty
-     if (empty($laporanpajak)) {
-         return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
-     }
-
-     return ResponseFormatter::success($laporanpajak, 'Data Laporan Pajak Dosen Luar Biasa Found');
-     }
- }
-             public function laporanpotongan(Request $request){
-             // Get ALL Dosen LB attribute by month & year
-            $dosenlbALL = Dosen_Luar_Biasa::all();
-            $month = $request->input('month');
-            $year = $request->input('year');
-
-             // Request by month & year
-             if(isset($month) && isset ($year)){
-                 foreach($dosenlbALL as $dosenlb){
-                     // Get ALL DATA potongan with condition
-                     $potonganfh = Doslb_Potongan::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                 foreach($potonganfh as $key=> $potongan){
-                         // Get ALL DATA PotonganTambahan with condition
-                     $potongantambahan = Doslb_Potongan_Tambahan::where('doslb_potongan_id', $potongan->id)
-                         ->whereMonth('created_at', $month)
-                         ->whereYear('created_at', $year)
-                         ->get();
-
-                   // menampilkan data dalam bentuk array
-                 $laporanpotongan[] = [
-                     'nama' =>   Dosen_Luar_Biasa::find($dosenlb->id)->nama,
-                     'golongan' => Dosen_Luar_Biasa::find($dosenlb->id)->golongan,
-                     'dosenlb_potongan' => $potonganfh,
-                     'dosenlb_potongan_tambahan' => $potongantambahan,
-                     ];
-                 }
-                 }
-                  // Check if the laporanpotongan array is empty
-                 if (empty($laporanpotongan)) {
-                     return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
-                 }
-                 return ResponseFormatter::success($laporanpotongan, 'Data Laporan Potongan Dosen Luar Biasa Found');
-             }
- }
-
-             public function rekapitulasibank(Request $request){
-              // Get ALL Dosen LB attribute by month & year
-              $dosenlbALL = Dosen_Luar_Biasa::all();
-              $month = $request->input('month');
-              $year = $request->input('year');
-
-               // Request by month & year
-               if(isset($month) && isset ($year)){
-                 $rekapitulasibank = []; // Inisialisasi array untuk menampung data
-                 foreach($dosenlbALL as $dosenlb){
-                     // Get ALL DATA
-                     $komponenpendapatan = Doslb_Komponen_Pendapatan::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-                     foreach($komponenpendapatan as $key=> $kompen){
-                             // Get ALL DATA with condition
-                         $potongan = Doslb_Potongan::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                         $pajak = Doslb_Pajak::where('dosen_luar_biasa_id', $dosenlb->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
+        return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Pendapatan Bersih Dosen Luar Biasa Found');
+    }
 
 
-                      // Array Attribute
-                    $komponenpendapatanarray = !empty($kompen) ? $kompen['total_komponen_pendapatan'] : 0;
-                    $potonganarray = !empty($potongan[$key]) ? $potongan[$key]['total_potongan'] : 0;
-                    $pajakarray = !empty($pajak[$key]) ? $pajak[$key]['pendapatan_bersih'] : 0;
-                  // menampilkan data dalam bentuk array
-                  $data = [
-                     'nama' => Dosen_Luar_Biasa::find($dosenlb->id)->nama,
-                     'golongan' => Dosen_Luar_Biasa::find($dosenlb->id)->golongan,
-                     'total_pendapatan' => $komponenpendapatanarray,
-                     'total_potongan' => $potonganarray,
-                     'pendapatan_bersih' => $pajakarray,
-                     'no_rekening' => Dosen_Luar_Biasa::find($dosenlb->id)->norek_bank,
-                     'nama_bank' => Dosen_Luar_Biasa::find($dosenlb->id)->nama_bank
-                     ];
+    public function laporanpajak(Request $request){
+        // Get ALL Transaksi
+        $transaksigaji = Doslb_Master_Transaksi::all();
 
-                 // Memilah data berdasarkan nama_bank
-                 if (Dosen_Luar_Biasa::find($dosenlb->id)->nama_bank === 'Mandiri') {
-                         $rekapitulasibank['payroll'][] = $data;
-                 } else {
-                         $rekapitulasibank['non_payroll'][] = $data;
-                 }
-             }
-         }
-           // Check if the laporanpotongan array is empty
-           if (empty($rekapitulasibank)) {
-             return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
-         }
-         return ResponseFormatter::success($rekapitulasibank, 'Data Laporan Rekapitulasi Bank Dosen Luar Biasa Found');
-         }
+        // Initialize the array to store the results
+        $laporanpajak = [];
 
-     }
+      foreach ($transaksigaji as $gaji) {
+
+        $dosenluarbiasa = $gaji->dosen_luar_biasa;
+        $komponenpendapatan = $gaji->komponen_pendapatan;
+        $komponenpendapatan->komponen_pendapatan = json_decode($komponenpendapatan->komponen_pendapatan, true);
+        $potongan = $gaji->potongan;
+        $potongan->potongan = json_decode($potongan->potongan, true);
+        $pajak = $gaji->pajak;
+
+        $totalPotongan = array_sum($potongan->potongan);
+        $totalPendapatan= array_sum($komponenpendapatan->komponen_pendapatan);
+
+        $laporanpajak[] = [
+            'periode' => [
+                'month' => $gaji->created_at->format('F'),
+                'year' => $gaji->created_at->format('Y'),
+            ],
+            'laporanpajak' => [
+                'no_pegawai' => $dosenluarbiasa->no_pegawai,
+                'nama' => $dosenluarbiasa->nama,
+                'jumlah_pendapatan' => $totalPendapatan,
+                'jumlah_potongan' => $totalPotongan,
+                'pendapatan_bruto' => $totalPendapatan,
+                'pajak' => [
+                    'pajak_pph25' => $pajak->pajak_pph25,
+
+                ],
+            ],
+        ];
+    }
+
+    // Group the data by unique month and year
+    $groupedData = [];
+    foreach ($laporanpajak as $item) {
+        $groupKey = $item['periode']['year'] . $item['periode']['month'];
+        $groupedData[$groupKey]['periode'] = $item['periode'];
+        $groupedData[$groupKey]['laporanpajak'][] = $item['laporanpajak'];
+    }
+
+    // Check if the rekapitulasipendapatan array is empty
+    if (empty($groupedData)) {
+        return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
+    }
+
+    return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Pajak Dosen Luar Biasa Found');
+}
+
+        public function laporanpotongan(Request $request){
+        // Get ALL Transaksi
+        $transaksigaji = Doslb_Master_Transaksi::all();
+
+        // Initialize the array to store the results
+        $laporanpotongan = [];
+
+
+        foreach ($transaksigaji as $gaji) {
+
+        $dosenluarbiasa = $gaji->dosen_luar_biasa;
+        $potongan = $gaji->potongan;
+        $potongan->potongan = json_decode($potongan->potongan, true);
+
+
+        $laporanpotongan[] = [
+            'periode' => [
+                'month' => $gaji->created_at->format('F'),
+                'year' => $gaji->created_at->format('Y'),
+            ],
+            'laporanpotongan' => [
+                'no_pegawai' => $dosenluarbiasa->no_pegawai,
+                'nama' => $dosenluarbiasa->nama,
+                'potongan' => $potongan->potongan,
+            ],
+        ];
+        }
+
+        // Group the data by unique month and year
+        $groupedData = [];
+        foreach ($laporanpotongan as $item) {
+        $groupKey = $item['periode']['year'] . $item['periode']['month'];
+        $groupedData[$groupKey]['periode'] = $item['periode'];
+        $groupedData[$groupKey]['laporanpotongan'][] = $item['laporanpotongan'];
+        }
+
+        // Check if the rekapitulasipendapatan array is empty
+        if (empty($groupedData)) {
+        return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
+        }
+
+        return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Potongan Dosen Luar Biasa Found');
+        }
+
+
+    public function rekapitulasibank(){
+            // Get ALL Transaksi
+            $transaksigaji = Doslb_Master_Transaksi::all();
+             // Initialize the array to store the results
+            $rekapitulasibank = [];
+
+            foreach ($transaksigaji as $gaji) {
+
+                $dosenluarbiasa = $gaji->dosen_luar_biasa;
+                $bank= $gaji->bank;
+                $komponenpendapatan = $gaji->komponen_pendapatan;
+                $komponenpendapatan->komponen_pendapatan = json_decode($komponenpendapatan->komponen_pendapatan, true);
+                $potongan = $gaji->potongan;
+                $potongan->potongan = json_decode($potongan->potongan, true);
+                $pajak = $gaji->pajak;
+
+                $totalPotongan = array_sum($potongan->potongan);
+                $totalPendapatan= array_sum($komponenpendapatan->komponen_pendapatan);
+
+    // menampilkan data dalam bentuk array
+    $rekapitulasibankArray = [
+        'periode' => [
+            'month' => $gaji->created_at->format('F'),
+            'year' => $gaji->created_at->format('Y'),
+        ],
+        'rekapitulasibank' => [
+            'no_pegawai' => $dosenluarbiasa->no_pegawai,
+            'nama' => $dosenluarbiasa->nama,
+            'golongan' => $dosenluarbiasa->golongan,
+            'jumlah_pendapatan' => $totalPendapatan,
+            'jumlah_potongan' => $totalPotongan,
+            'pendapatan_bersih' => $pajak->pendapatan_bersih,
+            'no_rekening' => $bank->no_rekening,
+            'nama_bank' => $gaji->bank->nama_bank,
+        ],
+    ];
+
+  // Add to the appropriate array based on the condition
+  $bankType = ($gaji->bank->nama_bank === 'Bank Mandiri') ? 'payroll' : 'non_payroll';
+  $rekapitulasibankKey = $rekapitulasibankArray['periode']['year'] . $rekapitulasibankArray['periode']['month'];
+
+  if (!isset($rekapitulasibank[$rekapitulasibankKey])) {
+      $rekapitulasibank[$rekapitulasibankKey] = [
+          'periode' => $rekapitulasibankArray['periode'],
+          'payroll' => [],
+          'non_payroll' => [],
+      ];
+  }
+
+  $rekapitulasibank[$rekapitulasibankKey][$bankType][] = $rekapitulasibankArray['rekapitulasibank'];
+}
+
+return ResponseFormatter::success(array_values($rekapitulasibank), 'Data Laporan Rekapitulasi Bank Dosen Luar Biasa Found');
+}
  }

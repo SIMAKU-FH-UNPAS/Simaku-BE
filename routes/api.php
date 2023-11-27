@@ -57,24 +57,18 @@ function(){
     Route::post('create', [DosenTetapController::class, 'create'])->name('create');
     Route::put('update/{id}', [DosenTetapController::class, 'update'])->name('update');
     Route::delete('delete/{id}', [DosenTetapController::class, 'destroy'])->name('delete');
-    Route::get('/gaji/{dosentetapId}', [DosenTetapTransaksiGajiController::class, 'fetch'])->name('fetch');
-    Route::get('/gaji/transaksi/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'fetchById'])->name('fetchById');
-    Route::post('/gaji/transaksi/create', [DosenTetapTransaksiGajiController::class, 'create'])->name('create');
+    Route::get('gaji/{dosentetapId}', [DosenTetapTransaksiGajiController::class, 'fetch'])->name('fetch');
+    Route::get('gaji/transaksi/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'fetchById'])->name('fetchById');
+    Route::post('gaji/transaksi/create', [DosenTetapTransaksiGajiController::class, 'create'])->name('create');
     Route::put('gaji/transaksi/update/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'update'])->name('update');
     Route::delete('gaji/transaksi/delete/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'destroy'])->name('destroy');
-
+    Route::get('laporan/rekapitulasipendapatan', [DosenTetapLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
+    Route::get('laporan/pendapatanbersih', [DosenTetapLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
+    Route::get('laporan/pajak', [DosenTetapLaporanController::class, 'laporanpajak'])->name('laporanpajak');
+    Route::get('laporan/potongan', [DosenTetapLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
+    Route::get('laporan/rekapitulasibank', [DosenTetapLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
 });
 
-
-// Laporan Dosen Tetap
-Route::prefix('dosentetap-laporan')->middleware('auth:sanctum')->name('dosentetap-laporan.')->group(
-    function(){
-        Route::get('rekapitulasipendapatan', [DosenTetapLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
-        Route::get('pendapatanbersih', [DosenTetapLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
-        Route::get('laporanpajak', [DosenTetapLaporanController::class, 'laporanpajak'])->name('laporanpajak');
-        Route::get('laporanpotongan', [DosenTetapLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
-        Route::get('rekapitulasibank', [DosenTetapLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
-    });
 
 // Karyawan
 Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
@@ -84,22 +78,18 @@ Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
         Route::post('create', [KaryawanController::class, 'create'])->name('create');
         Route::put('update/{id}', [KaryawanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanController::class, 'destroy'])->name('delete');
-        Route::get('/gaji/{karyawanId}', [KaryawanTransaksiGajiController::class, 'fetch'])->name('fetch');
-        Route::get('/gaji/transaksi/{transaksiId}', [KaryawanTransaksiGajiController::class, 'fetchById'])->name('fetchById');
-        Route::post('/gaji/transaksi/create', [KaryawanTransaksiGajiController::class, 'create'])->name('create');
+        Route::get('gaji/{karyawanId}', [KaryawanTransaksiGajiController::class, 'fetch'])->name('fetch');
+        Route::get('gaji/transaksi/{transaksiId}', [KaryawanTransaksiGajiController::class, 'fetchById'])->name('fetchById');
+        Route::post('gaji/transaksi/create', [KaryawanTransaksiGajiController::class, 'create'])->name('create');
         Route::put('gaji/transaksi/update/{transaksiId}', [KaryawanTransaksiGajiController::class, 'update'])->name('update');
         Route::delete('gaji/transaksi/delete/{transaksiId}', [KaryawanTransaksiGajiController::class, 'destroy'])->name('destroy');
+        Route::get('laporan/rekapitulasipendapatan', [KaryawanLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
+        Route::get('laporan/pendapatanbersih', [KaryawanLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
+        Route::get('laporan/pajak', [KaryawanLaporanController::class, 'laporanpajak'])->name('laporanpajak');
+        Route::get('laporan/potongan', [KaryawanLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
+        Route::get('laporan/rekapitulasibank', [KaryawanLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
+    });
 
-    });
-// Laporan Karyawan
-Route::prefix('karyawan-laporan')->middleware('auth:sanctum')->name('karyawan-laporan.')->group(
-    function(){
-        Route::get('rekapitulasipendapatan', [KaryawanLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
-        Route::get('pendapatanbersih', [KaryawanLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
-        Route::get('laporanpajak', [KaryawanLaporanController::class, 'laporanpajak'])->name('laporanpajak');
-        Route::get('laporanpotongan', [KaryawanLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
-        Route::get('rekapitulasibank', [KaryawanLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
-    });
 
 
 // Dosen Luar Biasa
@@ -110,28 +100,18 @@ function(){
     Route::post('create', [DosenLuarBiasaController::class, 'create'])->name('create');
     Route::put('update/{id}', [DosenLuarBiasaController::class, 'update'])->name('update');
     Route::delete('delete/{id}', [DosenLuarBiasaController::class, 'destroy'])->name('delete');
-    Route::get('/gaji/{dosenlbId}', [DosenlbTransaksiGajiController::class, 'fetch'])->name('fetch');
-    Route::get('/gaji/transaksi/{transaksiId}', [DosenlbTransaksiGajiController::class, 'fetchById'])->name('fetchById');
-    Route::post('/gaji/transaksi/create', [DosenlbTransaksiGajiController::class, 'create'])->name('create');
+    Route::get('gaji/{dosenlbId}', [DosenlbTransaksiGajiController::class, 'fetch'])->name('fetch');
+    Route::get('gaji/transaksi/{transaksiId}', [DosenlbTransaksiGajiController::class, 'fetchById'])->name('fetchById');
+    Route::post('gaji/transaksi/create', [DosenlbTransaksiGajiController::class, 'create'])->name('create');
     Route::put('gaji/transaksi/update/{transaksiId}', [DosenlbTransaksiGajiController::class, 'update'])->name('update');
     Route::delete('gaji/transaksi/delete/{transaksiId}', [DosenlbTransaksiGajiController::class, 'destroy'])->name('destroy');
+    Route::get('laporan/rekapitulasipendapatan', [DosenlbLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
+    Route::get('laporan/pendapatanbersih', [DosenlbLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
+    Route::get('laporan/pajak', [DosenlbLaporanController::class, 'laporanpajak'])->name('laporanpajak');
+    Route::get('laporan/potongan', [DosenlbLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
+    Route::get('laporan/rekapitulasibank', [DosenlbLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
 });
 
-// Laporan Dosen Luar Biasa
-Route::prefix('dosenlb-laporan')->middleware('auth:sanctum')->name('dosenlb-laporan.')->group(
-    function(){
-        Route::get('rekapitulasipendapatan', [DosenlbLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
-        Route::get('pendapatanbersih', [DosenlbLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
-        Route::get('laporanpajak', [DosenlbLaporanController::class, 'laporanpajak'])->name('laporanpajak');
-        Route::get('laporanpotongan', [DosenlbLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
-        Route::get('rekapitulasibank', [DosenlbLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
-    });
 
 
 
-    // Coba
-    Route::prefix('transaksi')->middleware('auth:sanctum')->name('transaksi.')->group(
-        function(){
-            Route::get('bruto', [RekapitulasiController::class, 'pendapatanbruto'])->name('pendapatanbruto');
-            // Route::get('pegawai/{bulan}/{tahun}', [TransaksiGajiController::class, 'getDataByMonthAndYear'])->name('pegawai.getDataByMonthAndYear');
-        });

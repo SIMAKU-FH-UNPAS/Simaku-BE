@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\dosentetap;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,7 +26,13 @@ class UpdateMasterTransaksiRequest extends FormRequest
     public function rules()
     {
         return [
-            'dostap_bank_id'=> 'required|integer|exists:dostap_bank,id,deleted_at,NULL'
+            'dostap_bank_id' => [
+                'required',
+                'integer',
+                Rule::exists('dostap_bank', 'id')
+                    ->where('dosen_tetap_id', $this->dosen_tetap_id)
+                    ->whereNull('deleted_at'),
+            ],
         ];
     }
 }

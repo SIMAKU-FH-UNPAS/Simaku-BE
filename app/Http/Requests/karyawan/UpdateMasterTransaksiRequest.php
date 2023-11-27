@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\karyawan;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -25,7 +26,13 @@ class UpdateMasterTransaksiRequest extends FormRequest
     public function rules()
     {
         return [
-            'karyawan_bank_id'=> 'required|integer|exists:karyawan_bank,id'
+            'karyawan_bank_id' => [
+                'required',
+                'integer',
+                Rule::exists('karyawan_bank', 'id')
+                    ->where('karyawan_id', $this->karyawan_id)
+                    ->whereNull('deleted_at'),
+            ],
         ];
     }
 }

@@ -5,231 +5,289 @@ namespace App\Http\Controllers\API\dosentetap;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
-use App\Models\dosentetap\Dosen_Tetap;
-use App\Models\dosentetap\Dostap_Gaji_Fakultas;
-use App\Models\dosentetap\Dostap_Honor_Fakultas;
-use App\Models\dosentetap\Dostap_Gaji_Universitas;
-use App\Models\dosentetap\Dostap_Pajak;
-use App\Models\dosentetap\Dostap_Potongan;
-use App\Models\dosentetap\Dostap_Potongan_Tambahan;
+use App\Models\dosentetap\Dostap_Master_Transaksi;
+
 
 class LaporanController extends Controller
 {
-    public function rekapitulasipendapatan(Request $request){
-        // Get ALL DosenTetap attributr nama & golongan
-        $dosentetapALL = Dosen_Tetap::all();
-        $month = $request->input('month');
-        $year = $request->input('year');
+    public function rekapitulasipendapatan() {
+        // Get ALL Transaksi
+        $transaksigaji = Dostap_Master_Transaksi::all();
 
-        // Request by month & year
-        if(isset($month) && isset ($year)){
-            foreach($dosentetapALL as $dosentetap){
-                // Get ALL DATA gaji fakultas with condition
-                $gajifakultas = Dostap_Gaji_Fakultas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-            foreach($gajifakultas as $key=> $gajifak){
-                    // Get ALL DATA gaji universitas with condition
-                $gajiuniv = Dostap_Gaji_Universitas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                    // Get ALL DATA honor fakultas with condition
-                $honorfakultas = Dostap_Honor_Fakultas::where('dostap_gaji_fakultas_id', $gajifak->id)
-                    ->whereMonth('created_at', $month)
-                    ->whereYear('created_at', $year)
-                    ->get();
+        // Initialize the array to store the results
+        $rekapitulasipendapatan = [];
 
-            // Array Attribute
-            $gajiunivarray = !empty($gajiuniv[$key]) ? $gajiuniv[$key]['total_gaji_univ'] : 0;
-            $gajifakarray = !empty($gajifak) ? $gajifak['total_gaji_fakultas'] : 0;
+        foreach ($transaksigaji as $gaji) {
 
-            // menampilkan data dalam bentuk array
-                $rekapitulasipendapatan[] = [
-                    'nama' => Dosen_Tetap::find($dosentetap->id)->nama,
-                    'golongan' => Dosen_Tetap::find($dosentetap->id)->golongan,
-                    'dostap_gaji_fakultas' => $gajifakultas,
-                    'dostap_honor_fakultas' => $honorfakultas,
-                    'total_gaji_univ' => $gajiunivarray,
-                    'total_pendapatan' => $gajiunivarray + $gajifakarray
+            $dosentetap = $gaji->dosen_tetap;
+            $gajiuniv = $gaji->gaji_universitas;
+            $gajifakultas = $gaji->gaji_fakultas;
+            $gajifakultas->gaji_fakultas = json_decode($gajifakultas->gaji_fakultas, true);
 
-                ];
-            }
-            }
-            // Check if the rekapitulasipendapatan array is empty
-        if (empty($rekapitulasipendapatan)) {
-            return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
-        }
+            $totalGajiUniv = $gajiuniv->gaji_pokok + $gajiuniv->tunjangan_fungsional + $gajiuniv->tunjangan_struktural + $gajiuniv->tunjangan_khusus_istimewa + $gajiuniv->tunjangan_presensi_kerja + $gajiuniv->tunjangan_tambahan + $gajiuniv->tunjangan_suami_istri + $gajiuniv->tunjangan_anak + $gajiuniv->uang_lembur_hk + $gajiuniv->uang_lembur_hl + $gajiuniv->transport_kehadiran + $gajiuniv->honor_universitas;
+            $totalGajiFak = array_sum($gajifakultas->gaji_fakultas);
+            $totalPendapatan = $totalGajiUniv + $totalGajiFak;
 
-        return ResponseFormatter::success($rekapitulasipendapatan, 'Data Laporan Rekapitulasi Pendapatan Dosen Tetap Found');
-    }
-    }
-
-        public function pendapatanbersih(Request $request){
-            $dosentetapALL = Dosen_Tetap::all();
-            $month = $request->input('month');
-            $year = $request->input('year');
-
-            // Request by month & year
-            if(isset($month) && isset ($year)){
-                foreach($dosentetapALL as $dosentetap){
-                    // Get ALL DATA gaji fakultas with condition
-                    $gajifakultas = Dostap_Gaji_Fakultas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-                foreach($gajifakultas as $key=> $gajifak){
-                        // Get ALL DATA gaji universitas with condition
-                    $gajiuniv = Dostap_Gaji_Universitas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                    $potongan = Dostap_Potongan::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                    $pajak = Dostap_Pajak::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-
-
-            // Array Attribute
-            $gajiunivarray = !empty($gajiuniv[$key]) ? $gajiuniv[$key]['total_gaji_univ'] : 0;
-            $gajifakarray = !empty($gajifak) ? $gajifak['total_gaji_fakultas'] : 0;
-            $potonganarray = !empty($potongan[$key]) ? $potongan[$key]['total_potongan'] : 0;
-            $pajakarray = !empty($pajak[$key]) ? $pajak[$key]['pendapatan_bersih'] : 0;
-
-             // menampilkan data dalam bentuk array
-             $pendapatanbersih[] = [
-                'nama' => Dosen_Tetap::find($dosentetap->id)->nama,
-                'golongan' => Dosen_Tetap::find($dosentetap->id)->golongan,
-                'total_gaji_fakultas' => $gajifakarray,
-                'total_gaji_univ' => $gajiunivarray,
-                'total_pendapatan' => $gajiunivarray + $gajifakarray,
-                'total_potongan' => $potonganarray,
-                'pendapatan_bersih' => $pajakarray
-
+            $rekapitulasipendapatan[] = [
+                'periode' => [
+                    'month' => $gaji->created_at->format('F'),
+                    'year' => $gaji->created_at->format('Y'),
+                ],
+                'rekapitulasipendapatan' => [
+                    'no_pegawai' => $dosentetap->no_pegawai,
+                    'nama' => $dosentetap->nama,
+                    'golongan' => $dosentetap->golongan,
+                    'gaji_fakultas' => $gajifakultas->gaji_fakultas,
+                    'jumlah_gaji_fh' => $totalGajiFak,
+                    'jumlah_gaji_pusat' => $totalGajiUniv,
+                    'total' => $totalPendapatan
+                ],
             ];
         }
-    }
-        // Check if the pendapatanbersih array is empty
-        if (empty($pendapatanbersih)) {
+
+        // Group the data by unique month and year
+        $groupedData = [];
+        foreach ($rekapitulasipendapatan as $item) {
+            $groupKey = $item['periode']['year'] . $item['periode']['month'];
+            $groupedData[$groupKey]['periode'] = $item['periode'];
+            $groupedData[$groupKey]['rekapitulasipendapatan'][] = $item['rekapitulasipendapatan'];
+        }
+
+        // Check if the rekapitulasipendapatan array is empty
+        if (empty($groupedData)) {
             return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
         }
 
-        return ResponseFormatter::success($pendapatanbersih, 'Data Laporan Pendapatan Bersih Dosen Tetap Found');
-}
-}
+        return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Rekapitulasi Pendapatan Dosen Tetap Found');
+    }
+
+    public function pendapatanbersih(Request $request)
+    {
+        // Get ALL Transaksi
+        $transaksigaji = Dostap_Master_Transaksi::all();
+
+        // Initialize the array to store the results
+        $laporanpendapatanbersih = [];
+
+        foreach ($transaksigaji as $gaji) {
+            $dosentetap = $gaji->dosen_tetap;
+            $gajiuniv = $gaji->gaji_universitas;
+            $gajifakultas = $gaji->gaji_fakultas;
+            $gajifakultas->gaji_fakultas = json_decode($gajifakultas->gaji_fakultas, true);
+            $potongan = $gaji->potongan;
+            $potongan->potongan = json_decode($potongan->potongan, true);
+            $pajak = $gaji->pajak;
+
+            $totalGajiUniv = $gajiuniv->gaji_pokok + $gajiuniv->tunjangan_fungsional + $gajiuniv->tunjangan_struktural + $gajiuniv->tunjangan_khusus_istimewa + $gajiuniv->tunjangan_presensi_kerja + $gajiuniv->tunjangan_tambahan + $gajiuniv->tunjangan_suami_istri + $gajiuniv->tunjangan_anak + $gajiuniv->uang_lembur_hk + $gajiuniv->uang_lembur_hl + $gajiuniv->transport_kehadiran + $gajiuniv->honor_universitas;
+            $totalGajiFak = array_sum($gajifakultas->gaji_fakultas);
+            $totalPotongan = array_sum($potongan->potongan);
+            $totalPendapatan = $totalGajiUniv + $totalGajiFak;
+
+            $laporanpendapatanbersih[] = [
+                'periode' => [
+                    'month' => $gaji->created_at->format('F'),
+                    'year' => $gaji->created_at->format('Y'),
+                ],
+                'pendapatanbersih' => [
+                    'no_pegawai' => $dosentetap->no_pegawai,
+                    'nama' => $dosentetap->nama,
+                    'golongan' => $dosentetap->golongan,
+                    'jumlah_gaji_fh' => $totalGajiFak,
+                    'jumlah_gaji_pusat' => $totalGajiUniv,
+                    'jumlah_pendapatan' => $totalPendapatan,
+                    'jumlah_potongan' => $totalPotongan,
+                    'pendapatan_bersih' => $pajak->pendapatan_bersih,
+                ],
+            ];
+        }
+
+        // Group the data by unique month and year
+        $groupedData = [];
+        foreach ($laporanpendapatanbersih as $item) {
+            $groupKey = $item['periode']['year'] . $item['periode']['month'];
+            $groupedData[$groupKey]['periode'] = $item['periode'];
+            $groupedData[$groupKey]['pendapatanbersih'][] = $item['pendapatanbersih'];
+        }
+
+        // Check if the rekapitulasipendapatan array is empty
+        if (empty($groupedData)) {
+            return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
+        }
+
+        return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Pendapatan Bersih Dosen Tetap Found');
+    }
+
+
 
     public function laporanpajak(Request $request){
-        $dosentetapALL = Dosen_Tetap::all();
-        $month = $request->input('month');
-        $year = $request->input('year');
+        // Get ALL Transaksi
+        $transaksigaji = Dostap_Master_Transaksi::all();
 
-        // Request by month & year
-        if(isset($month) && isset ($year)){
-            foreach($dosentetapALL as $dosentetap){
-                // Get ALL DATA gaji fakultas with condition
-                $gajifakultas = Dostap_Gaji_Fakultas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-            foreach($gajifakultas as $key=> $gajifak){
-                    // Get ALL DATA gaji universitas with condition
-                $gajiuniv = Dostap_Gaji_Universitas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                $potongan = Dostap_Potongan::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-                $pajak = Dostap_Pajak::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
+        // Initialize the array to store the results
+        $laporanpajak = [];
 
-            // Array Attribute
-            $gajiunivarray = !empty($gajiuniv[$key]) ? $gajiuniv[$key]['total_gaji_univ'] : 0;
-            $gajifakarray = !empty($gajifak) ? $gajifak['total_gaji_fakultas'] : 0;
-            $potonganarray = !empty($potongan[$key]) ? $potongan[$key]['total_potongan'] : 0;
+      foreach ($transaksigaji as $gaji) {
 
-             // menampilkan data dalam bentuk array
-             $laporanpajak[] = [
-                'nama' => Dosen_Tetap::find($dosentetap->id)->nama,
-                'golongan' => Dosen_Tetap::find($dosentetap->id)->golongan,
-                'total_gaji_fakultas' => $gajifakarray,
-                'total_gaji_univ' => $gajiunivarray,
-                'total_potongan' => $potonganarray,
-                'dostap_pajak' => $pajak
+        $dosentetap = $gaji->dosen_tetap;
+        $gajiuniv = $gaji->gaji_universitas;
+        $gajifakultas = $gaji->gaji_fakultas;
+        $gajifakultas->gaji_fakultas = json_decode($gajifakultas->gaji_fakultas, true);
+        $potongan = $gaji->potongan;
+        $potongan->potongan = json_decode($potongan->potongan, true);
+        $pajak = $gaji->pajak;
 
-                ];
-        }
+        $totalGajiUniv = $gajiuniv->gaji_pokok + $gajiuniv->tunjangan_fungsional + $gajiuniv->tunjangan_struktural + $gajiuniv->tunjangan_khusus_istimewa + $gajiuniv->tunjangan_presensi_kerja + $gajiuniv->tunjangan_tambahan + $gajiuniv->tunjangan_suami_istri + $gajiuniv->tunjangan_anak + $gajiuniv->uang_lembur_hk + $gajiuniv->uang_lembur_hl + $gajiuniv->transport_kehadiran + $gajiuniv->honor_universitas;
+        $totalGajiFak = array_sum($gajifakultas->gaji_fakultas);
+        $totalPotongan = array_sum($potongan->potongan);
+
+        $laporanpajak[] = [
+            'periode' => [
+                'month' => $gaji->created_at->format('F'),
+                'year' => $gaji->created_at->format('Y'),
+            ],
+            'laporanpajak' => [
+                'no_pegawai' => $dosentetap->no_pegawai,
+                'nama' => $dosentetap->nama,
+                'gaji_pusat' => $totalGajiUniv,
+                'gaji_fh' => $totalGajiFak,
+                'jumlah_potongan' => $totalPotongan,
+                'pensiun' => $pajak->pensiun,
+                'pendapatan_bruto' => $pajak->bruto_pajak,
+                'pajak' => [
+                    'bruto_murni' => $pajak->bruto_murni,
+                    'biaya_jabatan' => $pajak->biaya_jabatan,
+                    'aksa_mandiri' => $pajak->aksa_mandiri,
+                    'dplk_pensiun' => $pajak->dplk_pensiun,
+                    'jumlah_potongan_kena_pajak' => $pajak->jumlah_potongan_kena_pajak,
+                    'jumlah_set_potongan_kena_pajak' => $pajak->jumlah_set_potongan_kena_pajak,
+                    'ptkp' => $pajak->ptkp,
+                    'pkp' => $pajak->pkp,
+                    'pajak_pph21' => $pajak->pajak_pph21,
+                    'jumlah_set_pajak' => $pajak->jumlah_set_pajak,
+                    'potongan_tak_kena_pajak' => $pajak->potongan_tak_kena_pajak,
+                    'pendapatan_bersih' => $pajak->pendapatan_bersih,
+                ],
+            ],
+        ];
     }
-    // Check if the laporanpajak array is empty
-    if (empty($laporanpajak)) {
+
+    // Group the data by unique month and year
+    $groupedData = [];
+    foreach ($laporanpajak as $item) {
+        $groupKey = $item['periode']['year'] . $item['periode']['month'];
+        $groupedData[$groupKey]['periode'] = $item['periode'];
+        $groupedData[$groupKey]['laporanpajak'][] = $item['laporanpajak'];
+    }
+
+    // Check if the rekapitulasipendapatan array is empty
+    if (empty($groupedData)) {
         return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
     }
 
-    return ResponseFormatter::success($laporanpajak, 'Data Laporan Pajak Dosen Tetap Found');
+    return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Pajak Dosen Tetap Found');
+}
+
+        public function laporanpotongan(Request $request){
+        // Get ALL Transaksi
+        $transaksigaji = Dostap_Master_Transaksi::all();
+
+        // Initialize the array to store the results
+        $laporanpotongan = [];
+
+
+        foreach ($transaksigaji as $gaji) {
+
+        $dosentetap = $gaji->dosen_tetap;
+        $potongan = $gaji->potongan;
+        $potongan->potongan = json_decode($potongan->potongan, true);
+
+
+
+        $laporanpotongan[] = [
+            'periode' => [
+                'month' => $gaji->created_at->format('F'),
+                'year' => $gaji->created_at->format('Y'),
+            ],
+            'laporanpotongan' => [
+                'no_pegawai' => $dosentetap->no_pegawai,
+                'nama' => $dosentetap->nama,
+                'potongan' => $potongan->potongan,
+            ],
+        ];
+        }
+
+        // Group the data by unique month and year
+        $groupedData = [];
+        foreach ($laporanpotongan as $item) {
+        $groupKey = $item['periode']['year'] . $item['periode']['month'];
+        $groupedData[$groupKey]['periode'] = $item['periode'];
+        $groupedData[$groupKey]['laporanpotongan'][] = $item['laporanpotongan'];
+        }
+
+        // Check if the rekapitulasipendapatan array is empty
+        if (empty($groupedData)) {
+        return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
+        }
+
+        return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Potongan Dosen Tetap Found');
+        }
+
+    public function rekapitulasibank(){
+            // Get ALL Transaksi
+            $transaksigaji = Dostap_Master_Transaksi::all();
+             // Initialize the array to store the results
+            $rekapitulasibank = [];
+
+            foreach ($transaksigaji as $gaji) {
+
+                $dosentetap = $gaji->dosen_tetap;
+                $bank= $gaji->bank;
+                $gajiuniv = $gaji->gaji_universitas;
+                $gajifakultas = $gaji->gaji_fakultas;
+                $gajifakultas->gaji_fakultas = json_decode($gajifakultas->gaji_fakultas, true);
+                $potongan = $gaji->potongan;
+                $potongan->potongan = json_decode($potongan->potongan, true);
+                $pajak = $gaji->pajak;
+
+                $totalGajiUniv = $gajiuniv->gaji_pokok + $gajiuniv->tunjangan_fungsional + $gajiuniv->tunjangan_struktural + $gajiuniv->tunjangan_khusus_istimewa + $gajiuniv->tunjangan_presensi_kerja + $gajiuniv->tunjangan_tambahan + $gajiuniv->tunjangan_suami_istri + $gajiuniv->tunjangan_anak + $gajiuniv->uang_lembur_hk + $gajiuniv->uang_lembur_hl + $gajiuniv->transport_kehadiran + $gajiuniv->honor_universitas;
+                $totalGajiFak = array_sum($gajifakultas->gaji_fakultas);
+                $totalPendapatan = $totalGajiUniv + $totalGajiFak;
+                $totalPotongan = array_sum($potongan->potongan);
+
+    // menampilkan data dalam bentuk array
+    $rekapitulasibankArray = [
+        'periode' => [
+            'month' => $gaji->created_at->format('F'),
+            'year' => $gaji->created_at->format('Y'),
+        ],
+        'rekapitulasibank' => [
+            'no_pegawai' => $dosentetap->no_pegawai,
+            'nama' => $dosentetap->nama,
+            'golongan' => $dosentetap->golongan,
+            'jumlah_pendapatan' => $totalPendapatan,
+            'jumlah_potongan' => $totalPotongan,
+            'pendapatan_bersih' => $pajak->pendapatan_bersih,
+            'no_rekening' => $bank->no_rekening,
+            'nama_bank' => $gaji->bank->nama_bank,
+        ],
+    ];
+
+  // Add to the appropriate array based on the condition
+  $bankType = ($gaji->bank->nama_bank === 'Bank Mandiri') ? 'payroll' : 'non_payroll';
+  $rekapitulasibankKey = $rekapitulasibankArray['periode']['year'] . $rekapitulasibankArray['periode']['month'];
+
+  if (!isset($rekapitulasibank[$rekapitulasibankKey])) {
+      $rekapitulasibank[$rekapitulasibankKey] = [
+          'periode' => $rekapitulasibankArray['periode'],
+          'payroll' => [],
+          'non_payroll' => [],
+      ];
+  }
+
+  $rekapitulasibank[$rekapitulasibankKey][$bankType][] = $rekapitulasibankArray['rekapitulasibank'];
+}
+
+return ResponseFormatter::success(array_values($rekapitulasibank), 'Data Laporan Rekapitulasi Bank Dosen Tetap Found');
+}
     }
-}
-            public function laporanpotongan(Request $request){
-            // Get ALL DosenTetap attributr nama & golongan
-            $dosentetapALL = Dosen_Tetap::all();
-            $month = $request->input('month');
-            $year = $request->input('year');
-
-            // Request by month & year
-            if(isset($month) && isset ($year)){
-                foreach($dosentetapALL as $dosentetap){
-                    // Get ALL DATA gaji fakultas with condition
-                    $potonganfh = Dostap_Potongan::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-                foreach($potonganfh as $key=> $potongan){
-                        // Get ALL DATA PotonganTambahan with condition
-                    $potongantambahan = Dostap_Potongan_Tambahan::where('dostap_potongan_id', $potongan->id)
-                        ->whereMonth('created_at', $month)
-                        ->whereYear('created_at', $year)
-                        ->get();
-
-                  // menampilkan data dalam bentuk array
-                $laporanpotongan[] = [
-                    'nama' => Dosen_Tetap::find($dosentetap->id)->nama,
-                    'golongan' => Dosen_Tetap::find($dosentetap->id)->golongan,
-                    'dostap_potongan' => $potonganfh,
-                    'dostap_potongan_tambahan' => $potongantambahan,
-                    ];
-                }
-                }
-                 // Check if the laporanpotongan array is empty
-                if (empty($laporanpotongan)) {
-                    return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
-                }
-                return ResponseFormatter::success($laporanpotongan, 'Data Laporan Potongan Dosen Tetap Found');
-            }
-}
-
-            public function rekapitulasibank(Request $request){
-            // Get ALL DosenTetap attributr nama & golongan
-            $dosentetapALL = Dosen_Tetap::all();
-            $month = $request->input('month');
-            $year = $request->input('year');
-
-              // Request by month & year
-              if(isset($month) && isset ($year)){
-                $rekapitulasibank = []; // Inisialisasi array untuk menampung data
-                foreach($dosentetapALL as $dosentetap){
-                    // Get ALL DATA
-                    $gajiuniversitas = Dostap_Gaji_Universitas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-                    foreach($gajiuniversitas as $key=> $gajiuniv){
-                        // Get ALL DATA
-                    $gajifakultas = Dostap_Gaji_Fakultas::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-                    $potongan = Dostap_Potongan::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at', $year)->get();
-                    $pajak = Dostap_Pajak::where('dosen_tetap_id', $dosentetap->id)->whereMonth('created_at', $month)->whereYear('created_at',$year)->get();
-
-                     // Array Attribute
-            $gajifakarray = !empty($gajifakultas[$key]) ? $gajifakultas[$key]['total_gaji_fakultas'] : 0;
-            $gajiunivarray = !empty($gajiuniv) ? $gajiuniv['total_gaji_univ'] : 0;
-            $potonganarray = !empty($potongan[$key]) ? $potongan[$key]['total_potongan'] : 0;
-            $pajakarray = !empty($pajak[$key]) ? $pajak[$key]['pendapatan_bersih'] : 0;
-                 // menampilkan data dalam bentuk array
-                 $data = [
-                    'nama' => Dosen_Tetap::find($dosentetap->id)->nama,
-                    'golongan' => Dosen_Tetap::find($dosentetap->id)->golongan,
-                    'total_pendapatan' => $gajiunivarray + $gajifakarray,
-                    'total_potongan' => $potonganarray,
-                    'pendapatan_bersih' => $pajakarray,
-                    'no_rekening' => Dosen_Tetap::find($dosentetap->id)->norek_bank,
-                    'nama_bank' => Dosen_Tetap::find($dosentetap->id)->nama_bank
-                    ];
-
-                // Memilah data berdasarkan nama_bank
-                if ( Dosen_Tetap::find($dosentetap->id)->nama_bank === 'Mandiri') {
-                        $rekapitulasibank['payroll'][] = $data;
-                } else {
-                        $rekapitulasibank['non_payroll'][] = $data;
-                }
-            }
-        }
-          // Check if the laporanpotongan array is empty
-          if (empty($rekapitulasibank)) {
-            return ResponseFormatter::error(null, 'No data found for the specified month and year', 404);
-        }
-        return ResponseFormatter::success($rekapitulasibank, 'Data Laporan Rekapitulasi Bank Dosen Tetap Found');
-        }
-
-    }
-}
 

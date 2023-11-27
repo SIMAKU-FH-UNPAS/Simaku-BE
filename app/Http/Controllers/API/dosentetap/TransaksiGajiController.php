@@ -23,7 +23,6 @@ use App\Http\Requests\dosentetap\UpdateGajiUnivRequest;
 use App\Http\Requests\dosentetap\UpdatePotonganRequest;
 use App\Http\Requests\dosentetap\CreateMasterTransaksiRequest;
 use App\Http\Requests\dosentetap\UpdateMasterTransaksiRequest;
-use App\Models\dosentetap\Dostap_Bank;
 
 class TransaksiGajiController extends Controller
 {
