@@ -6,19 +6,15 @@
         "contact": {
             "email": "sahid11.sj@gmail.com"
         },
-        "license": {
-            "name": "Apache 2.0",
-            "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-        },
         "version": "1.0.0"
     },
     "servers": [
         {
-          "url": "http://testing-simaku-be.my.id",
+          "url": "https://testing-simaku-be.my.id/",
           "description": "Testing (production) server 1"
         },
         {
-            "url": "http://localhost:8000",
+            "url": "http://127.0.0.1:8000",
             "description": "Internal staging server for develop"
           }
     ],
@@ -26,14 +22,13 @@
         "/api/login": {
             "post": {
                 "tags": [
-                    "Login"
+                    "Auth-Admin"
                 ],
-                "summary": "User Login",
-                "description": "Login User Here",
-                "operationId": "authLogin",
+                "summary": "Admin Login",
+                "description": "Login Admin Here",
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/x-www-form-urlencoded": {
                             "schema": {
                                 "required": [
                                     "email",
@@ -41,50 +36,100 @@
                                 ],
                                 "properties": {
                                     "email": {
-                                        "type": "email"
+                                        "type": "string",
+                                        "example": "adminunpas@gmail.com"
                                     },
                                     "password": {
-                                        "type": "password"
+                                        "type": "string",
+                                        "example": "12345678"
                                     }
                                 },
                                 "type": "object"
                             }
-                        },
-                        "application/json": {
-                            "schema": {}
                         }
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Login Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "200": {
                         "description": "Login Successfully",
                         "content": {
-                            "application/json": {
-                                "schema": {}
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Login success"
+                                    }
+                                  }
+                                },
+                                "data": {
+                                  "type": "object",
+                                  "properties": {
+                                    "access_token": {
+                                      "type": "string",
+                                      "example": "xxxxxxxx"
+                                    },
+                                    "token_type": {
+                                      "type": "string",
+                                      "example": "Bearer"
+                                    },
+                                    "user": {
+                                      "$ref": "#/components/schemas/user"
+                                    }
+                                  }
+                                }
+                              }
                             }
+                          }
                         }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
+                      },
+                      "400": {
+                        "description": "Bad request",
                         "content": {
-                            "application/json": {
-                                "schema": {}
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 400
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "error"
+                                    },
+                                    "message": {
+                                      "type": "integer",
+                                      "example":"401"
+                                    }
+                                  }
+                                },
+                                "data": {
+                                  "type": "string",
+                                  "example":"Unauthorized"
+                                }
+                              }
                             }
+                          }
                         }
-                    },
-                    "400": {
-                        "description": "Bad request"
-                    },
-                    "404": {
-                        "description": "Resource Not Found"
+                      },
+                    "500": {
+                        "description": "Internal Service Error"
                     }
                 }
             }
@@ -92,14 +137,13 @@
         "/api/register": {
             "post": {
                 "tags": [
-                    "Register"
+                    "Auth-Admin"
                 ],
-                "summary": "User Register",
-                "description": "User Register here",
-                "operationId": "Register",
+                "summary": "Admin Register",
+                "description": "Admin Register here",
                 "requestBody": {
                     "content": {
-                        "multipart/form-data": {
+                        "application/x-www-form-urlencoded": {
                             "schema": {
                                 "required": [
                                     "name",
@@ -108,80 +152,2335 @@
                                 ],
                                 "properties": {
                                     "name": {
-                                        "type": "text"
+                                        "type": "string",
+                                        "example": "adminunpas"
                                     },
                                     "email": {
-                                        "type": "text"
+                                        "type": "string",
+                                        "example":"adminunpas@gmail.com"
                                     },
                                     "password": {
-                                        "type": "password"
+                                        "type": "string",
+                                        "example": "12345678"
                                     }
                                 },
                                 "type": "object"
                             }
-                        },
-                        "application/json": {
-                            "schema": {}
                         }
                     }
                 },
                 "responses": {
-                    "201": {
-                        "description": "Register Successfully",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
                     "200": {
                         "description": "Register Successfully",
                         "content": {
-                            "application/json": {
-                                "schema": {}
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Register success"
+                                    }
+                                  }
+                                },
+                                "data": {
+                                  "type": "object",
+                                  "properties": {
+                                    "access_token": {
+                                      "type": "string",
+                                      "example": "xxxxxxxx"
+                                    },
+                                    "token_type": {
+                                      "type": "string",
+                                      "example": "Bearer"
+                                    },
+                                    "user": {
+                                      "$ref": "#/components/schemas/user"
+                                    }
+                                  }
+                                }
+                              }
                             }
-                        }
-                    },
-                    "422": {
-                        "description": "Unprocessable Entity",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
+                          }
                         }
                     },
                     "400": {
-                        "description": "Bad request"
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "tags": [
+                    "Auth-Admin"
+                ],
+                "summary": "Admin Logout",
+                "description": "Admin Logout here",
+                "security": [
+                    {
+                      "bearerAuth": []
+                    }
+                  ],
+                "responses": {
+                    "200": {
+                        "description": "Logout Successfully",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Logout success"
+                                    }
+                                  }
+                                },
+                                "data": {
+                                    "type": "boolean",
+                                    "example": true
+                              }
+                            }
+                            }
+                          }
+                        }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
+                    }
+                }
+            }
+        },
+        "/api/user": {
+            "get": {
+              "tags": [
+                "Auth-Admin"
+                ],
+              "summary": "Get current Admin data",
+              "description": "Display data of currently logged in Admins",
+              "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Success",
+                  "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                              "meta": {
+                                "type": "object",
+                                "properties": {
+                                  "code": {
+                                    "type": "integer",
+                                    "example": 200
+                                  },
+                                  "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                  },
+                                  "message": {
+                                    "type": "string",
+                                    "example":"Fetch success"
+                                  }
+                                }
+                              },
+                          "data": {
+                            "$ref": "#/components/schemas/user"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "401": {
+                    "$ref": "#/components/responses/Unauthenticated"
+                },
+                "500": {
+                  "description": "Internal Service Error"
+                }
+              }
+            }
+        },
+        "/api/dosentetap/create": {
+            "post": {
+                "tags": ["Dosen Tetap"],
+                "summary": "Create Dosen Tetap and Bank",
+                "description": "Create Dosen Tetap and Bank here",
+                 "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "required": [
+                          "nama",
+                          "no_pegawai",
+                          "status",
+                          "golongan",
+                          "jabatan",
+                          "alamat_KTP",
+                          "alamat_saat_ini",
+                          "nomor_hp"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "nama": {
+                            "type": "string",
+                            "example": "Ayi Purbasari"
+                          },
+                          "no_pegawai": {
+                            "type": "string",
+                            "example": "11223344"
+                          },
+                          "npwp": {
+                            "type": "string",
+                            "example": "12345678"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["Aktif", "Tidak Aktif"],
+                            "example": "Aktif"
+                          },
+                          "golongan": {
+                            "type": "string",
+                            "enum": ["IIA","IIB","IIC","IID","IIIA","IIIB","IIIC","IIID","IVA","IVB","IVC","IVD","IVE"],
+                            "example": "IIA"
+                          },
+                          "jabatan": {
+                            "type": "string",
+                            "example": "Ketua Prodi Teknik Informatika"
+                          },
+                          "alamat_KTP": {
+                            "type": "string",
+                            "example": "Kota Bandung"
+                          },
+                          "alamat_saat_ini": {
+                            "type": "string",
+                            "example": "Kota Bandung"
+                          },
+                          "nomor_hp": {
+                            "type": "string",
+                            "example": "081234567890"
+                          },
+                          "banks": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "nama_bank": {
+                                  "type": "string"
+                                },
+                                "no_rekening": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "example": [
+                                {
+                                  "nama_bank": "Bank Mandiri",
+                                  "no_rekening": "1234567890"
+                                },
+                                {
+                                  "nama_bank": "Bank BCA",
+                                  "no_rekening": "1234567890"
+                                }
+                              ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Create Dosen Tetap and Bank Successfully",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Data Dosen Tetap created"
+                                    }
+                                  }
+                                },
+                               "data": {
+                                "type": "object",
+                                "properties": {
+                                    "dosentetap": {
+                                    "$ref": "#/components/schemas/dosen_tetap"
+                                    },
+                                    "banks": {
+                                        "$ref": "#/components/schemas/dostap_bank"
+                                }
+                             }
+                            }
+                         }
+                        }
+                    }
+                    }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
+                    }
+                }
+            }
+        },
+        "/api/dosentetap/update/{id}": {
+            "put": {
+                "tags": ["Dosen Tetap"],
+                "summary": "Update Dosen Tetap and Bank",
+                "description": "Update Dosen Tetap and Bank here",
+                 "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "parameters": [
+                {
+                  "in": "path",
+                  "name": "id",
+                  "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "required": true
+                }
+              ],
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "required": [
+                          "nama",
+                          "no_pegawai",
+                          "status",
+                          "golongan",
+                          "jabatan",
+                          "alamat_KTP",
+                          "alamat_saat_ini",
+                          "nomor_hp"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "nama": {
+                            "type": "string",
+                            "example": "Ayi Purbasari"
+                          },
+                          "no_pegawai": {
+                            "type": "string",
+                            "example": "11223344"
+                          },
+                          "npwp": {
+                            "type": "string",
+                            "example": "12345678"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["Aktif", "Tidak Aktif"],
+                            "example": "Aktif"
+                          },
+                          "golongan": {
+                            "type": "string",
+                            "enum": ["IIA","IIB","IIC","IID","IIIA","IIIB","IIIC","IIID","IVA","IVB","IVC","IVD","IVE"],
+                            "example": "IIA"
+                          },
+                          "jabatan": {
+                            "type": "string",
+                            "example": "Ketua Prodi Teknik Informatika"
+                          },
+                          "alamat_KTP": {
+                            "type": "string",
+                            "example": "Kota Bandung"
+                          },
+                          "alamat_saat_ini": {
+                            "type": "string",
+                            "example": "Kota Bandung"
+                          },
+                          "nomor_hp": {
+                            "type": "string",
+                            "example": "081234567890"
+                          },
+                          "banks": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id":{
+                                    "type":"integer"
+                                },
+                                "nama_bank": {
+                                  "type": "string"
+                                },
+                                "no_rekening": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "example": [
+                                {
+                                  "id": 1,
+                                  "nama_bank": "Bank Mandiri",
+                                  "no_rekening": "1234567890"
+                                },
+                                {
+                                  "id": 2,
+                                  "nama_bank": "Bank BSI",
+                                  "no_rekening": "1234567890"
+                                }
+                              ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Update Dosen Tetap and Bank Successfully",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Data Dosen Tetap updated"
+                                    }
+                                  }
+                                },
+                               "data": {
+                                "type": "object",
+                                "properties": {
+                                    "dosentetap": {
+                                    "$ref": "#/components/schemas/dosen_tetap"
+                                    },
+                                    "banks": {
+                                        "$ref": "#/components/schemas/dostap_bank"
+                                }
+                             }
+                            }
+                         }
+                        }
+                    }
+                    }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
                     },
                     "404": {
-                        "description": "Resource Not Found"
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
                     }
+                }
+            }
+        },
+        "/api/dosentetap": {
+            "get": {
+                "tags": ["Dosen Tetap"],
+                "summary": "Fetch ALL Dosen Tetap and Bank",
+                "description": "Fetch ALL Dosen Tetap and Bank here",
+                 "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+                "responses": {
+                    "200": {
+                        "description": "Fetch ALL Dosen Tetap and Bank Successfully",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Data Dosen Tetap Found"
+                                    }
+                                  }
+                                },
+                               "data": {
+                                "type": "object",
+                                "properties": {
+                                    "dosentetap": {
+                                    "$ref": "#/components/schemas/dosen_tetap"
+                                    },
+                                    "banks": {
+                                        "$ref": "#/components/schemas/dostap_bank"
+                                }
+                             }
+                            }
+                         }
+                        }
+                    }
+                    }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
+                    }
+                }
+            }
+        },
+        "/api/dosentetap/?id={id}": {
+            "get": {
+                "tags": ["Dosen Tetap"],
+                "summary": "Dosen Tetap and Bank by id",
+                "description": "Fetch Dosen Tetap and Bank by id here",
+                 "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "parameters": [
+                {
+                  "in": "path",
+                  "name": "id",
+                  "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "required": true
+                }
+              ],
+                "responses": {
+                    "200": {
+                        "description": "Fetch Dosen Tetap and Bank by id Successfully",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Data Dosen Tetap Found"
+                                    }
+                                  }
+                                },
+                               "data": {
+                                "type": "object",
+                                "properties": {
+                                    "dosentetap": {
+                                    "$ref": "#/components/schemas/dosen_tetap"
+                                    },
+                                    "banks": {
+                                        "$ref": "#/components/schemas/dostap_bank"
+                                }
+                             }
+                            }
+                         }
+                        }
+                    }
+                    }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
+                    }
+                }
+            }
+        },
+        "/api/dosentetap/?status={status}": {
+            "get": {
+                "tags": ["Dosen Tetap"],
+                "summary": "Dosen Tetap and Bank by status",
+                "description": "Fetch Dosen Tetap and Bank by status here",
+                 "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "parameters": [
+                {
+                  "in": "path",
+                  "name": "status",
+                  "schema": {
+                    "type": "string",
+                    "example":"Aktif"
+                  },
+                  "required": true
+                }
+              ],
+                "responses": {
+                    "200": {
+                        "description": "Fetch Dosen Tetap and Bank by status Successfully",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Data Dosen Tetap Found"
+                                    }
+                                  }
+                                },
+                               "data": {
+                                "type": "object",
+                                "properties": {
+                                    "dosentetap": {
+                                    "$ref": "#/components/schemas/dosen_tetap"
+                                    },
+                                    "banks": {
+                                        "$ref": "#/components/schemas/dostap_bank"
+                                }
+                             }
+                            }
+                         }
+                        }
+                    }
+                    }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
+                    }
+                }
+            }
+        },
+        "/api/dosentetap/delete/{id}": {
+            "delete": {
+                "tags": ["Dosen Tetap"],
+                "summary": "Dosen Tetap and Bank delete",
+                "description": "Delete Dosen Tetap and Bank  here",
+                 "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "parameters": [
+                {
+                    "in": "path",
+                    "name": "id",
+                    "schema": {
+                      "type": "integer",
+                      "format": "int64"
+                  },
+                  "required": true
+                }
+              ],
+                "responses": {
+                    "200": {
+                        "description": "Delete Dosen Tetap and Bank Successfully",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Data Dosen Tetap deleted"
+                                    }
+                                  }
+                                },
+                               "data": {
+                                "type": "string",
+                                "example": "Data Dosen Tetap deleted"
+                            }
+                         }
+                        }
+                    }
+                    }
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
+                    }
+                }
+            }
+        },
+           "/api/dosenlb/create": {
+            "post": {
+                "tags": ["Dosen Luar Biasa"],
+                "summary": "Create Dosen Luar Biasa and Bank",
+                "description": "Create Dosen Luar Biasa and Bank here",
+                 "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "required": [
+                          "nama",
+                          "no_pegawai",
+                          "status",
+                          "golongan",
+                          "jabatan",
+                          "alamat_KTP",
+                          "alamat_saat_ini",
+                          "nomor_hp"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "nama": {
+                            "type": "string",
+                            "example": "Moch Ilham"
+                          },
+                          "no_pegawai": {
+                            "type": "string",
+                            "example": "223322111"
+                          },
+                          "npwp": {
+                            "type": "string",
+                            "example": "12345678"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["Aktif", "Tidak Aktif"],
+                            "example": "Aktif"
+                          },
+                          "golongan": {
+                            "type": "string",
+                            "enum": ["IIA","IIB","IIC","IID","IIIA","IIIB","IIIC","IIID","IVA","IVB","IVC","IVD","IVE"],
+                            "example": "IIA"
+                          },
+                          "jabatan": {
+                            "type": "string",
+                            "example": "Koordinator Asisten TIF UNPAS"
+                          },
+                          "alamat_KTP": {
+                            "type": "string",
+                            "example": "Kota Bandung"
+                          },
+                          "alamat_saat_ini": {
+                            "type": "string",
+                            "example": "Kota Bandung"
+                          },
+                          "nomor_hp": {
+                            "type": "string",
+                            "example": "081234567890"
+                          },
+                          "banks": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "nama_bank": {
+                                  "type": "string"
+                                },
+                                "no_rekening": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "example": [
+                                {
+                                  "nama_bank": "Bank Mandiri",
+                                  "no_rekening": "1234567890"
+                                },
+                                {
+                                  "nama_bank": "Bank BNI",
+                                  "no_rekening": "1234567890"
+                                }
+                              ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Create Dosen Luar Biasa and Bank Successfully",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Data Dosen Luar Biasa created"
+                                    }
+                                  }
+                                },
+                               "data": {
+                                "type": "object",
+                                "properties": {
+                                    "dosenluarbiasa": {
+                                    "$ref": "#/components/schemas/dosen_luar_biasa"
+                                    },
+                                    "banks": {
+                                        "$ref": "#/components/schemas/doslb_bank"
+                                }
+                             }
+                            }
+                         }
+                        }
+                    }
+                  }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
+                    }
+                }
+            }
+          },
+          "/api/dosenlb/update/{id}": {
+            "put": {
+                "tags": ["Dosen Luar Biasa"],
+                "summary": "Update Dosen Luar Biasa and Bank",
+                "description": "Update Dosen Luar Biasa and Bank here",
+                 "security": [
+                {
+                  "bearerAuth": []
+                }
+              ],
+              "parameters": [
+                {
+                  "in": "path",
+                  "name": "id",
+                  "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                  },
+                  "required": true
+                }
+              ],
+                "requestBody": {
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "required": [
+                          "nama",
+                          "no_pegawai",
+                          "status",
+                          "golongan",
+                          "jabatan",
+                          "alamat_KTP",
+                          "alamat_saat_ini",
+                          "nomor_hp"
+                        ],
+                        "type": "object",
+                        "properties": {
+                          "nama": {
+                            "type": "string",
+                            "example": "Moch Ilham"
+                          },
+                          "no_pegawai": {
+                            "type": "string",
+                            "example": "223322111"
+                          },
+                          "npwp": {
+                            "type": "string",
+                            "example": "12345678"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["Aktif", "Tidak Aktif"],
+                            "example": "Aktif"
+                          },
+                          "golongan": {
+                            "type": "string",
+                            "enum": ["IIA","IIB","IIC","IID","IIIA","IIIB","IIIC","IIID","IVA","IVB","IVC","IVD","IVE"],
+                            "example": "IIA"
+                          },
+                          "jabatan": {
+                            "type": "string",
+                            "example": "Koordinator Asisten TIF UNPAS"
+                          },
+                          "alamat_KTP": {
+                            "type": "string",
+                            "example": "Kota Bandung"
+                          },
+                          "alamat_saat_ini": {
+                            "type": "string",
+                            "example": "Kota Bandung"
+                          },
+                          "nomor_hp": {
+                            "type": "string",
+                            "example": "081234567890"
+                          },
+                          "banks": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "nama_bank": {
+                                  "type": "string"
+                                },
+                                "no_rekening": {
+                                  "type": "string"
+                                }
+                              }
+                            },
+                            "example": [
+                                {
+                                  "id": 1,
+                                  "nama_bank": "Bank Mandiri",
+                                  "no_rekening": "1234567890"
+                                },
+                                {
+                                  "id": 2,
+                                  "nama_bank": "Bank BNI",
+                                  "no_rekening": "1234567890"
+                                }
+                              ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Update Dosen Luar Biasa and Bank Successfully",
+                        "content": {
+                          "application/json": {
+                            "schema": {
+                              "type": "object",
+                              "properties": {
+                                "meta": {
+                                  "type": "object",
+                                  "properties": {
+                                    "code": {
+                                      "type": "integer",
+                                      "example": 200
+                                    },
+                                    "status": {
+                                      "type": "string",
+                                      "example": "success"
+                                    },
+                                    "message": {
+                                      "type": "string",
+                                      "example":"Data Dosen Luar Biasa updated"
+                                    }
+                                  }
+                                },
+                               "data": {
+                                "type": "object",
+                                "properties": {
+                                    "dosenluarbiasa": {
+                                    "$ref": "#/components/schemas/dosen_luar_biasa"
+                                    },
+                                    "banks": {
+                                        "$ref": "#/components/schemas/doslb_bank"
+                                }
+                             }
+                            }
+                         }
+                        }
+                    }
+                    }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/BadRequest"
+                    },
+                    "401": {
+                        "$ref": "#/components/responses/Unauthenticated"
+                    },
+                    "404": {
+                        "$ref": "#/components/responses/NotFound"
+                    },
+                    "500": {
+                        "description": "Internal Service Error"
+                    }
+                }
+            }
+        },
+        "/api/dosenlb": {
+          "get": {
+              "tags": ["Dosen Luar Biasa"],
+              "summary": "Fetch ALL Dosen Luar Biasa and Bank",
+              "description": "Fetch ALL Dosen Luar Biasa and Bank here",
+               "security": [
+              {
+                "bearerAuth": []
+              }
+            ],
+              "responses": {
+                  "200": {
+                      "description": "Fetch ALL Dosen Luar Biasa and Bank Successfully",
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "meta": {
+                                "type": "object",
+                                "properties": {
+                                  "code": {
+                                    "type": "integer",
+                                    "example": 200
+                                  },
+                                  "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                  },
+                                  "message": {
+                                    "type": "string",
+                                    "example":"Data Dosen Luar Biasa Found"
+                                  }
+                                }
+                              },
+                             "data": {
+                              "type": "object",
+                              "properties": {
+                                  "dosenluarbiasa": {
+                                  "$ref": "#/components/schemas/dosen_luar_biasa"
+                                  },
+                                  "banks": {
+                                      "$ref": "#/components/schemas/doslb_bank"
+                              }
+                           }
+                          }
+                       }
+                      }
+                  }
+                  }
+                  },
+                  "401": {
+                      "$ref": "#/components/responses/Unauthenticated"
+                  },
+                  "500": {
+                      "description": "Internal Service Error"
+                  }
+              }
+          }
+      },
+      "/api/dosenlb/?id={id}": {
+          "get": {
+              "tags": ["Dosen Luar Biasa"],
+              "summary": "Dosen Luar Biasa and Bank by id",
+              "description": "Fetch Dosen Luar Biasa and Bank by id here",
+               "security": [
+              {
+                "bearerAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "id",
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                },
+                "required": true
+              }
+            ],
+              "responses": {
+                  "200": {
+                      "description": "Fetch Dosen Luar Biasa and Bank by id Successfully",
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "meta": {
+                                "type": "object",
+                                "properties": {
+                                  "code": {
+                                    "type": "integer",
+                                    "example": 200
+                                  },
+                                  "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                  },
+                                  "message": {
+                                    "type": "string",
+                                    "example":"Data Dosen Luar Biasa Found"
+                                  }
+                                }
+                              },
+                             "data": {
+                              "type": "object",
+                              "properties": {
+                                  "dosenluarbiasa": {
+                                  "$ref": "#/components/schemas/dosen_luar_biasa"
+                                  },
+                                  "banks": {
+                                      "$ref": "#/components/schemas/doslb_bank"
+                              }
+                           }
+                          }
+                       }
+                      }
+                  }
+                  }
+                  },
+                  "401": {
+                      "$ref": "#/components/responses/Unauthenticated"
+                  },
+                  "404": {
+                      "$ref": "#/components/responses/NotFound"
+                  },
+                  "500": {
+                      "description": "Internal Service Error"
+                  }
+              }
+          }
+      },
+      "/api/dosenlb/?status={status}": {
+          "get": {
+              "tags": ["Dosen Luar Biasa"],
+              "summary": "Dosen Luar Biasa and Bank by status",
+              "description": "Fetch Dosen Luar Biasa and Bank by status here",
+               "security": [
+              {
+                "bearerAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                "in": "path",
+                "name": "status",
+                "schema": {
+                  "type": "string",
+                  "example":"Aktif"
+                },
+                "required": true
+              }
+            ],
+              "responses": {
+                  "200": {
+                      "description": "Fetch Dosen Luar Biasa and Bank by status Successfully",
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "meta": {
+                                "type": "object",
+                                "properties": {
+                                  "code": {
+                                    "type": "integer",
+                                    "example": 200
+                                  },
+                                  "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                  },
+                                  "message": {
+                                    "type": "string",
+                                    "example":"Data Dosen Luar Biasa Found"
+                                  }
+                                }
+                              },
+                             "data": {
+                              "type": "object",
+                              "properties": {
+                                  "dosenluarbiasa": {
+                                  "$ref": "#/components/schemas/dosen_luar_biasa"
+                                  },
+                                  "banks": {
+                                      "$ref": "#/components/schemas/doslb_bank"
+                              }
+                           }
+                          }
+                       }
+                      }
+                  }
+                  }
+                  },
+                  "401": {
+                      "$ref": "#/components/responses/Unauthenticated"
+                  },
+                  "404": {
+                      "$ref": "#/components/responses/NotFound"
+                  },
+                  "500": {
+                      "description": "Internal Service Error"
+                  }
+              }
+          }
+      },
+      "/api/dosenlb/delete/{id}": {
+          "delete": {
+              "tags": ["Dosen Luar Biasa"],
+              "summary": "Dosen Luar Biasa and Bank delete",
+              "description": "Delete Dosen Luar Biasa and Bank  here",
+               "security": [
+              {
+                "bearerAuth": []
+              }
+            ],
+            "parameters": [
+              {
+                  "in": "path",
+                  "name": "id",
+                  "schema": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "required": true
+              }
+            ],
+              "responses": {
+                  "200": {
+                      "description": "Delete Dosen Luar Biasa and Bank Successfully",
+                      "content": {
+                        "application/json": {
+                          "schema": {
+                            "type": "object",
+                            "properties": {
+                              "meta": {
+                                "type": "object",
+                                "properties": {
+                                  "code": {
+                                    "type": "integer",
+                                    "example": 200
+                                  },
+                                  "status": {
+                                    "type": "string",
+                                    "example": "success"
+                                  },
+                                  "message": {
+                                    "type": "string",
+                                    "example":"Data Dosen Luar Biasa deleted"
+                                  }
+                                }
+                              },
+                             "data": {
+                              "type": "string",
+                              "example": "Data Dosen Luar Biasa deleted"
+                          }
+                       }
+                      }
+                  }
+                  }
+                  },
+                  "401": {
+                      "$ref": "#/components/responses/Unauthenticated"
+                  },
+                  "404": {
+                      "$ref": "#/components/responses/NotFound"
+                  },
+                  "500": {
+                      "description": "Internal Service Error"
+                  }
+              }
+          }
+      },
+      "/api/karyawan/create": {
+        "post": {
+            "tags": ["Karyawan"],
+            "summary": "Create Karyawan and Bank",
+            "description": "Create Karyawan and Bank here",
+             "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "required": [
+                      "nama",
+                      "no_pegawai",
+                      "status",
+                      "golongan",
+                      "jabatan",
+                      "alamat_KTP",
+                      "alamat_saat_ini",
+                      "nomor_hp"
+                    ],
+                    "type": "object",
+                    "properties": {
+                      "nama": {
+                        "type": "string",
+                        "example": "Rudi"
+                      },
+                      "no_pegawai": {
+                        "type": "string",
+                        "example": "1526262111"
+                      },
+                      "npwp": {
+                        "type": "string",
+                        "example": "12345678"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": ["Aktif", "Tidak Aktif"],
+                        "example": "Aktif"
+                      },
+                      "golongan": {
+                        "type": "string",
+                        "enum": ["IIA","IIB","IIC","IID","IIIA","IIIB","IIIC","IIID","IVA","IVB","IVC","IVD","IVE"],
+                        "example": "IIA"
+                      },
+                      "jabatan": {
+                        "type": "string",
+                        "example": "Staff TIF UNPAS"
+                      },
+                      "alamat_KTP": {
+                        "type": "string",
+                        "example": "Kota Bandung"
+                      },
+                      "alamat_saat_ini": {
+                        "type": "string",
+                        "example": "Kota Bandung"
+                      },
+                      "nomor_hp": {
+                        "type": "string",
+                        "example": "081234567890"
+                      },
+                      "banks": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "nama_bank": {
+                              "type": "string"
+                            },
+                            "no_rekening": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "example": [
+                            {
+                              "nama_bank": "Bank Mandiri",
+                              "no_rekening": "987654321"
+                            },
+                            {
+                              "nama_bank": "Bank BCA",
+                              "no_rekening": "1234567890"
+                            }
+                          ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "responses": {
+                "200": {
+                    "description": "Create Karyawan and Bank Successfully",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "meta": {
+                              "type": "object",
+                              "properties": {
+                                "code": {
+                                  "type": "integer",
+                                  "example": 200
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "example": "success"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "example":"Data Karyawan created"
+                                }
+                              }
+                            },
+                           "data": {
+                            "type": "object",
+                            "properties": {
+                                "karyawan": {
+                                "$ref": "#/components/schemas/karyawan"
+                                },
+                                "banks": {
+                                    "$ref": "#/components/schemas/karyawan_bank"
+                            }
+                         }
+                        }
+                     }
+                    }
+                }
+              }
+                },
+                "400": {
+                    "$ref": "#/components/responses/BadRequest"
+                },
+                "401": {
+                    "$ref": "#/components/responses/Unauthenticated"
+                },
+                "500": {
+                    "description": "Internal Service Error"
+                }
+            }
+        }
+      },
+      "/api/karyawan/update/{id}": {
+        "put": {
+            "tags": ["Karyawan"],
+            "summary": "Update Karyawan and Bank",
+            "description": "Update Karyawan and Bank here",
+             "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "required": true
+            }
+          ],
+            "requestBody": {
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "required": [
+                      "nama",
+                      "no_pegawai",
+                      "status",
+                      "golongan",
+                      "jabatan",
+                      "alamat_KTP",
+                      "alamat_saat_ini",
+                      "nomor_hp"
+                    ],
+                    "type": "object",
+                    "properties": {
+                      "nama": {
+                        "type": "string",
+                        "example": "Rudi"
+                      },
+                      "no_pegawai": {
+                        "type": "string",
+                        "example": "1526262111"
+                      },
+                      "npwp": {
+                        "type": "string",
+                        "example": "12345678"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": ["Aktif", "Tidak Aktif"],
+                        "example": "Aktif"
+                      },
+                      "golongan": {
+                        "type": "string",
+                        "enum": ["IIA","IIB","IIC","IID","IIIA","IIIB","IIIC","IIID","IVA","IVB","IVC","IVD","IVE"],
+                        "example": "IIA"
+                      },
+                      "jabatan": {
+                        "type": "string",
+                        "example": "Staff TIF UNPAS"
+                      },
+                      "alamat_KTP": {
+                        "type": "string",
+                        "example": "Kota Bandung"
+                      },
+                      "alamat_saat_ini": {
+                        "type": "string",
+                        "example": "Kota Bandung"
+                      },
+                      "nomor_hp": {
+                        "type": "string",
+                        "example": "081234567890"
+                      },
+                      "banks": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "nama_bank": {
+                              "type": "string"
+                            },
+                            "no_rekening": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "example": [
+                            {
+                              "id": 1,
+                              "nama_bank": "Bank Mandiri",
+                              "no_rekening": "987654321"
+                            },
+                            {
+                              "id": 2,
+                              "nama_bank": "Bank BCA",
+                              "no_rekening": "1234567890"
+                            }
+                          ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "responses": {
+                "200": {
+                    "description": "Update Karyawan and Bank Successfully",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "meta": {
+                              "type": "object",
+                              "properties": {
+                                "code": {
+                                  "type": "integer",
+                                  "example": 200
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "example": "success"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "example":"Data Karyawan updated"
+                                }
+                              }
+                            },
+                           "data": {
+                            "type": "object",
+                            "properties": {
+                                "karyawan": {
+                                "$ref": "#/components/schemas/karyawan"
+                                },
+                                "banks": {
+                                    "$ref": "#/components/schemas/karyawan_bank"
+                            }
+                         }
+                        }
+                     }
+                    }
+                }
+                }
+                },
+                "400": {
+                    "$ref": "#/components/responses/BadRequest"
+                },
+                "401": {
+                    "$ref": "#/components/responses/Unauthenticated"
+                },
+                "404": {
+                    "$ref": "#/components/responses/NotFound"
+                },
+                "500": {
+                    "description": "Internal Service Error"
                 }
             }
         }
     },
+    "/api/karyawan": {
+      "get": {
+          "tags": ["Karyawan"],
+          "summary": "Fetch ALL Karyawan and Bank",
+          "description": "Fetch ALL Karyawan and Bank here",
+           "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+          "responses": {
+              "200": {
+                  "description": "Fetch ALL Karyawan and Bank Successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "meta": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "integer",
+                                "example": 200
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "success"
+                              },
+                              "message": {
+                                "type": "string",
+                                "example":"Data Karyawan Found"
+                              }
+                            }
+                          },
+                         "data": {
+                          "type": "object",
+                          "properties": {
+                              "karyawan": {
+                              "$ref": "#/components/schemas/karyawan"
+                              },
+                              "banks": {
+                                  "$ref": "#/components/schemas/karyawan_bank"
+                          }
+                       }
+                      }
+                   }
+                  }
+              }
+              }
+              },
+              "401": {
+                  "$ref": "#/components/responses/Unauthenticated"
+              },
+              "500": {
+                  "description": "Internal Service Error"
+              }
+          }
+      }
+  },
+  "/api/karyawan/?id={id}": {
+      "get": {
+          "tags": ["Karyawan"],
+          "summary": "Karyawan and Bank by id",
+          "description": "Fetch Karyawan and Bank by id here",
+           "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "required": true
+          }
+        ],
+          "responses": {
+              "200": {
+                  "description": "Fetch Karyawan and Bank by id Successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "meta": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "integer",
+                                "example": 200
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "success"
+                              },
+                              "message": {
+                                "type": "string",
+                                "example":"Data Karyawan Found"
+                              }
+                            }
+                          },
+                         "data": {
+                          "type": "object",
+                          "properties": {
+                              "karyawan": {
+                              "$ref": "#/components/schemas/karyawan"
+                              },
+                              "banks": {
+                                  "$ref": "#/components/schemas/karyawan_bank"
+                          }
+                       }
+                      }
+                   }
+                  }
+              }
+              }
+              },
+              "401": {
+                  "$ref": "#/components/responses/Unauthenticated"
+              },
+              "404": {
+                  "$ref": "#/components/responses/NotFound"
+              },
+              "500": {
+                  "description": "Internal Service Error"
+              }
+          }
+      }
+  },
+  "/api/karyawan/?status={status}": {
+      "get": {
+          "tags": ["Karyawan"],
+          "summary": "Karyawan and Bank by status",
+          "description": "Fetch Karyawan and Bank by status here",
+           "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "status",
+            "schema": {
+              "type": "string",
+              "example":"Aktif"
+            },
+            "required": true
+          }
+        ],
+          "responses": {
+              "200": {
+                  "description": "Fetch Karyawan and Bank by status Successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "meta": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "integer",
+                                "example": 200
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "success"
+                              },
+                              "message": {
+                                "type": "string",
+                                "example":"Data Karyawan Found"
+                              }
+                            }
+                          },
+                         "data": {
+                          "type": "object",
+                          "properties": {
+                              "karyawan": {
+                              "$ref": "#/components/schemas/karyawan"
+                              },
+                              "banks": {
+                                  "$ref": "#/components/schemas/karyawan_bank"
+                          }
+                       }
+                      }
+                   }
+                  }
+              }
+              }
+              },
+              "401": {
+                  "$ref": "#/components/responses/Unauthenticated"
+              },
+              "404": {
+                  "$ref": "#/components/responses/NotFound"
+              },
+              "500": {
+                  "description": "Internal Service Error"
+              }
+          }
+      }
+  },
+  "/api/karyawan/delete/{id}": {
+      "delete": {
+          "tags": ["Karyawan"],
+          "summary": "Karyawan and Bank delete",
+          "description": "Delete Karyawan and Bank here",
+           "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+              "in": "path",
+              "name": "id",
+              "schema": {
+                "type": "integer",
+                "format": "int64"
+            },
+            "required": true
+          }
+        ],
+          "responses": {
+              "200": {
+                  "description": "Delete Karyawan and Bank Successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "meta": {
+                            "type": "object",
+                            "properties": {
+                              "code": {
+                                "type": "integer",
+                                "example": 200
+                              },
+                              "status": {
+                                "type": "string",
+                                "example": "success"
+                              },
+                              "message": {
+                                "type": "string",
+                                "example":"Data Karyawan deleted"
+                              }
+                            }
+                          },
+                         "data": {
+                          "type": "string",
+                          "example": "Data Karyawan deleted"
+                      }
+                   }
+                  }
+              }
+              }
+              },
+              "401": {
+                  "$ref": "#/components/responses/Unauthenticated"
+              },
+              "404": {
+                  "$ref": "#/components/responses/NotFound"
+              },
+              "500": {
+                  "description": "Internal Service Error"
+              }
+          }
+      }
+  }
+    },
     "components": {
         "securitySchemes": {
-            "passport": {
-                "type": "oauth2",
-                "description": "Laravel passport oauth2 security.",
-                "in": "header",
-                "scheme": "https",
-                "flows": {
-                    "password": {
-                        "authorizationUrl": "http://localhost/oauth/authorize",
-                        "tokenUrl": "http://localhost/oauth/token",
-                        "refreshUrl": "http://localhost/token/refresh",
-                        "scopes": []
-                    }
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+              }
+        },
+        "schemas": {
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "name": {
+                  "type": "string",
+                  "example": "adminunpas"
+                },
+                "email": {
+                  "type": "string",
+                  "example" :"adminunpas@gmail.com"
+                },
+                "email_verified_at": {
+                  "type": ["string", "null"]
+                },
+                "two_factor_confirmed_at": {
+                  "type": ["string", "null"]
+                },
+                "current_team_id": {
+                  "type": ["integer", "null"]
+                },
+                "profile_photo_path": {
+                  "type": ["string", "null"]
+                },
+                "created_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updated_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "profile_photo_url": {
+                  "type": ["string", "null"]
+                }
+              }
+            },
+            "dosen_tetap": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                    },
+                  "nama": {
+                    "type": "string",
+                    "example": "Ayi Purbasari"
+                    },
+                  "no_pegawai": {
+                    "type": "string",
+                    "example": "11223344"
+                    },
+                  "npwp": {
+                    "type": "string",
+                    "example": "12345678"
+                    },
+                  "status": {
+                    "type": "string",
+                    "example":"Aktif"
+                    },
+                  "golongan": {
+                    "type": "string",
+                    "example": "IVA"
+                    },
+                  "jabatan": {
+                    "type": "string",
+                    "example": "Ketua Prodi TIF UNPAS"
+                    },
+                  "alamat_KTP": {
+                    "type": "string",
+                    "example": "Kota Bandung"
+                    },
+                  "alamat_saat_ini": {
+                     "type": "string",
+                     "example": "Kota Bandung"
+                    },
+                  "nomor_hp": {
+                    "type": "string",
+                    "example": "082122112"
+                    },
+                  "deleted_at": { "type": ["null", "string"] },
+                  "created_at": { "type": "string", "format": "date-time" },
+                  "updated_at": { "type": "string", "format": "date-time" }
                 }
             },
-            "sanctum": {
-                "type": "apiKey",
-                "description": "Enter token in format (Bearer <token>)",
-                "name": "Authorization",
-                "in": "header"
+            "dostap_bank": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id":{
+                        "type":"integer"
+                    },
+                    "nama_bank": {
+                      "type": "string"
+                    },
+                    "no_rekening": {
+                      "type": "string"
+                    },
+                    "deleted_at": { "type": ["null", "string"] },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                  }
+                },
+                "example": [
+                    {
+                      "id": 1,
+                      "nama_bank": "Bank Mandiri",
+                      "no_rekening": "1234567890",
+                      "deleted_at": null,
+                      "created_at": "2023-09-20T08:03:41.000000Z",
+                      "updated_at": "2023-09-20T08:03:41.000000Z"
+
+                    },
+                    {
+                      "id": 2,
+                      "nama_bank": "Bank BCA",
+                      "no_rekening": "1234567890",
+                      "deleted_at": null,
+                      "created_at": "2023-09-20T08:03:41.000000Z",
+                      "updated_at": "2023-09-20T08:03:41.000000Z"
+                    }
+                  ]
+              },
+                "dosen_luar_biasa": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                    },
+                  "nama": {
+                    "type": "string",
+                    "example": "Moch Ilham"
+                    },
+                  "no_pegawai": {
+                    "type": "string",
+                    "example": "223322111"
+                    },
+                  "npwp": {
+                    "type": "string",
+                    "example": "12345678"
+                    },
+                  "status": {
+                    "type": "string",
+                    "example":"Aktif"
+                    },
+                  "golongan": {
+                    "type": "string",
+                    "example": "IIIB"
+                    },
+                  "jabatan": {
+                    "type": "string",
+                    "example": "Koordinator Asisten TIF UNPAS"
+                    },
+                  "alamat_KTP": {
+                    "type": "string",
+                    "example": "Kota Bandung"
+                    },
+                  "alamat_saat_ini": {
+                     "type": "string",
+                     "example": "Kota Bandung"
+                    },
+                  "nomor_hp": {
+                    "type": "string",
+                    "example": "08922118181811"
+                    },
+                  "deleted_at": { "type": ["null", "string"] },
+                  "created_at": { "type": "string", "format": "date-time" },
+                  "updated_at": { "type": "string", "format": "date-time" }
+                }
+            },
+             "doslb_bank": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id":{
+                        "type":"integer"
+                    },
+                    "nama_bank": {
+                      "type": "string"
+                    },
+                    "no_rekening": {
+                      "type": "string"
+                    },
+                    "deleted_at": { "type": ["null", "string"] },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                  }
+                },
+                "example": [
+                    {
+                      "id": 1,
+                      "nama_bank": "Bank Mandiri",
+                      "no_rekening": "1234567890",
+                      "deleted_at": null,
+                      "created_at": "2023-09-20T08:03:41.000000Z",
+                      "updated_at": "2023-09-20T08:03:41.000000Z"
+
+                    },
+                    {
+                      "id": 2,
+                      "nama_bank": "Bank BNI",
+                      "no_rekening": "1234567890",
+                      "deleted_at": null,
+                      "created_at": "2023-09-20T08:03:41.000000Z",
+                      "updated_at": "2023-09-20T08:03:41.000000Z"
+                    }
+                  ]
+              },
+              "karyawan": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                    },
+                  "nama": {
+                    "type": "string",
+                    "example": "Rudi"
+                    },
+                  "no_pegawai": {
+                    "type": "string",
+                    "example": "1526262111"
+                    },
+                  "npwp": {
+                    "type": "string",
+                    "example": "12345678"
+                    },
+                  "status": {
+                    "type": "string",
+                    "example":"Aktif"
+                    },
+                  "golongan": {
+                    "type": "string",
+                    "example": "IIIB"
+                    },
+                  "jabatan": {
+                    "type": "string",
+                    "example": "Staff TIF UNPAS"
+                    },
+                  "alamat_KTP": {
+                    "type": "string",
+                    "example": "Kota Bandung"
+                    },
+                  "alamat_saat_ini": {
+                     "type": "string",
+                     "example": "Kota Bandung"
+                    },
+                  "nomor_hp": {
+                    "type": "string",
+                    "example": "08922118181811"
+                    },
+                  "deleted_at": { "type": ["null", "string"] },
+                  "created_at": { "type": "string", "format": "date-time" },
+                  "updated_at": { "type": "string", "format": "date-time" }
+                }
+            },
+             "karyawan_bank": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id":{
+                        "type":"integer"
+                    },
+                    "nama_bank": {
+                      "type": "string"
+                    },
+                    "no_rekening": {
+                      "type": "string"
+                    },
+                    "deleted_at": { "type": ["null", "string"] },
+                    "created_at": { "type": "string", "format": "date-time" },
+                    "updated_at": { "type": "string", "format": "date-time" }
+                  }
+                },
+                "example": [
+                    {
+                      "id": 1,
+                      "nama_bank": "Bank Mandiri",
+                      "no_rekening": "987654321",
+                      "deleted_at": null,
+                      "created_at": "2023-09-20T08:03:41.000000Z",
+                      "updated_at": "2023-09-20T08:03:41.000000Z"
+
+                    },
+                    {
+                      "id": 2,
+                      "nama_bank": "Bank BCA",
+                      "no_rekening": "1234567890",
+                      "deleted_at": null,
+                      "created_at": "2023-09-20T08:03:41.000000Z",
+                      "updated_at": "2023-09-20T08:03:41.000000Z"
+                    }
+                  ]
+              }
+            },
+            "responses":{
+                "BadRequest":{
+                    "description": "Bad request",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "meta": {
+                              "type": "object",
+                              "properties": {
+                                "code": {
+                                  "type": "integer",
+                                  "example": 400
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "example": "error"
+                                },
+                                "message": {
+                                  "type": "string",
+                                  "example":"null"
+                                }
+                              }
+                            },
+                            "data": {
+                              "type": "string",
+                              "example":"The field is required."
+                            }
+                          }
+                        }
+                      }
+                    }
+                },
+                "Unauthenticated":{
+                    "description": "Unauthenticated",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "message": {
+                              "type": "string",
+                              "example": "Unauthenticated."
+                            }
+                        }
+                    }
+                      }
+                    }
+                },
+                "NotFound":{
+                    "description": "Not Found",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "meta": {
+                              "type": "object",
+                              "properties": {
+                                "code": {
+                                  "type": "integer",
+                                  "example": 400
+                                },
+                                "status": {
+                                  "type": "string",
+                                  "example": "error"
+                                },
+                                "message": {
+                                  "type": "integer",
+                                  "example":"404"
+                                }
+                              }
+                            },
+                            "data": {
+                              "type": "string",
+                              "example":"Data Not Found."
+                            }
+                          }
+                        }
+                      }
+                    }
             }
+          }
         }
     }
-}
+

@@ -69,7 +69,7 @@ class DosenTetapController extends Controller
         $dosentetap->where('status', $status);
     } else {
         // Jika nilai status tidak valid, berikan respon error
-        return ResponseFormatter::error('Data Dosen Tetap not Found', 400);
+        return ResponseFormatter::error('Data Dosen Tetap not Found', 404);
     }
 
     }
@@ -165,7 +165,7 @@ public function create(CreateDosenTetapRequest $dosentetapRequest, CreateBankReq
 
             // Check if Dosen Tetap exists
             if(!$dosentetap){
-                throw new Exception('Data Dosen Tetap not found');
+                return ResponseFormatter::error('Data Dosen Tetap not found', 404);
             }
 
             // Update Dosen Tetap
@@ -190,7 +190,7 @@ public function create(CreateDosenTetapRequest $dosentetapRequest, CreateBankReq
 
             // Check if Bank exists
             if (!$dostapBank) {
-                throw new Exception('Data Bank not found');
+                return ResponseFormatter::error('Data Bank not found', 404);
             }
 
             // Update data bank sesuai dengan ID
@@ -220,7 +220,7 @@ public function destroy($id){
 
         // Check if Data Tetap exists
         if(!$dosentetap){
-            throw new Exception('Data Dosen Tetap not found');
+            return ResponseFormatter::error('Data Dosen Tetap not found', 404);
         }
          // Delete the related records with Dosen Tetap
          $dosentetap->banks()->delete();

@@ -5,6 +5,7 @@ namespace App\Http\Requests\karyawan;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\karyawan\Karyawan_Master_Transaksi;
 
 class UpdateMasterTransaksiRequest extends FormRequest
 {
@@ -30,7 +31,7 @@ class UpdateMasterTransaksiRequest extends FormRequest
                 'required',
                 'integer',
                 Rule::exists('karyawan_bank', 'id')
-                    ->where('karyawan_id', $this->karyawan_id)
+                    ->where('karyawan_id', Karyawan_Master_Transaksi::find($this->transaksiId)->karyawan_id)
                     ->whereNull('deleted_at'),
             ],
         ];

@@ -249,12 +249,12 @@ public function create(CreateKomponenPendapatanRequest $komponenpendapatanReques
        throw new Exception('Data Transaksi Gaji Dosen Luar Biasa not created');
    }
 
-    return ResponseFormatter::success('Data Transaksi Gaji Dosen Luar Biasa created',[
-       'komponen_pendapatan' => $komponenpendapatan,
-       'potongan' => $potongan,
-       'pajak' => $pajak,
-       'transaksi' => $mastertransaksi,
-   ]);
+    return ResponseFormatter::success([
+        'komponen_pendapatan' => $komponenpendapatan,
+        'potongan' => $potongan,
+        'pajak' => $pajak,
+        'transaksi' => $mastertransaksi,
+    ],'Data Transaksi Gaji Dosen Luar Biasa created');
    }
    catch(Exception $e){
        DB::rollback();
@@ -314,9 +314,9 @@ public function update(UpdateKomponenPendapatanRequest $komponenpendapatanReques
     // Handle jika master transaksi dengan ID $id tidak ditemukan
     return ResponseFormatter::error('Master Transaksi not found', 404);
 }
-    return ResponseFormatter::success('Data Transaksi Gaji Dosen Luar Biasa updated',[
-       'transaksi' => $mastertransaksi,
-   ]);
+    return ResponseFormatter::success([
+        'transaksi' => $mastertransaksi,
+    ],'Data Transaksi Gaji Dosen Luar Biasa updated');
    }
    catch(Exception $e){
        DB::rollback();
@@ -331,7 +331,7 @@ public function update(UpdateKomponenPendapatanRequest $komponenpendapatanReques
     $masterTransaksi = Doslb_Master_Transaksi::find($transaksiId);
     // Check if Dosen Luar Biasa exists
         if(!$masterTransaksi){
-            throw new Exception('Data Transaksi Gaji Dosen Luar Biasa not found');
+            return ResponseFormatter::error('Data Transaksi Gaji Dosen Luar Biasa not found',404);
         }
 
     // Hapus gaji komponen pendapatan, potongan, dan pajak berdasarkan kriteria

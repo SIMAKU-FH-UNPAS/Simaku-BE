@@ -296,13 +296,13 @@ public function create(CreateGajiUnivRequest $gajiunivRequest, CreateGajiFakRequ
        throw new Exception('Data Transaksi Gaji Karyawan not created');
    }
 
-    return ResponseFormatter::success('Data Transaksi Gaji Karyawan created',[
-       'gaji_universitas' => $gajiuniv,
-       'gaji_fakultas' => $gajifak,
-       'potongan' => $potongan,
-       'pajak' => $pajak,
-       'transaksi' => $mastertransaksi,
-   ]);
+    return ResponseFormatter::success([
+        'gaji_universitas' => $gajiuniv,
+        'gaji_fakultas' => $gajifak,
+        'potongan' => $potongan,
+        'pajak' => $pajak,
+        'transaksi' => $mastertransaksi,
+    ],'Data Transaksi Gaji Karyawan created');
    }
    catch(Exception $e){
        DB::rollback();
@@ -395,9 +395,9 @@ public function update(UpdateGajiUnivRequest $gajiunivRequest, UpdateGajiFakRequ
     // Handle jika master transaksi dengan ID $id tidak ditemukan
     return ResponseFormatter::error('Master Transaksi not found', 404);
 }
-    return ResponseFormatter::success('Data Transaksi Gaji Karyawan updated',[
-       'transaksi' => $mastertransaksi,
-   ]);
+    return ResponseFormatter::success([
+        'transaksi' => $mastertransaksi,
+    ],'Data Transaksi Gaji Karyawan updated');
    }
    catch(Exception $e){
        DB::rollback();
@@ -412,7 +412,7 @@ public function update(UpdateGajiUnivRequest $gajiunivRequest, UpdateGajiFakRequ
     $masterTransaksi = Karyawan_Master_Transaksi::find($transaksiId);
     // Check if Dosen Luar Biasa exists
         if(!$masterTransaksi){
-            throw new Exception('Data Transaksi Gaji Karyawan not found');
+            return ResponseFormatter::error('Data Transaksi Gaji Karyawan not found',404);
         }
 
     // Hapus gaji universitas, gaji fakultas, potongan, dan pajak berdasarkan kriteria

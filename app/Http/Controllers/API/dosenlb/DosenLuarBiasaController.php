@@ -73,7 +73,7 @@ class DosenLuarBiasaController extends Controller
         $dosenlb->where('status', $status);
     } else {
         // Jika nilai status tidak valid, berikan respon error
-        return ResponseFormatter::error('Data Dosen Luar Biasa not Found', 400);
+        return ResponseFormatter::error('Data Dosen Luar Biasa not Found', 404);
     }
     }
     if($jabatan)
@@ -187,7 +187,7 @@ class DosenLuarBiasaController extends Controller
 
             // Check if Dosen Luar Biasa exists
             if(!$dosenlb){
-                throw new Exception('Data Dosen Luar Biasa not found');
+                return ResponseFormatter::error('Data Dosen Luar Biasa not found', 404);
             }
 
             // Update Dosen Luar Biasa
@@ -242,7 +242,7 @@ public function destroy($id){
 
         // Check if Data Luar Biasa exists
         if(!$dosenlb){
-            throw new Exception('Data Dosen Luar Biasa not found');
+            return ResponseFormatter::error('Data Dosen Luar Biasa not found', 404);
         }
         // Delete the related records with Dosen Luar Biasa
         $dosenlb->banks()->delete();

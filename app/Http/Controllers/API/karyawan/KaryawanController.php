@@ -165,7 +165,7 @@ class KaryawanController extends Controller
 
             // Check if Karyawan exists
             if(!$karyawan){
-                throw new Exception('Data Karyawan not found');
+                return ResponseFormatter::error('Data Karyawan not found', 404);
             }
 
             // Update Karyawan
@@ -220,7 +220,7 @@ public function destroy($id){
 
         // Check if Data Karyawan exists
         if(!$karyawan){
-            throw new Exception('Data Karyawan not found');
+            return ResponseFormatter::error('Data Karyawan not found', 404);
         }
         // Delete the related records with Karyawan
         $karyawan->banks()->delete();

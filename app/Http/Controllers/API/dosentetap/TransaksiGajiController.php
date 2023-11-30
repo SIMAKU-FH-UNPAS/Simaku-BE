@@ -297,13 +297,13 @@ public function fetchById($transaksiId)
            throw new Exception('Data Transaksi Gaji Dosen Tetap not created');
        }
 
-        return ResponseFormatter::success('Data Transaksi Gaji Dosen Tetap created',[
-           'gaji_universitas' => $gajiuniv,
-           'gaji_fakultas' => $gajifak,
-           'potongan' => $potongan,
-           'pajak' => $pajak,
-           'transaksi' => $mastertransaksi,
-       ]);
+        return ResponseFormatter::success([
+            'gaji_universitas' => $gajiuniv,
+            'gaji_fakultas' => $gajifak,
+            'potongan' => $potongan,
+            'pajak' => $pajak,
+            'transaksi' => $mastertransaksi,
+        ],'Data Transaksi Gaji Dosen Tetap created');
        }
        catch(Exception $e){
            DB::rollback();
@@ -394,9 +394,9 @@ public function fetchById($transaksiId)
         // Handle jika master transaksi dengan ID $id tidak ditemukan
         return ResponseFormatter::error('Master Transaksi not found', 404);
     }
-        return ResponseFormatter::success('Data Transaksi Gaji Dosen Tetap updated',[
-           'transaksi' => $mastertransaksi,
-       ]);
+        return ResponseFormatter::success([
+            'transaksi' => $mastertransaksi,
+        ],'Data Transaksi Gaji Dosen Tetap updated');
        }
        catch(Exception $e){
            DB::rollback();
@@ -412,7 +412,7 @@ public function fetchById($transaksiId)
         $masterTransaksi = Dostap_Master_Transaksi::find($transaksiId);
         // Check if Dosen Luar Biasa exists
             if(!$masterTransaksi){
-                throw new Exception('Data Transaksi Gaji Dosen Tetap not found');
+                return ResponseFormatter::error('Data Transaksi Gaji Dosen Tetap not found',404);
             }
 
         // Hapus gaji universitas, gaji fakultas, potongan, dan pajak berdasarkan kriteria
