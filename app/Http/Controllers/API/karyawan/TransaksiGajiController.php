@@ -114,11 +114,6 @@ class TransaksiGajiController extends Controller
         $transaksi['transaksi'][] = $transaksiData;
     }
 
-    // Check if the transaksi gaji array is empty
-    if (empty($transaksi['transaksi'])) {
-        return ResponseFormatter::error(null, 'Data Transaksi Gaji Karyawan Not Found', 404);
-    }
-
     return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Karyawan Found');
 
 }

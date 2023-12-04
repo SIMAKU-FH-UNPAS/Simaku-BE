@@ -102,12 +102,6 @@ class TransaksiGajiController extends Controller
            // Menambahkan data transaksi ke dalam array transaksi utama
            $transaksi['transaksi'][] = $transaksiData;
        }
-
-       // Check if the transaksi gaji array is empty
-       if (empty($transaksi['transaksi'])) {
-           return ResponseFormatter::error(null, 'Data Transaksi Gaji Dosen Luar Biasa Not Found', 404);
-       }
-
        return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Dosen Luar Biasa Found');
 
    }

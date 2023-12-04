@@ -9,18 +9,21 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\dosentetap\DosenTetapController;
 use App\Http\Controllers\API\dosentetap\LaporanController as DosenTetapLaporanController;
 use App\Http\Controllers\API\dosentetap\TransaksiGajiController as DosenTetapTransaksiGajiController;
+use App\Http\Controllers\API\dosentetap\SlipGajiController as DosenTetapSlipGajiController;
 
 
 // Import Model Karyawan
 use App\Http\Controllers\API\karyawan\KaryawanController;
 use App\Http\Controllers\API\karyawan\LaporanController as KaryawanLaporanController;
 use App\Http\Controllers\API\karyawan\TransaksiGajiController as KaryawanTransaksiGajiController;
+use App\Http\Controllers\API\karyawan\SlipGajiController as KaryawanSlipGajiController;
 
 
 // Import Model Dosen Luar Biasa
 use App\Http\Controllers\API\dosenlb\DosenLuarBiasaController;
 use App\Http\Controllers\API\dosenlb\LaporanController as DosenlbLaporanController;
 use App\Http\Controllers\API\dosenlb\TransaksiGajiController as DosenlbTransaksiGajiController;
+use App\Http\Controllers\API\dosenlb\SlipGajiController as DosenlbSlipGajiController;
 
 
 /*
@@ -62,6 +65,8 @@ function(){
     Route::post('gaji/transaksi/create', [DosenTetapTransaksiGajiController::class, 'create'])->name('create');
     Route::put('gaji/transaksi/update/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'update'])->name('update');
     Route::delete('gaji/transaksi/delete/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'destroy'])->name('destroy');
+    Route::get('gaji/slip/{transaksiId}', [DosenTetapSlipGajiController::class, 'get'])->name('get');
+    Route::get('gaji/slip/cetak/{transaksiId}', [DosenTetapSlipGajiController::class, 'generatePDF'])->name('generatePDF');
     Route::get('laporan/rekapitulasipendapatan', [DosenTetapLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
     Route::get('laporan/pendapatanbersih', [DosenTetapLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
     Route::get('laporan/pajak', [DosenTetapLaporanController::class, 'laporanpajak'])->name('laporanpajak');
@@ -83,6 +88,8 @@ Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
         Route::post('gaji/transaksi/create', [KaryawanTransaksiGajiController::class, 'create'])->name('create');
         Route::put('gaji/transaksi/update/{transaksiId}', [KaryawanTransaksiGajiController::class, 'update'])->name('update');
         Route::delete('gaji/transaksi/delete/{transaksiId}', [KaryawanTransaksiGajiController::class, 'destroy'])->name('destroy');
+        Route::get('gaji/slip/{transaksiId}', [KaryawanSlipGajiController::class, 'get'])->name('get');
+        Route::get('gaji/slip/cetak/{transaksiId}', [KaryawanSlipGajiController::class, 'generatePDF'])->name('generatePDF');
         Route::get('laporan/rekapitulasipendapatan', [KaryawanLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
         Route::get('laporan/pendapatanbersih', [KaryawanLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
         Route::get('laporan/pajak', [KaryawanLaporanController::class, 'laporanpajak'])->name('laporanpajak');
@@ -105,6 +112,8 @@ function(){
     Route::post('gaji/transaksi/create', [DosenlbTransaksiGajiController::class, 'create'])->name('create');
     Route::put('gaji/transaksi/update/{transaksiId}', [DosenlbTransaksiGajiController::class, 'update'])->name('update');
     Route::delete('gaji/transaksi/delete/{transaksiId}', [DosenlbTransaksiGajiController::class, 'destroy'])->name('destroy');
+    Route::get('gaji/slip/{transaksiId}', [DosenlbSlipGajiController::class, 'get'])->name('get');
+    Route::get('gaji/slip/cetak/{transaksiId}', [DosenlbSlipGajiController::class, 'generatePDF'])->name('generatePDF');
     Route::get('laporan/rekapitulasipendapatan', [DosenlbLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
     Route::get('laporan/pendapatanbersih', [DosenlbLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
     Route::get('laporan/pajak', [DosenlbLaporanController::class, 'laporanpajak'])->name('laporanpajak');

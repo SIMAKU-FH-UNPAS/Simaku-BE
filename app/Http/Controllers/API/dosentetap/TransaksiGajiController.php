@@ -113,11 +113,6 @@ class TransaksiGajiController extends Controller
         $transaksi['transaksi'][] = $transaksiData;
     }
 
-    // Check if the transaksi gaji array is empty
-    if (empty($transaksi['transaksi'])) {
-        return ResponseFormatter::error(null, 'Data Transaksi Gaji Dosen Tetap Not Found', 404);
-    }
-
     return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Dosen Tetap Found');
 
 }
@@ -403,7 +398,6 @@ public function fetchById($transaksiId)
            return ResponseFormatter::error($e->getMessage(), 500);
        }
     }
-
 
      //  Hapus Transaksi Gaji Dosen Tetap
      public function destroy($transaksiId){
