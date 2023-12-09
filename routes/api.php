@@ -66,7 +66,8 @@ function(){
     Route::put('gaji/transaksi/update/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'update'])->name('update');
     Route::delete('gaji/transaksi/delete/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'destroy'])->name('destroy');
     Route::get('gaji/slip/{transaksiId}', [DosenTetapSlipGajiController::class, 'get'])->name('get');
-    Route::get('gaji/slip/cetak/{transaksiId}', [DosenTetapSlipGajiController::class, 'generatePDF'])->name('generatePDF');
+    Route::get('gaji/slip/cetak/{transaksiId}', [DosenTetapSlipGajiController::class, 'viewPDF'])->name('viewPDF');
+    Route::post('gaji/slip/kirim/{transaksiId}', [DosenTetapSlipGajiController::class, 'sendWA'])->name('sendWA');
     Route::get('laporan/rekapitulasipendapatan', [DosenTetapLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
     Route::get('laporan/pendapatanbersih', [DosenTetapLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
     Route::get('laporan/pajak', [DosenTetapLaporanController::class, 'laporanpajak'])->name('laporanpajak');
@@ -89,7 +90,8 @@ Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
         Route::put('gaji/transaksi/update/{transaksiId}', [KaryawanTransaksiGajiController::class, 'update'])->name('update');
         Route::delete('gaji/transaksi/delete/{transaksiId}', [KaryawanTransaksiGajiController::class, 'destroy'])->name('destroy');
         Route::get('gaji/slip/{transaksiId}', [KaryawanSlipGajiController::class, 'get'])->name('get');
-        Route::get('gaji/slip/cetak/{transaksiId}', [KaryawanSlipGajiController::class, 'generatePDF'])->name('generatePDF');
+        Route::get('gaji/slip/cetak/{transaksiId}', [KaryawanSlipGajiController::class, 'viewPDF'])->name('viewPDF');
+        Route::post('gaji/slip/kirim/{transaksiId}', [KaryawanSlipGajiController::class, 'sendWA'])->name('sendWA');
         Route::get('laporan/rekapitulasipendapatan', [KaryawanLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
         Route::get('laporan/pendapatanbersih', [KaryawanLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
         Route::get('laporan/pajak', [KaryawanLaporanController::class, 'laporanpajak'])->name('laporanpajak');
@@ -113,7 +115,8 @@ function(){
     Route::put('gaji/transaksi/update/{transaksiId}', [DosenlbTransaksiGajiController::class, 'update'])->name('update');
     Route::delete('gaji/transaksi/delete/{transaksiId}', [DosenlbTransaksiGajiController::class, 'destroy'])->name('destroy');
     Route::get('gaji/slip/{transaksiId}', [DosenlbSlipGajiController::class, 'get'])->name('get');
-    Route::get('gaji/slip/cetak/{transaksiId}', [DosenlbSlipGajiController::class, 'generatePDF'])->name('generatePDF');
+    Route::get('gaji/slip/cetak/{transaksiId}', [DosenlbSlipGajiController::class, 'viewPDF'])->name('viewPDF');
+    Route::post('gaji/slip/kirim/{transaksiId}', [DosenlbSlipGajiController::class, 'sendWA'])->name('sendWA');
     Route::get('laporan/rekapitulasipendapatan', [DosenlbLaporanController::class, 'rekapitulasipendapatan'])->name('rekapitulasipendapatan');
     Route::get('laporan/pendapatanbersih', [DosenlbLaporanController::class, 'pendapatanbersih'])->name('pendapatanbersih');
     Route::get('laporan/pajak', [DosenlbLaporanController::class, 'laporanpajak'])->name('laporanpajak');

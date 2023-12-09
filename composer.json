@@ -9,7 +9,7 @@
         "ext-gd": "*",
         "barryvdh/laravel-dompdf": "^2.0",
         "darkaonline/l5-swagger": "^8.5",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "*",
         "laravel/framework": "^9.19",
         "laravel/jetstream": "^2.16",
         "laravel/sanctum": "^3.0",

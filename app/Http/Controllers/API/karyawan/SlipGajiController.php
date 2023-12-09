@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\karyawan;
 
+use App\Helpers\Wa;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\App;
@@ -113,4 +114,53 @@ class SlipGajiController extends Controller
         // Lihat Blade
         //  return view('slipgaji.dosentetap.index');
     }
+
+    public function viewPDF($transaksiId){
+        // Get Master Transaksi
+        $transaksi = Karyawan_Master_Transaksi::find($transaksiId);
+
+        if (!$transaksi) {
+            return ResponseFormatter::error('Master Transaksi Not Found', 404);
+        }
+
+        $filePath = "karyawan/gaji/slip/pdf/$transaksiId";
+        $fileUrl = url($filePath);
+
+        return ResponseFormatter::success(['url'=>$fileUrl], 'PDF Slip Gaji Karyawan Found');
+    }
+
+    public function sendWA($transaksiId){
+        // Get Master Transaksi
+        $transaksi = Karyawan_Master_Transaksi::find($transaksiId);
+
+        if (!$transaksi) {
+            return ResponseFormatter::error('Master Transaksi Not Found', 404);
+        }
+           // Get data bulan dan tahun dari created_at
+           $bulanTahun = $transaksi->created_at->format('F Y');
+
+           // Get Dosen Tetap
+           $karyawan = $transaksi->karyawan;
+
+           // Get Nama and Nomor HP Karyawan
+           $namapegawai = $karyawan->nama;
+           $nomorhp = $karyawan->nomor_hp;
+
+
+           $filePath = "karyawan/gaji/slip/pdf/$transaksiId";
+           $fileUrl = url($filePath);
+       // Use the Wa helper to send WhatsApp message with the PDF
+       $waHelper = new Wa();
+       $nama = $namapegawai; // Set the recipient's name
+       $hp = $nomorhp; // Set the recipient's phone number
+       $pesan = 'Berikut merupakan rincian gaji pada periode'. $bulanTahun; // Set your custom message
+       $responseStatus = $waHelper->waSend($nama, $hp, $pesan, $fileUrl);
+
+       if ($responseStatus === 'success') {
+           return ResponseFormatter::success('WhatsApp message sent with PDF', 200);
+       } else {
+           return ResponseFormatter::error('Failed to send WhatsApp message', 500);
+       }
+
+   }
 }

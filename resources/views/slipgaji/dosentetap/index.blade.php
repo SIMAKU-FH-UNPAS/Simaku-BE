@@ -145,6 +145,7 @@ top: 10px;
                     <td>:</td>
                     <td>{{ $dosentetap->npwp }}</td>
                 </tr>
+
             </table>
           </div>
         </div>
@@ -236,7 +237,7 @@ top: 10px;
           <div class="text-footer">
             <p>Mengetahui,</p>
             <p>Kepala Sub Bagian Keuangan</p>
-            <p class="footer-nama">Ibu Uyul</p>
+            <p class="footer-nama">Ruruh Ruhayati, S.Pd</p>
           </div>
         </div>
   </footer>

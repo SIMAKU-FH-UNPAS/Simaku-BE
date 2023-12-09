@@ -4661,7 +4661,7 @@
     "get": {
         "tags": ["Slip Gaji-Dosen Tetap"],
         "summary": "Cetak Slip Gaji by id Transaksi",
-        "description": "Cetak Slip Gaji by id Transaksi here (Swagger not support a response media)",
+        "description": "Cetak Slip Gaji by id Transaksi here",
          "security": [
         {
           "bearerAuth": []
@@ -4680,13 +4680,110 @@
       ],
         "responses": {
             "200": {
-                "description": "Download File Slip Gaji by id Transaksi Successfully",
-             "content": {
-          "application/pdf": {
-            "example": "PDF content here"
-          }
+                "description": "Cetak Slip Gaji by id Transaksi here",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meta": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "integer",
+                              "example": 200
+                            },
+                            "status": {
+                              "type": "string",
+                              "example": "success"
+                            },
+                            "message": {
+                              "type": "string",
+                              "example":"PDF Slip Gaji Dosen Tetap Found"
+                            }
+                          }
+                        },
+                       "data": {
+                        "type": "object",
+                        "properties": {
+                            "url": {
+                                "type": "string",
+                                "example": "https://example.com/dosentetap/gaji/slip/pdf/1"
+                            }
+                     }
+                    }
+                 }
+                }
+            }
+            }
+            },
+            "401": {
+                "$ref": "#/components/responses/Unauthenticated"
+            },
+            "404": {
+                "$ref": "#/components/responses/NotFound"
+            },
+            "500": {
+                "description": "Internal Service Error"
+            }
         }
-        },
+    }
+  },
+  "/api/dosentetap/gaji/slip/kirim/{transaksiId}": {
+    "post": {
+        "tags": ["Slip Gaji-Dosen Tetap"],
+        "summary": "Send  Slip Gaji to Whatsapp by id Transaksi",
+        "description": "Send  Slip Gaji to Whatsapp by id Transaksi here",
+         "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "transaksiId",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "required": true
+        }
+      ],
+        "responses": {
+            "200": {
+                "description": "Send  Slip Gaji to Whatsapp by id Transaksi here",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meta": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "integer",
+                              "example": 200
+                            },
+                            "status": {
+                              "type": "string",
+                              "example": "success"
+                            },
+                            "message": {
+                              "type": "integer",
+                              "example":200
+                            }
+                          }
+                        },
+                       "data": {
+                        "type": "string",
+                            "example" : "WhatsApp message sent with PDF"
+                    }
+                 }
+                }
+            }
+            }
+            },
             "401": {
                 "$ref": "#/components/responses/Unauthenticated"
             },
@@ -4832,7 +4929,7 @@
     "get": {
         "tags": ["Slip Gaji-Dosen Luar Biasa"],
         "summary": "Cetak Slip Gaji by id Transaksi",
-        "description": "Cetak Slip Gaji by id Transaksi here (Swagger not support a response media)",
+        "description": "Cetak Slip Gaji by id Transaksi here",
          "security": [
         {
           "bearerAuth": []
@@ -4851,13 +4948,110 @@
       ],
         "responses": {
             "200": {
-                "description": "Download File Slip Gaji by id Transaksi Successfully",
-             "content": {
-          "application/pdf": {
-            "example": "PDF content here"
-          }
+                "description": "Cetak Slip Gaji by id Transaksi here",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meta": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "integer",
+                              "example": 200
+                            },
+                            "status": {
+                              "type": "string",
+                              "example": "success"
+                            },
+                            "message": {
+                              "type": "string",
+                              "example":"PDF Slip Gaji Dosen Luar Biasa Found"
+                            }
+                          }
+                        },
+                       "data": {
+                        "type": "object",
+                        "properties": {
+                            "url": {
+                                "type": "string",
+                                "example": "https://example.com/dosenlb/gaji/slip/pdf/1"
+                            }
+                     }
+                    }
+                 }
+                }
+            }
+            }
+            },
+            "401": {
+                "$ref": "#/components/responses/Unauthenticated"
+            },
+            "404": {
+                "$ref": "#/components/responses/NotFound"
+            },
+            "500": {
+                "description": "Internal Service Error"
+            }
         }
-        },
+    }
+  },
+  "/api/dosenlb/gaji/slip/kirim/{transaksiId}": {
+    "post": {
+        "tags": ["Slip Gaji-Dosen Luar Biasa"],
+        "summary": "Send  Slip Gaji to Whatsapp by id Transaksi",
+        "description": "Send  Slip Gaji to Whatsapp by id Transaksi here",
+         "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "transaksiId",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "required": true
+        }
+      ],
+        "responses": {
+            "200": {
+                "description": "Send  Slip Gaji to Whatsapp by id Transaksi here",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meta": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "integer",
+                              "example": 200
+                            },
+                            "status": {
+                              "type": "string",
+                              "example": "success"
+                            },
+                            "message": {
+                              "type": "integer",
+                              "example":200
+                            }
+                          }
+                        },
+                       "data": {
+                        "type": "string",
+                            "example" : "WhatsApp message sent with PDF"
+                    }
+                 }
+                }
+            }
+            }
+            },
             "401": {
                 "$ref": "#/components/responses/Unauthenticated"
             },
@@ -5006,7 +5200,7 @@
     "get": {
         "tags": ["Slip Gaji-Karyawan"],
         "summary": "Cetak Slip Gaji by id Transaksi",
-        "description": "Cetak Slip Gaji by id Transaksi here (Swagger not support a response media)",
+        "description": "Cetak Slip Gaji by id Transaksi here",
          "security": [
         {
           "bearerAuth": []
@@ -5025,13 +5219,110 @@
       ],
         "responses": {
             "200": {
-                "description": "Download File Slip Gaji by id Transaksi Successfully",
-             "content": {
-          "application/pdf": {
-            "example": "PDF content here"
-          }
+                "description": "Cetak Slip Gaji by id Transaksi here",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meta": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "integer",
+                              "example": 200
+                            },
+                            "status": {
+                              "type": "string",
+                              "example": "success"
+                            },
+                            "message": {
+                              "type": "string",
+                              "example":"PDF Slip Gaji Karyawan Found"
+                            }
+                          }
+                        },
+                       "data": {
+                        "type": "object",
+                        "properties": {
+                            "url": {
+                                "type": "string",
+                                "example": "https://example.com/karyawan/gaji/slip/pdf/1"
+                            }
+                     }
+                    }
+                 }
+                }
+            }
+            }
+            },
+            "401": {
+                "$ref": "#/components/responses/Unauthenticated"
+            },
+            "404": {
+                "$ref": "#/components/responses/NotFound"
+            },
+            "500": {
+                "description": "Internal Service Error"
+            }
         }
-        },
+    }
+  },
+  "/api/karyawan/gaji/slip/kirim/{transaksiId}": {
+    "post": {
+        "tags": ["Slip Gaji-Karyawan"],
+        "summary": "Send  Slip Gaji to Whatsapp by id Transaksi",
+        "description": "Send  Slip Gaji to Whatsapp by id Transaksi here",
+         "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "transaksiId",
+          "schema": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "required": true
+        }
+      ],
+        "responses": {
+            "200": {
+                "description": "Send  Slip Gaji to Whatsapp by id Transaksi here",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "meta": {
+                          "type": "object",
+                          "properties": {
+                            "code": {
+                              "type": "integer",
+                              "example": 200
+                            },
+                            "status": {
+                              "type": "string",
+                              "example": "success"
+                            },
+                            "message": {
+                              "type": "integer",
+                              "example":200
+                            }
+                          }
+                        },
+                       "data": {
+                        "type": "string",
+                            "example" : "WhatsApp message sent with PDF"
+                    }
+                 }
+                }
+            }
+            }
+            },
             "401": {
                 "$ref": "#/components/responses/Unauthenticated"
             },
