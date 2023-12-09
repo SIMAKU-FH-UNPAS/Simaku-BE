@@ -156,7 +156,7 @@ class SlipGajiController extends Controller
         $waHelper = new Wa();
         $nama = $namapegawai; // Set the recipient's name
         $hp = $nomorhp; // Set the recipient's phone number
-        $pesan = 'Berikut merupakan rincian gaji pada periode'. $bulanTahun; // Set your custom message
+        $pesan = 'Berikut merupakan rincian gaji pada periode '. $bulanTahun; // Set your custom message
         $responseStatus = $waHelper->waSend($nama, $hp, $pesan, $fileUrl);
 
         if ($responseStatus === 'success') {
