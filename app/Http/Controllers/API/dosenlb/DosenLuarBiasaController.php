@@ -16,7 +16,7 @@ use App\Http\Requests\dosenlb\UpdateDosenLuarBiasaRequest;
 
 class DosenLuarBiasaController extends Controller
 {
-    public function fetch(Request $request ){
+    public function fetch(Request $request){
         $id = $request->input('id');
         $nama = $request->input('nama');
         $no_pegawai = $request->input('no_pegawai');

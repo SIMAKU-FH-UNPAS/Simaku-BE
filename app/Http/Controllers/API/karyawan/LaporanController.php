@@ -60,7 +60,7 @@ class LaporanController extends Controller
         return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Rekapitulasi Pendapatan Karyawan Found');
     }
 
-    public function pendapatanbersih(Request $request)
+    public function pendapatanbersih()
     {
         // Get ALL Transaksi
         $transaksigaji = Karyawan_Master_Transaksi::all();
@@ -116,7 +116,7 @@ class LaporanController extends Controller
         return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Pendapatan Bersih Karyawan Found');
     }
 
-    public function laporanpajak(Request $request){
+    public function laporanpajak(){
         // Get ALL Transaksi
         $transaksigaji = Karyawan_Master_Transaksi::all();
 
@@ -184,7 +184,7 @@ class LaporanController extends Controller
     return ResponseFormatter::success(array_values($groupedData), 'Data Laporan Pajak Karyawan Found');
 }
 
-    public function laporanpotongan(Request $request){
+    public function laporanpotongan(){
         // Get ALL Transaksi
         $transaksigaji = Karyawan_Master_Transaksi::all();
 

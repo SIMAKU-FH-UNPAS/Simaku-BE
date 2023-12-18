@@ -4,10 +4,8 @@ namespace App\Http\Controllers\API\dosentetap;
 
 use Exception;
 use Illuminate\Http\Request;
-use Barryvdh\DomPDF\PDF as PDF;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Models\dosentetap\Dosen_Tetap;
 use App\Models\dosentetap\Dostap_Bank;
@@ -19,7 +17,7 @@ use App\Http\Requests\dosentetap\UpdateDosenTetapRequest;
 
 class DosenTetapController extends Controller
 {
-    public function fetch(Request $request ){
+    public function fetch(Request $request){
         $id = $request->input('id');
         $nama = $request->input('nama');
         $no_pegawai = $request->input('no_pegawai');
