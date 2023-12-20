@@ -43,22 +43,43 @@ font-weight: bolder;
     width: 600px;
 }
 
-.row-gaji{
+.tabel-gaji, .tabel-potongan{
     position: relative;
     top: 40px;
 }
-.row-gaji table{
+.tabel-gaji table, .tabel-potongan table{
     width: 300px;
 }
-.row-gaji table th{
+.tabel-gaji table th, .tabel-potongan table th{
     background-color: lightgray;
 }
 .jumlah{
     font-weight: bold;
 }
+.tabel-gaji table{
+    float: left;
+}
+.tabel-potongan table{
+    float: right;
+}
+
+.tabel-jumlah{
+    clear: both;
+    position: relative;
+    top: 10px;
+}
+.tabel-jumlah table{
+    width: 300px;
+    background-color: lightgray;
+}
+.terbilang{
+    font-style: italic;
+    text-align: center;
+}
+
 
 footer{
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .text-footer p{
@@ -87,8 +108,11 @@ position: relative;
 top: 10px;
 }
 
-.row-gaji table{
+.tabel-gaji table, .tabel-potongan table{
     width: 300px;
+}
+.tabel-jumlah table{
+    width: 700px;
 }
 }
 
@@ -116,8 +140,7 @@ top: 10px;
 
   <main>
     <div class="container">
-        <div class="row">
-          <div class="tabel-pegawai">
+        <div class="tabel-pegawai">
             <table>
             {{-- Data Dosen Tetap --}}
                 <tr>
@@ -145,58 +168,20 @@ top: 10px;
                     <td>:</td>
                     <td>{{ $dosentetap->npwp }}</td>
                 </tr>
-
             </table>
           </div>
         </div>
 
-        <div class="row-gaji">
-            <div class="tabel">
-            <table>
-                {{-- Data Gaji Univ dan Gaji Fak --}}
-                <tr>
-                    <th colspan="3">Pendapatan</th>
-                </tr>
-                {{-- Data Gaji Univ --}}
-                @foreach($gajiUniv->getAttributes() as $column => $value)
-                {{-- Exclude column dibawah --}}
-                @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
-                    <tr>
-                        <td>{{ ucfirst(str_replace('_', ' ', $column)) }}</td>
-                        <td>:</td>
-                        <td>{{ format_rupiah($value) }}</td>
-                    </tr>
-                @endif
-            @endforeach
-
-            {{-- Data Gaji Fak --}}
-            @foreach($gajiFak->gaji_fakultas as $column => $value)
-            {{-- Exclude column yang tidak ingin ditampilkan --}}
-            @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
-                <tr>
-                    <td>{{ ucfirst(str_replace('_', ' ', $column)) }}</td>
-                    <td>:</td>
-                    <td>{{ format_rupiah($value) }}</td>
-                </tr>
-            @endif
-            @endforeach
-
-            <tr>
-                <td class="jumlah">Jumlah Pendapatan</td>
-                <td class="jumlah">:</td>
-                <td class="jumlah">{{ format_rupiah($totalPendapatan) }}</td>
-            </tr>
-            </table>
-            </div>
-            <div class="tabel">
-                {{-- Data Potongan --}}
+        <div class="container">
+            <div class="tabel-gaji">
                 <table>
+                    {{-- Data Gaji Univ dan Gaji Fak --}}
                     <tr>
-                        <th colspan="3">Potongan</th>
+                        <th colspan="3">Pendapatan</th>
                     </tr>
-                    {{-- Data Potongan --}}
-                    @foreach($potongan->potongan as $column => $value)
-                    {{-- Exclude column yang tidak ingin ditampilkan --}}
+                    {{-- Data Gaji Univ --}}
+                    @foreach($gajiUniv->getAttributes() as $column => $value)
+                    {{-- Exclude column dibawah --}}
                     @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
                         <tr>
                             <td>{{ ucfirst(str_replace('_', ' ', $column)) }}</td>
@@ -204,32 +189,81 @@ top: 10px;
                             <td>{{ format_rupiah($value) }}</td>
                         </tr>
                     @endif
-                    @endforeach
+                @endforeach
+
+                {{-- Data Gaji Fak --}}
+                @foreach($gajiFak->gaji_fakultas as $column => $value)
+                {{-- Exclude column yang tidak ingin ditampilkan --}}
+                @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
                     <tr>
-                        <td class="jumlah">Jumlah Potongan</td>
-                        <td class="jumlah">:</td>
-                        <td class="jumlah">{{ format_rupiah($totalPotongan) }}</td>
+                        <td>{{ ucfirst(str_replace('_', ' ', $column)) }}</td>
+                        <td>:</td>
+                        <td>{{ format_rupiah($value) }}</td>
+                    </tr>
+                @endif
+                @endforeach
+
+                <tr>
+                    <td class="jumlah">Jumlah Pendapatan</td>
+                    <td class="jumlah">:</td>
+                    <td class="jumlah">{{ format_rupiah($totalPendapatan) }}</td>
+                </tr>
+                </table>
+                </div>
+        </div>
+
+            <div class="container">
+                <div class="tabel-potongan">
+                    {{-- Data Potongan --}}
+                    <table>
+                        <tr>
+                            <th colspan="3">Potongan</th>
+                        </tr>
+                        {{-- Data Potongan --}}
+                        @foreach($potongan->potongan as $column => $value)
+                        {{-- Exclude column yang tidak ingin ditampilkan --}}
+                        @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
+                            <tr>
+                                <td>{{ ucfirst(str_replace('_', ' ', $column)) }}</td>
+                                <td>:</td>
+                                <td>{{ format_rupiah($value) }}</td>
+                            </tr>
+                        @endif
+                        @endforeach
+                        <tr>
+                            <td class="jumlah">Jumlah Potongan</td>
+                            <td class="jumlah">:</td>
+                            <td class="jumlah">{{ format_rupiah($totalPotongan) }}</td>
+                        </tr>
+                    </table>
+            </div>
+            </div>
+
+        <div class="container">
+            <div class="tabel-jumlah">
+                <table>
+                    <tr>
+                        {{-- Data Pendapatan Bersih --}}
+                        <th>
+                            Jumlah Yang Diterima
+                        </th>
+                        <th>
+                            :
+                        </th>
+                        <th>
+                            {{ format_rupiah($pendapatanBersih) }}
+                        </th>
+                    </tr>
+                    <tr class="terbilang">
+                        <td colspan="3">
+                             ( Terbilang : {{ terbilang_rupiah($pendapatanBersih) }} rupiah )
+                        </td>
                     </tr>
                 </table>
+            </div>
         </div>
-        <div>
-
-        </div>
-        <div>
-            <table>
-                <tr>
-                    {{-- Data Pendapatan Bersih --}}
-                    <th colspan="3">
-                        Jumlah Yang Diterima {{ format_rupiah($pendapatanBersih) }}
-                    </th>
-                </tr>
-            </table>
-        </div>
-
-        </div>
-
-    </div>
   </main>
+
 
   <footer>
     <div class="container">
@@ -250,5 +284,39 @@ top: 10px;
   }
   @endphp
 
+{{-- Format terbilang rupiah --}}
+@php
+    function terbilang_rupiah($number) {
+    $angka = ["", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"];
+    $temp = "";
+    if ($number < 12) {
+        return " " . $angka[$number];
+    } else if ($number < 20) {
+        return terbilang_rupiah($number - 10) . " belas";
+    } else if ($number < 100) {
+        $temp = terbilang_rupiah($number / 10);
+        return $temp . " puluh" . terbilang_rupiah($number % 10);
+    } else if ($number < 200) {
+        return " seratus" . terbilang_rupiah($number - 100);
+    } else if ($number < 1000) {
+        $temp = terbilang_rupiah($number / 100);
+        return $temp . " ratus" . terbilang_rupiah($number % 100);
+    } else if ($number < 2000) {
+        return " seribu" . terbilang_rupiah($number - 1000);
+    } else if ($number < 1000000) {
+        $temp = terbilang_rupiah($number / 1000);
+        return $temp . " ribu" . terbilang_rupiah($number % 1000);
+    } else if ($number < 1000000000) {
+        $temp = terbilang_rupiah($number / 1000000);
+        return $temp . " juta" . terbilang_rupiah($number % 1000000);
+    }
+    else if ($number < 1000000000000000) {
+        $temp = terbilang_rupiah($number / 1000000000000);
+        return $temp . " triliun" . terbilang_rupiah($number % 1000000000000);
+    } else {
+        return "Maaf, angka terlalu besar";
+    }
+}
+@endphp
 </body>
 </html>
