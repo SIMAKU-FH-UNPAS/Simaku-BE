@@ -133,7 +133,7 @@ top: 10px;
 
   <div class="container-periode">
     <div class="row">
-        <p>Slip Gaji</p>
+        <p>Slip Gaji Dosen Luar Biasa</p>
         <p>Periode {{ $bulanTahun }}</p>
     </div>
   </div>
@@ -142,7 +142,7 @@ top: 10px;
     <div class="container">
         <div class="tabel-pegawai">
             <table>
-            {{-- Data Karyawan --}}
+            {{-- Data Dosen Luar Biasa --}}
                 <tr>
                     <td>No Pegawai</td>
                     <td>:</td>

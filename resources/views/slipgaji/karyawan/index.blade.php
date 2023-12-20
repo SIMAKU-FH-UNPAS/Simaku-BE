@@ -133,7 +133,7 @@ top: 10px;
 
   <div class="container-periode">
     <div class="row">
-        <p>Slip Gaji</p>
+        <p>Slip Gaji Karyawan</p>
         <p>Periode {{ $bulanTahun }}</p>
     </div>
   </div>
