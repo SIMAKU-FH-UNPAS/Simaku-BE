@@ -192,11 +192,6 @@ top: 10px;
                 @endif
                 @endforeach
 
-                <tr>
-                    <td class="jumlah">Jumlah Pendapatan</td>
-                    <td class="jumlah">:</td>
-                    <td class="jumlah">{{ format_rupiah($totalPendapatan) }}</td>
-                </tr>
                 </table>
                 </div>
         </div>
@@ -219,11 +214,6 @@ top: 10px;
                             </tr>
                         @endif
                         @endforeach
-                        <tr>
-                            <td class="jumlah">Jumlah Potongan</td>
-                            <td class="jumlah">:</td>
-                            <td class="jumlah">{{ format_rupiah($totalPotongan) }}</td>
-                        </tr>
                     </table>
             </div>
             </div>
@@ -232,19 +222,34 @@ top: 10px;
             <div class="tabel-jumlah">
                 <table>
                     <tr>
+                        <td class="jumlah" width="165px">Total Pendapatan</td>
+                        <td  width="1px">:</td>
+                        <td class="jumlah" width="230px">{{ format_rupiah($totalPendapatan) }}</td>
+
+                        <td class="jumlah" width="100px">Total Potongan</td>
+                        <td width="1px">:</td>
+                        <td class="jumlah">{{ format_rupiah($totalPotongan) }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"></td>
+                    </tr>
+                    <tr>
                         {{-- Data Pendapatan Bersih --}}
+                        <td colspan="3"></td>
+
                         <th>
                             Jumlah Yang Diterima
                         </th>
                         <th>
                             :
                         </th>
-                        <th>
+                        <th style="text-align: left">
                             {{ format_rupiah($pendapatanBersih) }}
                         </th>
                     </tr>
                     <tr class="terbilang">
-                        <td colspan="3">
+                        <td colspan="3"></td>
+                        <td colspan="3" style="text-align: left">
                              ( Terbilang : {{ terbilang_rupiah($pendapatanBersih) }} rupiah )
                         </td>
                     </tr>
@@ -269,7 +274,7 @@ top: 10px;
   {{-- Format Rupiah --}}
   @php
   function format_rupiah($number){
-      return 'Rp ' . number_format($number, 2, ',', '.');
+      return 'Rp. ' . number_format($number, 2, ',', '.');
   }
   @endphp
 
