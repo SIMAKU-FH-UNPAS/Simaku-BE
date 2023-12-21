@@ -97,6 +97,7 @@ class SlipGajiController extends Controller
         //Get data pendapatan bersih
         $pajak = $transaksi->pajak;
         $pendapatanBersih = $pajak->pendapatan_bersih;
+        $jumlahSetPotonganKenaPajak = $pajak->jumlah_set_potongan_kena_pajak;
 
         // Total Pendapatan
         $totalGajiUniv = $gajiUniv->gaji_pokok + $gajiUniv->tunjangan_fungsional + $gajiUniv->tunjangan_struktural + $gajiUniv->tunjangan_khusus_istimewa + $gajiUniv->tunjangan_presensi_kerja + $gajiUniv->tunjangan_tambahan + $gajiUniv->tunjangan_suami_istri + $gajiUniv->tunjangan_anak + $gajiUniv->uang_lembur_hk + $gajiUniv->uang_lembur_hl + $gajiUniv->transport_kehadiran + $gajiUniv->honor_universitas;
@@ -108,7 +109,7 @@ class SlipGajiController extends Controller
 
 
         $pdf = App::make('dompdf.wrapper');
-        $pdf->loadView('slipgaji.karyawan.index', compact('karyawan','gajiUniv', 'gajiFak', 'potongan', 'pendapatanBersih', 'bulanTahun', 'totalPendapatan', 'totalPotongan'));
+        $pdf->loadView('slipgaji.karyawan.index', compact('karyawan','gajiUniv', 'gajiFak', 'potongan', 'pendapatanBersih', 'bulanTahun', 'totalPendapatan', 'totalPotongan', 'jumlahSetPotonganKenaPajak'));
 
         return $pdf->stream('slipgaji.pdf');
         // Lihat Blade

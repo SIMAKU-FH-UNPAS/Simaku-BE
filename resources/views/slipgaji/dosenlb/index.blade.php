@@ -53,9 +53,7 @@ font-weight: bolder;
 .tabel-gaji table th, .tabel-potongan table th{
     background-color: lightgray;
 }
-.jumlah{
-    font-weight: bold;
-}
+
 .tabel-gaji table{
     float: left;
 }
@@ -222,11 +220,11 @@ top: 10px;
             <div class="tabel-jumlah">
                 <table>
                     <tr>
-                        <td class="jumlah" width="165px">Total Pendapatan</td>
+                        <td class="jumlah" width="165px">Total Pendapatan (A)</td>
                         <td  width="1px">:</td>
                         <td class="jumlah" width="230px">{{ format_rupiah($totalPendapatan) }}</td>
 
-                        <td class="jumlah" width="100px">Total Potongan</td>
+                        <td class="jumlah" width="100px">Total Potongan (B)</td>
                         <td width="1px">:</td>
                         <td class="jumlah">{{ format_rupiah($totalPotongan) }}</td>
                     </tr>
@@ -238,7 +236,7 @@ top: 10px;
                         <td colspan="3"></td>
 
                         <th>
-                            Jumlah Yang Diterima
+                            Jumlah Yang Diterima (A) - (B)
                         </th>
                         <th>
                             :

@@ -53,9 +53,7 @@ font-weight: bolder;
 .tabel-gaji table th, .tabel-potongan table th{
     background-color: lightgray;
 }
-.jumlah{
-    font-weight: bold;
-}
+
 .tabel-gaji table{
     float: left;
 }
@@ -237,7 +235,7 @@ top: 10px;
                         <td  width="1px">:</td>
                         <td class="jumlah" width="230px">{{ format_rupiah($totalPendapatan) }}</td>
 
-                        <td class="jumlah" width="100px">Total Potongan</td>
+                        <td class="jumlah" width="100px">Total Potongan (B)</td>
                         <td width="1px">:</td>
                         <td class="jumlah">{{ format_rupiah($totalPotongan) }}</td>
                     </tr>
@@ -245,11 +243,13 @@ top: 10px;
                         <td colspan="6"></td>
                     </tr>
                     <tr>
-                        {{-- Data Pendapatan Bersih --}}
-                        <td colspan="3"></td>
+                        {{-- Data Jumlah setoran potongan kena pajak --}}
+                        <td class="jumlah" width="165px">Jumlah Setoran Potongan Kena Pajak (A)</td>
+                        <td  width="1px">:</td>
+                        <td class="jumlah" width="230px">{{ format_rupiah($jumlahSetPotonganKenaPajak) }}</td>
 
                         <th>
-                            Jumlah Yang Diterima
+                            Jumlah Yang Diterima (A) - (B)
                         </th>
                         <th>
                             :
