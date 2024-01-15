@@ -102,7 +102,7 @@ class DosenTetapController extends Controller
 
     return ResponseFormatter::success(
         $dosentetap->paginate($limit),
-        'Data Dosen Luar Biasa Found'
+        'Data Dosen Tetap Found'
     );
 
  return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap Found');

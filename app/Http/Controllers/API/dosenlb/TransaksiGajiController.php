@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\dosenlb;
 
 use Exception;
-use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
 use App\Models\dosenlb\Doslb_Pajak;

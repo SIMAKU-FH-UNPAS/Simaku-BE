@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\karyawan;
 use App\Http\Controllers\Controller;
 use App\Helpers\ResponseFormatter;
 use App\Models\karyawan\Karyawan_Master_Transaksi;
-use Illuminate\Http\Request;
+
 
 class LaporanController extends Controller
 {

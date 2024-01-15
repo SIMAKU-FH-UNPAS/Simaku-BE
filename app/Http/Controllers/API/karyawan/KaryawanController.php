@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers\API\karyawan;
-
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\karyawan\Karyawan;
@@ -16,7 +14,8 @@ use App\Http\Requests\karyawan\UpdateKaryawanRequest;
 
 class KaryawanController extends Controller
 {
-    public function fetch(Request $request){
+    public function fetch(Request $request)
+{
         $id = $request->input('id');
         $nama = $request->input('nama');
         $no_pegawai = $request->input('no_pegawai');
@@ -69,7 +68,7 @@ class KaryawanController extends Controller
         $karyawan->where('status', $status);
     } else {
         // Jika nilai status tidak valid, berikan respon error
-        return ResponseFormatter::error('Data Karyawan not Found', 400);
+        return ResponseFormatter::error('Data Karyawan not Found', 404);
     }
 
 
@@ -98,18 +97,19 @@ class KaryawanController extends Controller
 
     }
 
- // Fetch Data ALL
- $karyawan->with('banks');
- return ResponseFormatter::success(
-    $karyawan->paginate($limit),
-    'Data Karyawan Found'
-);
- return ResponseFormatter::success($karyawan, 'Data Karyawan Found');
+    // Fetch Data ALL
+    $karyawan->with('banks');
+    return ResponseFormatter::success(
+        $karyawan->paginate($limit),
+        'Data Karyawan Found'
+    );
+    return ResponseFormatter::success($karyawan, 'Data Karyawan Found');
 }
 
 
 
-    public function create(CreateKaryawanRequest $karyawanRequest, CreateBankRequest $bankRequest){
+    public function create(CreateKaryawanRequest $karyawanRequest, CreateBankRequest $bankRequest)
+{
          // Memulai transaksi database
          DB::beginTransaction();
         try {
@@ -155,7 +155,7 @@ class KaryawanController extends Controller
 }
 
     public function update(UpdateKaryawanRequest $karyawanRequest, UpdateBankRequest $bankRequest, $id)
-    {
+{
          // Memulai transaksi database
          DB::beginTransaction();
         try {
@@ -211,9 +211,10 @@ class KaryawanController extends Controller
         DB::rollback();
         return ResponseFormatter::error($e->getMessage(), 500);
     }
-    }
+}
 
-public function destroy($id){
+public function destroy($id)
+{
     try{
         // Get Data Karyawan
         $karyawan = Karyawan::find($id);

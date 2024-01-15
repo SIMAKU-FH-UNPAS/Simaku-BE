@@ -37,5 +37,5 @@ Route::middleware([
 Route::get('dosentetap/gaji/slip/pdf/{transaksiId}', [DosenTetapSlipGajiController::class, 'generatePDF'])->name('generatePDF');
 // Slip Gaji Karyawan
 Route::get('karyawan/gaji/slip/pdf/{transaksiId}', [KaryawanSlipGajiController::class, 'generatePDF'])->name('generatePDF');
-// Slip Gaji Karyawan
+// Slip Gaji DosenLuarBiasa
 Route::get('dosenlb/gaji/slip/pdf/{transaksiId}', [DosenlbSlipGajiController::class, 'generatePDF'])->name('generatePDF');

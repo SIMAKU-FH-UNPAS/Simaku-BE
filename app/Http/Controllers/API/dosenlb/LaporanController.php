@@ -5,7 +5,6 @@ namespace App\Http\Controllers\API\dosenlb;
 use App\Http\Controllers\Controller;
 use App\Helpers\ResponseFormatter;
 use App\Models\dosenlb\Doslb_Master_Transaksi;
-use Illuminate\Http\Request;
 
 class LaporanController extends Controller
 {

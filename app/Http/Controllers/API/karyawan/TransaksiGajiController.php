@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\karyawan;
 
 use Exception;
-use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\karyawan\CreateGajiFakRequest;

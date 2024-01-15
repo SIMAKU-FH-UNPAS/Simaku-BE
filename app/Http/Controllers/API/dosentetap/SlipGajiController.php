@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\API\dosentetap;
 
 use App\Helpers\Wa;
-use Illuminate\Http\Request;
-use Barryvdh\DomPDF\PDF as PDF;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
 use App\Models\dosentetap\Dostap_Master_Transaksi;
 
 class SlipGajiController extends Controller

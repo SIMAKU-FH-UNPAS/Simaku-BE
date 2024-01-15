@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API\dosentetap;
 
-use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\dosentetap\Dostap_Master_Transaksi;

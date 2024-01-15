@@ -5801,7 +5801,7 @@
                                         }
                                     }
                                 },
-                            "laporanpajak":{
+                            "laporanpotongan":{
                                 "type": "array",
                                 "items":{
                                     "type":"object",
@@ -6389,7 +6389,7 @@
                                         }
                                     }
                                 },
-                            "laporanpajak":{
+                            "laporanpotongan":{
                                 "type": "array",
                                 "items":{
                                     "type":"object",
@@ -7041,7 +7041,7 @@
                                         }
                                     }
                                 },
-                            "laporanpajak":{
+                            "laporanpotongan":{
                                 "type": "array",
                                 "items":{
                                     "type":"object",

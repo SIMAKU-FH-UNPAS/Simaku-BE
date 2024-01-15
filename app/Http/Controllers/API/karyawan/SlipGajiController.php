@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API\karyawan;
 
 use App\Helpers\Wa;
-use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
