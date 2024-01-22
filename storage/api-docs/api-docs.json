@@ -679,17 +679,20 @@
                                     }
                                   }
                                 },
-                               "data": {
-                                "type": "object",
-                                "properties": {
-                                    "dosentetap": {
-                                    "$ref": "#/components/schemas/dosen_tetap"
-                                    },
-                                    "banks": {
-                                        "$ref": "#/components/schemas/dostap_bank"
+                                "data": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                        "type":"array",
+                                        "items":{
+                                            "$ref": "#/components/schemas/dosen_tetap",
+                                            "banks": {
+                                                "$ref": "#/components/schemas/dostap_bank"
+                                        }
+                                        }
+                                        }
+                                 }
                                 }
-                             }
-                            }
                          }
                         }
                     }
@@ -752,10 +755,8 @@
                                 },
                                "data": {
                                 "type": "object",
+                                "$ref": "#/components/schemas/dosen_tetap",
                                 "properties": {
-                                    "dosentetap": {
-                                    "$ref": "#/components/schemas/dosen_tetap"
-                                    },
                                     "banks": {
                                         "$ref": "#/components/schemas/dostap_bank"
                                 }
@@ -827,12 +828,15 @@
                                "data": {
                                 "type": "object",
                                 "properties": {
-                                    "dosentetap": {
-                                    "$ref": "#/components/schemas/dosen_tetap"
-                                    },
-                                    "banks": {
-                                        "$ref": "#/components/schemas/dostap_bank"
-                                }
+                                    "data": {
+                                    "type":"array",
+                                    "items":{
+                                        "$ref": "#/components/schemas/dosen_tetap",
+                                        "banks": {
+                                            "$ref": "#/components/schemas/dostap_bank"
+                                    }
+                                    }
+                                    }
                              }
                             }
                          }
@@ -1262,17 +1266,20 @@
                                   }
                                 }
                               },
-                             "data": {
-                              "type": "object",
-                              "properties": {
-                                  "dosenluarbiasa": {
-                                  "$ref": "#/components/schemas/dosen_luar_biasa"
-                                  },
-                                  "banks": {
-                                      "$ref": "#/components/schemas/doslb_bank"
-                              }
-                           }
-                          }
+                              "data": {
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                    "type":"array",
+                                    "items":{
+                                        "$ref": "#/components/schemas/dosen_luar_biasa",
+                                        "banks": {
+                                            "$ref": "#/components/schemas/doslb_bank"
+                                    }
+                                    }
+                                    }
+                             }
+                            }
                        }
                       }
                   }
@@ -1333,17 +1340,15 @@
                                   }
                                 }
                               },
-                             "data": {
-                              "type": "object",
-                              "properties": {
-                                  "dosenluarbiasa": {
-                                  "$ref": "#/components/schemas/dosen_luar_biasa"
-                                  },
-                                  "banks": {
-                                      "$ref": "#/components/schemas/doslb_bank"
-                              }
-                           }
-                          }
+                              "data": {
+                                "type": "object",
+                                "$ref": "#/components/schemas/dosen_luar_biasa",
+                                "properties": {
+                                    "banks": {
+                                        "$ref": "#/components/schemas/doslb_bank"
+                                }
+                             }
+                            }
                        }
                       }
                   }
@@ -1407,17 +1412,20 @@
                                   }
                                 }
                               },
-                             "data": {
-                              "type": "object",
-                              "properties": {
-                                  "dosenluarbiasa": {
-                                  "$ref": "#/components/schemas/dosen_luar_biasa"
-                                  },
-                                  "banks": {
-                                      "$ref": "#/components/schemas/doslb_bank"
-                              }
-                           }
-                          }
+                              "data": {
+                                "type": "object",
+                                "properties": {
+                                    "data": {
+                                    "type":"array",
+                                    "items":{
+                                        "$ref": "#/components/schemas/dosen_luar_biasa",
+                                        "banks": {
+                                            "$ref": "#/components/schemas/doslb_bank"
+                                    }
+                                    }
+                                    }
+                             }
+                            }
                        }
                       }
                   }
@@ -1845,17 +1853,20 @@
                               }
                             }
                           },
-                         "data": {
-                          "type": "object",
-                          "properties": {
-                              "karyawan": {
-                              "$ref": "#/components/schemas/karyawan"
-                              },
-                              "banks": {
-                                  "$ref": "#/components/schemas/karyawan_bank"
-                          }
-                       }
-                      }
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                "type":"array",
+                                "items":{
+                                    "$ref": "#/components/schemas/karyawan",
+                                    "banks": {
+                                        "$ref": "#/components/schemas/karyawan_bank"
+                                }
+                                }
+                                }
+                         }
+                        }
                    }
                   }
               }
@@ -1916,17 +1927,15 @@
                               }
                             }
                           },
-                         "data": {
-                          "type": "object",
-                          "properties": {
-                              "karyawan": {
-                              "$ref": "#/components/schemas/karyawan"
-                              },
-                              "banks": {
-                                  "$ref": "#/components/schemas/karyawan_bank"
-                          }
-                       }
-                      }
+                          "data": {
+                            "type": "object",
+                            "$ref": "#/components/schemas/karyawan",
+                            "properties": {
+                                "banks": {
+                                    "$ref": "#/components/schemas/karyawan_bank"
+                            }
+                         }
+                        }
                    }
                   }
               }
@@ -1990,17 +1999,20 @@
                               }
                             }
                           },
-                         "data": {
-                          "type": "object",
-                          "properties": {
-                              "karyawan": {
-                              "$ref": "#/components/schemas/karyawan"
-                              },
-                              "banks": {
-                                  "$ref": "#/components/schemas/karyawan_bank"
-                          }
-                       }
-                      }
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                                "data": {
+                                "type":"array",
+                                "items":{
+                                    "$ref": "#/components/schemas/karyawan",
+                                    "banks": {
+                                        "$ref": "#/components/schemas/karyawan_bank"
+                                }
+                                }
+                                }
+                         }
+                        }
                    }
                   }
               }
@@ -2541,20 +2553,22 @@
                         "type": "object",
                         "properties": {
                             "transaksi": {
-                                        "$ref": "#/components/schemas/dostap_master_transaksi"
-                                    },
-                                    "gaji_universitas": {
-                                        "$ref": "#/components/schemas/dostap_gaji_universitas"
+                                        "$ref": "#/components/schemas/dostap_master_transaksi",
+                                    "properties":{
+                                        "gaji_universitas": {
+                                            "$ref": "#/components/schemas/dostap_gaji_universitas"
+                                            },
+                                            "gaji_fakultas": {
+                                                "$ref": "#/components/schemas/dostap_gaji_fakultas"
                                         },
-                                        "gaji_fakultas": {
-                                            "$ref": "#/components/schemas/dostap_gaji_fakultas"
+                                        "potongan": {
+                                            "$ref": "#/components/schemas/dostap_potongan"
                                     },
-                                    "potongan": {
-                                        "$ref": "#/components/schemas/dostap_potongan"
-                                },
-                                "pajak": {
-                                    "$ref": "#/components/schemas/dostap_pajak"
-                                }
+                                    "pajak": {
+                                        "$ref": "#/components/schemas/dostap_pajak"
+                                    }
+                                    }
+                            }
                      }
                     }
                  }
@@ -3224,8 +3238,8 @@
                         "type": "object",
                         "properties": {
                             "transaksi": {
-                                        "$ref": "#/components/schemas/doslb_master_transaksi"
-                                    },
+                                        "$ref": "#/components/schemas/doslb_master_transaksi",
+                                    "properties":{
                                         "gaji_fakultas": {
                                             "$ref": "#/components/schemas/doslb_komponen_pendapatan"
                                     },
@@ -3235,7 +3249,9 @@
                                 "pajak": {
                                     "$ref": "#/components/schemas/doslb_pajak"
                                 }
+                                    }
                      }
+                    }
                     }
                  }
                 }
@@ -4079,19 +4095,21 @@
                         "type": "object",
                         "properties": {
                             "transaksi": {
-                                        "$ref": "#/components/schemas/karyawan_master_transaksi"
-                                    },
-                                    "gaji_universitas": {
-                                        "$ref": "#/components/schemas/karyawan_gaji_universitas"
+                                        "$ref": "#/components/schemas/karyawan_master_transaksi",
+                                    "properties":{
+                                        "gaji_universitas": {
+                                            "$ref": "#/components/schemas/karyawan_gaji_universitas"
+                                            },
+                                            "gaji_fakultas": {
+                                                "$ref": "#/components/schemas/karyawan_gaji_fakultas"
                                         },
-                                        "gaji_fakultas": {
-                                            "$ref": "#/components/schemas/karyawan_gaji_fakultas"
+                                        "potongan": {
+                                            "$ref": "#/components/schemas/karyawan_potongan"
                                     },
-                                    "potongan": {
-                                        "$ref": "#/components/schemas/karyawan_potongan"
-                                },
-                                "pajak": {
-                                    "$ref": "#/components/schemas/karyawan_pajak"
+                                    "pajak": {
+                                        "$ref": "#/components/schemas/karyawan_pajak"
+                                    }
+                                    }
                                 }
                      }
                     }
