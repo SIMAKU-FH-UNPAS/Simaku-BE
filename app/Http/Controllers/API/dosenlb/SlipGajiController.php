@@ -90,6 +90,8 @@ class SlipGajiController extends Controller
         //Get data pendapatan bersih
         $pajak = $transaksi->pajak;
         $pendapatanBersih = $pajak->pendapatan_bersih;
+        // Get data PPH 25
+        $pph25 = $pajak->pajak_pph25;
 
       // Total Pendapatan
       $totalPendapatan= array_sum($komponenPendapatan->komponen_pendapatan);
@@ -99,7 +101,7 @@ class SlipGajiController extends Controller
 
 
         $pdf = App::make('dompdf.wrapper');
-        $pdf->loadView('slipgaji.dosenlb.index', compact('dosenlb', 'komponenPendapatan', 'potongan', 'pendapatanBersih', 'bulanTahun', 'totalPendapatan', 'totalPotongan'));
+        $pdf->loadView('slipgaji.dosenlb.index', compact('dosenlb', 'komponenPendapatan', 'potongan','pph25', 'pendapatanBersih', 'bulanTahun', 'totalPendapatan', 'totalPotongan'));
 
         return $pdf->stream('slipgaji.pdf');
         // Lihat Blade

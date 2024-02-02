@@ -85,10 +85,10 @@ class UserController extends Controller
     public function logout(Request $request)
     {
         // Revoke Token
-        $token = $request->user()->currentAccessToken()->delete();
+        $request->user()->tokens()->delete();
 
         // Return Response
-        return ResponseFormatter::success($token, 'Logout success');
+        return ResponseFormatter::success(null,'Logout success');
     }
 
     public function fetch(Request $request)

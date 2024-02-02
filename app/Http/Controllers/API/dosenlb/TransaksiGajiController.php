@@ -40,6 +40,7 @@ class TransaksiGajiController extends Controller
            'npwp' => $dosenluarbiasa->npwp,
            'golongan' => $dosenluarbiasa->golongan,
            'jabatan' => $dosenluarbiasa->jabatan,
+           'nomor_hp' => $dosenluarbiasa->nomor_hp,
            'transaksi' => [],
        ];
 
@@ -135,6 +136,7 @@ public function fetchById($transaksiId)
             'npwp' => $dosenluarbiasa->npwp,
             'golongan' => $dosenluarbiasa->golongan,
             'jabatan' => $dosenluarbiasa->jabatan,
+            'nomor_hp' => $dosenluarbiasa->nomor_hp,
             'banks' => $dosenluarbiasa->banks,
             'transaksi' => [],
         ];

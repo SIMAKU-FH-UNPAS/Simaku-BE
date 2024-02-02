@@ -29,15 +29,14 @@ class DatabaseSeeder extends Seeder
 
         // Seeder Admin
         DB::table('users')->insert([
-            'name' => 'admin',
-            'email' => 'admin@gmail.com',
+            'name' => 'adminunpas',
+            'email' => 'adminunpas@gmail.com',
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make('12345678'),
             'two_factor_secret' => null,
             'two_factor_recovery_codes' => null,
             'remember_token' => Str::random(10),
-            'profile_photo_path' => null,
-            'current_team_id' => null,
+            'profile_photo_path' => null
         ]);
     }
 }

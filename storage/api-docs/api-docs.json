@@ -262,8 +262,8 @@
                                   }
                                 },
                                 "data": {
-                                    "type": "boolean",
-                                    "example": true
+                                    "type": "string",
+                                    "example": null
                               }
                             }
                             }
@@ -2664,6 +2664,10 @@
                                 "type": "string",
                                 "example": "Ketua Prodi Teknik Informatika"
                             },
+                            "nomor_hp": {
+                                "type": "string",
+                                "example": "62811223344"
+                            },
                             "transaksi": {
                                 "type": "array",
                                 "items": {
@@ -2833,6 +2837,10 @@
                             "jabatan": {
                                 "type": "string",
                                 "example": "Ketua Prodi Teknik Informatika"
+                            },
+                            "nomor_hp": {
+                                "type": "string",
+                                "example": "62811223344"
                             },
                             "banks": {
                                 "$ref": "#/components/schemas/dostap_bank"
@@ -3346,6 +3354,10 @@
                                 "type": "string",
                                 "example": "Koordinator Asisten TIF UNPAS"
                             },
+                            "nomor_hp": {
+                                "type": "string",
+                                "example": "62811223344"
+                            },
                             "transaksi": {
                                 "type": "array",
                                 "items": {
@@ -3509,6 +3521,10 @@
                             "jabatan": {
                                 "type": "string",
                                 "example": "Koordinator Asisten TIF UNPAS"
+                            },
+                            "nomor_hp": {
+                                "type": "string",
+                                "example": "62811223344"
                             },
                             "banks": {
                                 "$ref": "#/components/schemas/doslb_bank"
@@ -4206,6 +4222,10 @@
                                 "type": "string",
                                 "example": "Staff TIF UNPAS"
                             },
+                            "nomor_hp": {
+                                "type": "string",
+                                "example": "62811223344"
+                            },
                             "transaksi": {
                                 "type": "array",
                                 "items": {
@@ -4375,6 +4395,10 @@
                             "jabatan": {
                                 "type": "string",
                                 "example": "Staff TIF UNPAS"
+                            },
+                            "nomor_hp": {
+                                "type": "string",
+                                "example": "62811223344"
                             },
                             "banks": {
                                 "$ref": "#/components/schemas/karyawan_bank"
@@ -7291,9 +7315,6 @@
                 },
                 "two_factor_confirmed_at": {
                   "type": ["string", "null"]
-                },
-                "current_team_id": {
-                  "type": ["integer", "null"]
                 },
                 "profile_photo_path": {
                   "type": ["string", "null"]

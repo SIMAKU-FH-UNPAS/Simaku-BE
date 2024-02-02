@@ -232,11 +232,13 @@ top: 10px;
                         <td colspan="6"></td>
                     </tr>
                     <tr>
-                        {{-- Data Pendapatan Bersih --}}
-                        <td colspan="3"></td>
+                         {{-- Data PPH 25 --}}
+                         <td class="jumlah" width="165px">PPH 25 (C)</td>
+                         <td  width="1px">:</td>
+                         <td class="jumlah" width="230px">{{ format_rupiah($pph25) }}</td>
 
                         <th>
-                            Jumlah Yang Diterima (A) - (B)
+                            Jumlah Yang Diterima (A) - (B+C)
                         </th>
                         <th>
                             :

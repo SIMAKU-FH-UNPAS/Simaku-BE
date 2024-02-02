@@ -24,12 +24,12 @@ class ResponseFormatter
     /**
      * Give success response.
      */
-    public static function success($data = null, $message = null)
+    public static function success($data = null, $message = null, $code = 200)
     {
         self::$response['meta']['message'] = $message;
         self::$response['data'] = $data;
 
-        return response()->json(self::$response, self::$response['meta']['code']);
+        return response()->json(self::$response, $code);
     }
 
     /**
