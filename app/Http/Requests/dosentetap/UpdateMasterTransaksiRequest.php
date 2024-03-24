@@ -38,6 +38,7 @@ class UpdateMasterTransaksiRequest extends FormRequest
                               ->whereNull('deleted_at');
                     }),
             ],
+            'status_bank' => 'required|string|in:Payroll,Non Payroll'
         ];
     }
 }

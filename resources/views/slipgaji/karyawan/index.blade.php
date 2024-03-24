@@ -231,7 +231,7 @@ top: 10px;
             <div class="tabel-jumlah">
                 <table>
                     <tr>
-                        <td class="jumlah" width="165px">Total Pendapatan</td>
+                        <td class="jumlah" width="165px">Pendapatan Kotor</td>
                         <td  width="1px">:</td>
                         <td class="jumlah" width="230px">{{ format_rupiah($totalPendapatan) }}</td>
 
@@ -244,12 +244,12 @@ top: 10px;
                     </tr>
                     <tr>
                         {{-- Data Jumlah setoran potongan kena pajak --}}
-                        <td class="jumlah" width="165px">Jumlah Setoran Potongan Kena Pajak (A)</td>
+                        <td class="jumlah" width="170px">Jumlah Setoran Potongan Kena Pajak (A)</td>
                         <td  width="1px">:</td>
                         <td class="jumlah" width="230px">{{ format_rupiah($jumlahSetPotonganKenaPajak) }}</td>
 
-                        <th>
-                            Jumlah Yang Diterima (A) - (B)
+                        <th width="110px">
+                            Pendapatan Bersih (A-B)
                         </th>
                         <th>
                             :

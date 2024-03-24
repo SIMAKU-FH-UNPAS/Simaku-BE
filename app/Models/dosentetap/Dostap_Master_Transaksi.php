@@ -26,6 +26,9 @@ class Dostap_Master_Transaksi extends Model
     protected $fillable = [
         'dosen_tetap_id',
         'dostap_bank_id',
+        'status_bank',
+        'gaji_date_start',
+        'gaji_date_end',
         'dostap_gaji_universitas_id',
         'dostap_gaji_fakultas_id',
         'dostap_potongan_id',

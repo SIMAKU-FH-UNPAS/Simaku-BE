@@ -34,6 +34,7 @@ class UpdateMasterTransaksiRequest extends FormRequest
                     ->where('karyawan_id', Karyawan_Master_Transaksi::find($this->transaksiId)->karyawan_id)
                     ->whereNull('deleted_at'),
             ],
+            'status_bank' => 'required|string|in:Payroll,Non Payroll'
         ];
     }
 }

@@ -17,6 +17,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('dosen_tetap_id');
             $table->unsignedBigInteger('dostap_bank_id');
+            $table->enum('status_bank', ['Payroll', 'Non Payroll']);
+            $table->date('gaji_date_start'); //YYYY-MM-DD
+            $table->date('gaji_date_end'); //YYYY-MM-DD
             $table->unsignedBigInteger('dostap_gaji_universitas_id');
             $table->unsignedBigInteger('dostap_gaji_fakultas_id');
             $table->unsignedBigInteger('dostap_potongan_id');

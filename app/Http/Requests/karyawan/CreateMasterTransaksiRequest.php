@@ -34,6 +34,9 @@ class CreateMasterTransaksiRequest extends FormRequest
                     ->where('karyawan_id', $this->karyawan_id)
                     ->whereNull('deleted_at'),
             ],
+            'status_bank' => 'required|string|in:Payroll,Non Payroll',
+            'gaji_date_start' => 'required|date', //YYYY-MM-DD
+            'gaji_date_end' => 'required|date' //YYYY-MM-DD
         ];
     }
 }

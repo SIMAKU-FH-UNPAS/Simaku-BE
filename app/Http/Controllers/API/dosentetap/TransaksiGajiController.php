@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\dosentetap;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
@@ -52,28 +53,27 @@ class TransaksiGajiController extends Controller
     $transaksigaji = Dostap_Master_Transaksi::where('dosen_tetap_id', $dosentetap->id)->get();
 
     foreach ($transaksigaji as $gaji) {
-        // Get data created_at dari Gaji Universitas saat ini
-        $periode = [
-            'month' => $gaji->created_at->format('m'),
-            'year' => $gaji->created_at->format('Y'),
-        ];
+        // Get Periode
+        $gaji_date_start = Carbon::createFromFormat('Y-m-d', $gaji->gaji_date_start);
+        $gaji_date_end = Carbon::createFromFormat('Y-m-d', $gaji->gaji_date_end);
+
 
         $bankMasterTransaksi = Dostap_Master_Transaksi::with(['bank'])
             ->where('dosen_tetap_id', $dosentetap->id)
-            ->whereMonth('created_at', $periode['month'])
-            ->whereYear('created_at', $periode['year'])
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
             ->get();
 
         $gajiunivMasterTransaksi = Dostap_Master_Transaksi::with(['gaji_universitas'])
             ->where('dosen_tetap_id', $dosentetap->id)
-            ->whereMonth('created_at', $periode['month'])
-            ->whereYear('created_at', $periode['year'])
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
             ->get();
 
         $gajifakMasterTransaksi = Dostap_Master_Transaksi::with('gaji_fakultas')
             ->where('dosen_tetap_id', $dosentetap->id)
-            ->whereMonth('created_at', $periode['month'])
-            ->whereYear('created_at', $periode['year'])
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
             ->get();
             $gajifakMasterTransaksi->transform(function ($item) {
             $item->gaji_fakultas->gaji_fakultas = json_decode($item->gaji_fakultas->gaji_fakultas);
@@ -82,8 +82,8 @@ class TransaksiGajiController extends Controller
 
         $potonganMasterTransaksi = Dostap_Master_Transaksi::with('potongan')
             ->where('dosen_tetap_id', $dosentetap->id)
-            ->whereMonth('created_at', $periode['month'])
-            ->whereYear('created_at', $periode['year'])
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
             ->get();
         $potonganMasterTransaksi->transform(function ($item) {
             $item->potongan->potongan = json_decode($item->potongan->potongan);
@@ -92,18 +92,19 @@ class TransaksiGajiController extends Controller
 
         $pajakMasterTransaksi = Dostap_Master_Transaksi::with(['pajak'])
             ->where('dosen_tetap_id', $dosentetap->id)
-            ->whereMonth('created_at', $periode['month'])
-            ->whereYear('created_at', $periode['year'])
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
             ->get();
 
         // Transformasi data transaksi
         $transaksiData = [
-            'id'=>$gaji->id,
+            'id'=> $gaji->id,
             'periode' => [
-                'month' => $gaji->created_at->format('F'),
-                'year' => $gaji->created_at->format('Y'),
+                'month' => $gaji_date_end->format('F'),
+                'year' => $gaji_date_end->format('Y'),
             ],
             'bank' => $bankMasterTransaksi->pluck('bank')->toArray(),
+            'status_bank'=> $gaji->status_bank,
             'gaji_universitas' => $gajiunivMasterTransaksi->pluck('gaji_universitas')->toArray(),
             'gaji_fakultas' => $gajifakMasterTransaksi->pluck('gaji_fakultas')->toArray(),
             'potongan' => $potonganMasterTransaksi->pluck('potongan')->toArray(),
@@ -128,11 +129,9 @@ public function fetchById($transaksiId)
         return ResponseFormatter::error('Master Transaksi Not Found', 404);
     }
 
-    // Get data created_at dari Gaji Universitas saat ini
-    $periode = [
-        'month' => $masterTransaksi->created_at->format('m'),
-        'year' => $masterTransaksi->created_at->format('Y'),
-    ];
+      // Get Periode
+      $gaji_date_start = Carbon::createFromFormat('Y-m-d', $masterTransaksi->gaji_date_start);
+      $gaji_date_end = Carbon::createFromFormat('Y-m-d', $masterTransaksi->gaji_date_end);
 
     // Get Dosen Tetap
     $dosentetap = Dosen_Tetap::with('banks')->find($masterTransaksi->dosen_tetap_id);
@@ -155,20 +154,20 @@ public function fetchById($transaksiId)
 
     $bankMasterTransaksi = Dostap_Master_Transaksi::with(['bank'])
         ->where('dosen_tetap_id', $dosentetap->id)
-        ->whereMonth('created_at', $periode['month'])
-        ->whereYear('created_at', $periode['year'])
+        ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+        ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
         ->get();
 
     $gajiunivMasterTransaksi = Dostap_Master_Transaksi::with(['gaji_universitas'])
         ->where('dosen_tetap_id', $dosentetap->id)
-        ->whereMonth('created_at', $periode['month'])
-        ->whereYear('created_at', $periode['year'])
+        ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+        ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
         ->get();
 
     $gajifakMasterTransaksi = Dostap_Master_Transaksi::with('gaji_fakultas')
         ->where('dosen_tetap_id', $dosentetap->id)
-        ->whereMonth('created_at', $periode['month'])
-        ->whereYear('created_at', $periode['year'])
+        ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+        ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
         ->get();
     $gajifakMasterTransaksi->transform(function ($item) {
         $item->gaji_fakultas->gaji_fakultas = json_decode($item->gaji_fakultas->gaji_fakultas);
@@ -177,8 +176,8 @@ public function fetchById($transaksiId)
 
     $potonganMasterTransaksi = Dostap_Master_Transaksi::with('potongan')
         ->where('dosen_tetap_id', $dosentetap->id)
-        ->whereMonth('created_at', $periode['month'])
-        ->whereYear('created_at', $periode['year'])
+        ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+        ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
         ->get();
     $potonganMasterTransaksi->transform(function ($item) {
         $item->potongan->potongan = json_decode($item->potongan->potongan);
@@ -187,18 +186,17 @@ public function fetchById($transaksiId)
 
     $pajakMasterTransaksi = Dostap_Master_Transaksi::with(['pajak'])
         ->where('dosen_tetap_id', $dosentetap->id)
-        ->whereMonth('created_at', $periode['month'])
-        ->whereYear('created_at', $periode['year'])
+        ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+        ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
         ->get();
 
     // Transformasi data transaksi
     $transaksiData = [
         'id' => $masterTransaksi->id,
-        'periode' => [
-            'month' => $masterTransaksi->created_at->format('F'),
-            'year' => $masterTransaksi->created_at->format('Y'),
-        ],
+        'gaji_date_start' => $gaji_date_start->format('d F Y'),
+        'gaji_date_end' => $gaji_date_end->format('d F Y'),
         'bank' => $bankMasterTransaksi->pluck('bank')->toArray(),
+        'status_bank'=> $masterTransaksi->status_bank,
         'gaji_universitas' => $gajiunivMasterTransaksi->pluck('gaji_universitas')->toArray(),
         'gaji_fakultas' => $gajifakMasterTransaksi->pluck('gaji_fakultas')->toArray(),
         'potongan' => $potonganMasterTransaksi->pluck('potongan')->toArray(),
@@ -218,16 +216,18 @@ public function fetchById($transaksiId)
         DB::beginTransaction();
 
        try{
-        // Check kondisi transaksi gaji hanya bisa dilakukan 1x/bulan
-        $existingTransaction = Dostap_Master_Transaksi::where('dosen_tetap_id', $transaksiRequest->dosen_tetap_id)
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->first();
+        // Ambil periode dari request
+        $gaji_date_end = Carbon::createFromFormat('Y-m-d', $transaksiRequest->gaji_date_end);
+
+        // Cek apakah transaksi untuk periode tersebut sudah ada (bulan dan tahun terakhir sama)
+        $existingTransaction = Dostap_Master_Transaksi::whereYear('gaji_date_end', $gaji_date_end->year)
+        ->whereMonth('gaji_date_end', $gaji_date_end->month)
+        ->where('dosen_tetap_id', $transaksiRequest->dosen_tetap_id)
+        ->exists();
 
         if ($existingTransaction) {
-            throw new Exception('Data Transaksi Gaji Dosen Tetap already exists for the current month and year');
+            throw new Exception('Transaksi gaji untuk periode bulan tersebut sudah ada.');
         }
-
            // Create Gaji Universitas
            $gajiuniv = Dostap_Gaji_Universitas::create([
             'gaji_pokok' => $gajiunivRequest-> gaji_pokok,
@@ -280,6 +280,9 @@ public function fetchById($transaksiId)
            $mastertransaksi = Dostap_Master_Transaksi::create([
            'dosen_tetap_id'=> $transaksiRequest->dosen_tetap_id,
            'dostap_bank_id'=>  $transaksiRequest->dostap_bank_id,
+           'status_bank' => $transaksiRequest-> status_bank,
+           'gaji_date_start' => $transaksiRequest-> gaji_date_start,
+           'gaji_date_end' => $transaksiRequest-> gaji_date_end,
            'dostap_gaji_universitas_id'=> $gajiuniv->id,
            'dostap_gaji_fakultas_id'=> $gajifak->id,
            'dostap_potongan_id'=>$potongan->id,
@@ -377,12 +380,15 @@ public function fetchById($transaksiId)
 
            // Update Master Transaksi
            $mastertransaksi->update([
-           'dosen_tetap_id'=> $mastertransaksi->dosen_tetap_id,
+           'dosen_tetap_id'=> $mastertransaksi->dosen_tetap_id, //id yg sama
            'dostap_bank_id'=>  $transaksiRequest->dostap_bank_id,
-           'dostap_gaji_universitas_id'=> $mastertransaksi->dostap_gaji_universitas_id,
-           'dostap_gaji_fakultas_id'=> $mastertransaksi->dostap_gaji_fakultas_id,
-           'dostap_potongan_id'=>$mastertransaksi->dostap_potongan_id,
-           'dostap_pajak_id'=>$mastertransaksi->dostap_pajak_id
+           'status_bank' => $transaksiRequest-> status_bank,
+           'gaji_date_start' => $mastertransaksi->gaji_date_start, //data yg sama
+           'gaji_date_end' => $mastertransaksi->gaji_date_end, //data yg sama
+           'dostap_gaji_universitas_id'=> $mastertransaksi->dostap_gaji_universitas_id, //id yg sama
+           'dostap_gaji_fakultas_id'=> $mastertransaksi->dostap_gaji_fakultas_id, //id yg sama
+           'dostap_potongan_id'=>$mastertransaksi->dostap_potongan_id, //id yg sama
+           'dostap_pajak_id'=>$mastertransaksi->dostap_pajak_id //id yg sama
            ]);
 
        // Commit transaksi jika berhasil

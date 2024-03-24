@@ -34,6 +34,7 @@ class UpdateMasterTransaksiRequest extends FormRequest
                     ->where('dosen_luar_biasa_id', Doslb_Master_Transaksi::find($this->transaksiId)->dosen_luar_biasa_id)
                     ->whereNull('deleted_at'),
             ],
+            'status_bank' => 'required|string|in:Payroll,Non Payroll'
         ];
     }
 }

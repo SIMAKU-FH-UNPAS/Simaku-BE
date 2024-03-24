@@ -7,6 +7,7 @@ use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Models\dosenlb\Doslb_Master_Transaksi;
+use DateTime;
 
 class SlipGajiController extends Controller
 {
@@ -18,8 +19,8 @@ class SlipGajiController extends Controller
             return ResponseFormatter::error('Master Transaksi Not Found', 404);
         }
 
-         // Get data bulan dan tahun dari created_at
-        $bulanTahun = $transaksi->created_at;
+         // Get data bulan dan tahun dari gaji_date_end
+         $bulanTahun = new DateTime($transaksi->gaji_date_end);
 
         // Get Dosen Luar Biasa
         $dosenlb = $transaksi->dosen_luar_biasa;
@@ -74,8 +75,9 @@ class SlipGajiController extends Controller
             return ResponseFormatter::error('Master Transaksi Not Found', 404);
         }
 
-        // Get data bulan dan tahun dari created_at
-        $bulanTahun = $transaksi->created_at->format('F Y');
+        // Get data bulan dan tahun dari gaji_date_end
+        $gaji_date_end = new DateTime($transaksi->gaji_date_end);
+        $bulanTahun = $gaji_date_end->format('F Y');
 
         // Get Dosen Luar Biasa
         $dosenlb = $transaksi->dosen_luar_biasa;
@@ -128,8 +130,9 @@ class SlipGajiController extends Controller
         if (!$transaksi) {
             return ResponseFormatter::error('Master Transaksi Not Found', 404);
         }
-           // Get data bulan dan tahun dari created_at
-           $bulanTahun = $transaksi->created_at->format('F Y');
+            // Get data bulan dan tahun dari gaji_date_end , format (November 2023)
+            $gaji_date_end = new DateTime($transaksi->gaji_date_end);
+            $bulanTahun = $gaji_date_end->format('F Y');
 
            // Get Dosen Tetap
            $dosenlb = $transaksi->dosen_luar_biasa;

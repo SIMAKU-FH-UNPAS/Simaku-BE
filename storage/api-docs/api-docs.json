@@ -2270,6 +2270,18 @@
             "dostap_bank_id": {
                 "type": "integer",
                 "example": 1
+                },
+            "status_bank": {
+                "type": "string",
+                "example": "Payroll"
+                },
+            "gaji_date_start": {
+                "type": "date",
+                "example": "2024-02-01"
+                },
+            "gaji_date_end": {
+                "type": "date",
+                "example": "2024-02-29"
                 }
                 }
               }
@@ -2518,6 +2530,10 @@
             "dostap_bank_id": {
                 "type": "integer",
                 "example": 1
+                },
+            "status_bank": {
+                "type": "string",
+                "example": "Non Payroll"
                 }
                 }
               }
@@ -2719,6 +2735,10 @@
                                         }
                                     }
                                     },
+                                    "status_bank": {
+                                        "type": "string",
+                                        "example": "Payroll"
+                                    },
                                     "gaji_universitas":{
                                         "type": "array",
                                         "items":{
@@ -2854,19 +2874,14 @@
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "periode": {
-                                        "type": "object",
-                                        "properties": {
-                                            "month": {
-                                                "type": "string",
-                                                "example": "November"
-                                            },
-                                            "year": {
-                                                "type": "string",
-                                                "example": "2023"
-                                            }
-                                        }
-                                    },
+                                    "gaji_date_start": {
+                                        "type": "date",
+                                        "example": "01 February 2024"
+                                        },
+                                    "gaji_date_end": {
+                                        "type": "date",
+                                        "example": "29 February 2024"
+                                        },
                                     "bank":{
                                         "type":"array",
                                         "items":{
@@ -2895,6 +2910,10 @@
                                             }
                                         }
                                     }
+                                    },
+                                    "status_bank": {
+                                        "type": "string",
+                                        "example": "Payroll"
                                     },
                                     "gaji_universitas":{
                                         "type": "array",
@@ -3074,6 +3093,18 @@
             "doslb_bank_id": {
                 "type": "integer",
                 "example": 1
+                },
+            "status_bank": {
+                "type": "string",
+                "example": "Payroll"
+                },
+            "gaji_date_start": {
+                "type": "date",
+                "example": "2024-02-01"
+                },
+            "gaji_date_end": {
+                "type": "date",
+                "example": "2024-02-29"
                 }
                 }
               }
@@ -3211,6 +3242,10 @@
                 "doslb_bank_id": {
                     "type": "integer",
                     "example": 1
+                    },
+                "status_bank": {
+                    "type": "string",
+                    "example": "Non Payroll"
                     }
                 }
               }
@@ -3409,6 +3444,10 @@
                                         }
                                     }
                                     },
+                                    "status_bank": {
+                                        "type": "string",
+                                        "example": "Payroll"
+                                    },
                                     "komponen_pendapatan":{
                                         "type": "array",
                                         "items":{
@@ -3538,19 +3577,14 @@
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "periode": {
-                                        "type": "object",
-                                        "properties": {
-                                            "month": {
-                                                "type": "string",
-                                                "example": "November"
-                                            },
-                                            "year": {
-                                                "type": "string",
-                                                "example": "2023"
-                                            }
-                                        }
-                                    },
+                                    "gaji_date_start": {
+                                        "type": "date",
+                                        "example": "01 February 2024"
+                                        },
+                                    "gaji_date_end": {
+                                        "type": "date",
+                                        "example": "29 February 2024"
+                                        },
                                     "bank":{
                                         "type":"array",
                                         "items":{
@@ -3579,6 +3613,10 @@
                                             }
                                         }
                                     }
+                                    },
+                                    "status_bank": {
+                                        "type": "string",
+                                        "example": "Payroll"
                                     },
                                     "komponen_pendapatan":{
                                         "type": "array",
@@ -3844,6 +3882,18 @@
             "karyawan_bank_id": {
                 "type": "integer",
                 "example": 1
+                },
+            "status_bank": {
+                "type": "string",
+                "example": "Payroll"
+                },
+            "gaji_date_start": {
+                "type": "date",
+                "example": "2024-02-01"
+                },
+            "gaji_date_end": {
+                "type": "date",
+                "example": "2024-02-29"
                 }
                 }
               }
@@ -4076,6 +4126,10 @@
             "karyawan_bank_id": {
                 "type": "integer",
                 "example": 1
+                },
+            "status_bank": {
+                "type": "string",
+                "example": "Non Payroll"
                 }
                 }
               }
@@ -4277,6 +4331,10 @@
                                         }
                                     }
                                     },
+                                    "status_bank": {
+                                        "type": "string",
+                                        "example": "Payroll"
+                                    },
                                     "gaji_universitas":{
                                         "type": "array",
                                         "items":{
@@ -4412,19 +4470,14 @@
                                         "type": "integer",
                                         "example": 1
                                     },
-                                    "periode": {
-                                        "type": "object",
-                                        "properties": {
-                                            "month": {
-                                                "type": "string",
-                                                "example": "November"
-                                            },
-                                            "year": {
-                                                "type": "string",
-                                                "example": "2023"
-                                            }
-                                        }
-                                    },
+                                    "gaji_date_start": {
+                                        "type": "date",
+                                        "example": "01 February 2024"
+                                        },
+                                    "gaji_date_end": {
+                                        "type": "date",
+                                        "example": "29 February 2024"
+                                        },
                                     "bank":{
                                         "type":"array",
                                         "items":{
@@ -4453,6 +4506,10 @@
                                             }
                                         }
                                     }
+                                    },
+                                    "status_bank": {
+                                        "type": "string",
+                                        "example": "Payroll"
                                     },
                                     "gaji_universitas":{
                                         "type": "array",
@@ -7807,6 +7864,18 @@
                     "type": "integer",
                     "example": 1
                     },
+                    "status_bank": {
+                        "type": "string",
+                        "example": "Payroll"
+                    },
+                    "gaji_date_start": {
+                        "type": "date",
+                        "example": "01 February 2024"
+                        },
+                    "gaji_date_end": {
+                        "type": "date",
+                        "example": "29 February 2024"
+                        },
                   "dostap_gaji_universitas_id": {
                     "type": "integer",
                     "example": 1
@@ -7921,6 +7990,18 @@
                     "type": "integer",
                     "example": 1
                     },
+                    "status_bank": {
+                        "type": "string",
+                        "example": "Payroll"
+                    },
+                    "gaji_date_start": {
+                        "type": "date",
+                        "example": "01 February 2024"
+                        },
+                    "gaji_date_end": {
+                        "type": "date",
+                        "example": "29 February 2024"
+                        },
                   "doslb_komponen_pendapatan_id": {
                     "type": "integer",
                     "example": 1
@@ -8135,6 +8216,18 @@
                     "type": "integer",
                     "example": 1
                     },
+                    "status_bank": {
+                        "type": "string",
+                        "example": "Payroll"
+                    },
+                    "gaji_date_start": {
+                        "type": "date",
+                        "example": "01 February 2024"
+                        },
+                    "gaji_date_end": {
+                        "type": "date",
+                        "example": "29 February 2024"
+                        },
                   "karyawan_gaji_universitas_id": {
                     "type": "integer",
                     "example": 1

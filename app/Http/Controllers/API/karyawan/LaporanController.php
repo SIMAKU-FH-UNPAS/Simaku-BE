@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\karyawan;
 use App\Http\Controllers\Controller;
 use App\Helpers\ResponseFormatter;
 use App\Models\karyawan\Karyawan_Master_Transaksi;
-
+use DateTime;
 
 class LaporanController extends Controller
 {
@@ -17,6 +17,8 @@ class LaporanController extends Controller
         $rekapitulasipendapatan = [];
 
         foreach ($transaksigaji as $gaji) {
+            // Get data bulan dan tahun dari gaji_date_end
+            $bulanTahun = new DateTime($gaji->gaji_date_end);
 
             $karyawan = $gaji->karyawan;
             $gajiuniv = $gaji->gaji_universitas;
@@ -29,8 +31,8 @@ class LaporanController extends Controller
 
             $rekapitulasipendapatan[] = [
                 'periode' => [
-                    'month' => $gaji->created_at->format('F'),
-                    'year' => $gaji->created_at->format('Y'),
+                    'month' => $bulanTahun->format('F'),
+                    'year' => $bulanTahun->format('Y'),
                 ],
                 'rekapitulasipendapatan' => [
                     'no_pegawai' => $karyawan->no_pegawai,
@@ -69,6 +71,9 @@ class LaporanController extends Controller
         $laporanpendapatanbersih = [];
 
         foreach ($transaksigaji as $gaji) {
+            // Get data bulan dan tahun dari gaji_date_end
+            $bulanTahun = new DateTime($gaji->gaji_date_end);
+
             $karyawan = $gaji->karyawan;
             $gajiuniv = $gaji->gaji_universitas;
             $gajifakultas = $gaji->gaji_fakultas;
@@ -84,8 +89,8 @@ class LaporanController extends Controller
 
             $laporanpendapatanbersih[] = [
                 'periode' => [
-                    'month' => $gaji->created_at->format('F'),
-                    'year' => $gaji->created_at->format('Y'),
+                    'month' => $bulanTahun->format('F'),
+                    'year' => $bulanTahun->format('Y'),
                 ],
                 'pendapatanbersih' => [
                     'no_pegawai' => $karyawan->no_pegawai,
@@ -124,6 +129,8 @@ class LaporanController extends Controller
         $laporanpajak = [];
 
       foreach ($transaksigaji as $gaji) {
+        // Get data bulan dan tahun dari gaji_date_end
+        $bulanTahun = new DateTime($gaji->gaji_date_end);
 
         $karyawan = $gaji->karyawan;
         $gajiuniv = $gaji->gaji_universitas;
@@ -139,8 +146,8 @@ class LaporanController extends Controller
 
         $laporanpajak[] = [
             'periode' => [
-                'month' => $gaji->created_at->format('F'),
-                'year' => $gaji->created_at->format('Y'),
+                'month' => $bulanTahun->format('F'),
+                'year' => $bulanTahun->format('Y'),
             ],
             'laporanpajak' => [
                 'no_pegawai' => $karyawan->no_pegawai,
@@ -193,6 +200,8 @@ class LaporanController extends Controller
 
 
         foreach ($transaksigaji as $gaji) {
+        // Get data bulan dan tahun dari gaji_date_end
+        $bulanTahun = new DateTime($gaji->gaji_date_end);
 
         $karyawan = $gaji->karyawan;
         $potongan = $gaji->potongan;
@@ -201,8 +210,8 @@ class LaporanController extends Controller
 
         $laporanpotongan[] = [
             'periode' => [
-                'month' => $gaji->created_at->format('F'),
-                'year' => $gaji->created_at->format('Y'),
+                'month' => $bulanTahun->format('F'),
+                'year' => $bulanTahun->format('Y'),
             ],
             'laporanpotongan' => [
                 'no_pegawai' => $karyawan->no_pegawai,
@@ -235,6 +244,8 @@ class LaporanController extends Controller
             $rekapitulasibank = [];
 
             foreach ($transaksigaji as $gaji) {
+                // Get data bulan dan tahun dari gaji_date_end
+                $bulanTahun = new DateTime($gaji->gaji_date_end);
 
                 $karyawan = $gaji->karyawan;
                 $bank= $gaji->bank;
@@ -254,8 +265,8 @@ class LaporanController extends Controller
     // menampilkan data dalam bentuk array
     $rekapitulasibankArray = [
         'periode' => [
-            'month' => $gaji->created_at->format('F'),
-            'year' => $gaji->created_at->format('Y'),
+            'month' => $bulanTahun->format('F'),
+            'year' => $bulanTahun->format('Y'),
         ],
         'rekapitulasibank' => [
             'no_pegawai' => $karyawan->no_pegawai,
@@ -270,7 +281,9 @@ class LaporanController extends Controller
     ];
 
   // Add to the appropriate array based on the condition
-  $bankType = ($gaji->bank->nama_bank === 'Bank Mandiri') ? 'payroll' : 'non_payroll';
+  $statusBank = $gaji->status_bank;
+
+  $bankType = ($statusBank === 'Payroll') ? 'payroll' : 'non_payroll';
   $rekapitulasibankKey = $rekapitulasibankArray['periode']['year'] . $rekapitulasibankArray['periode']['month'];
 
   if (!isset($rekapitulasibank[$rekapitulasibankKey])) {

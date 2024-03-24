@@ -220,7 +220,7 @@ top: 10px;
             <div class="tabel-jumlah">
                 <table>
                     <tr>
-                        <td class="jumlah" width="165px">Total Pendapatan (A)</td>
+                        <td class="jumlah" width="165px">Pendapatan Kotor (A)</td>
                         <td  width="1px">:</td>
                         <td class="jumlah" width="230px">{{ format_rupiah($totalPendapatan) }}</td>
 
@@ -237,8 +237,8 @@ top: 10px;
                          <td  width="1px">:</td>
                          <td class="jumlah" width="230px">{{ format_rupiah($pph25) }}</td>
 
-                        <th>
-                            Jumlah Yang Diterima (A) - (B+C)
+                        <th width="135px">
+                            Pendapatan Bersih (A) - (B+C)
                         </th>
                         <th>
                             :

@@ -25,6 +25,9 @@ class Doslb_Master_Transaksi extends Model
     protected $fillable = [
         'dosen_luar_biasa_id',
         'doslb_bank_id',
+        'status_bank',
+        'gaji_date_start',
+        'gaji_date_end',
         'doslb_komponen_pendapatan_id',
         'doslb_potongan_id',
         'doslb_pajak_id',

@@ -26,6 +26,9 @@ class Karyawan_Master_Transaksi extends Model
     protected $fillable = [
         'karyawan_id',
         'karyawan_bank_id',
+        'status_bank',
+        'gaji_date_start',
+        'gaji_date_end',
         'karyawan_gaji_universitas_id',
         'karyawan_gaji_fakultas_id',
         'karyawan_potongan_id',
