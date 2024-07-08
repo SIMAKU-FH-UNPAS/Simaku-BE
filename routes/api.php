@@ -19,6 +19,8 @@ use App\Http\Controllers\API\dosenlb\LaporanController as DosenlbLaporanControll
 use App\Http\Controllers\API\dosenlb\TransaksiGajiController as DosenlbTransaksiGajiController;
 use App\Http\Controllers\API\dosenlb\SlipGajiController as DosenlbSlipGajiController;
 use App\Http\Controllers\API\master\FungsionalController;
+use App\Http\Controllers\API\master\KinerjaController;
+use App\Http\Controllers\API\master\TambahanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,11 +50,26 @@ Route::name('auth.')->group(function () {
 // master
 Route::prefix('master')->middleware('auth:sanctum')->name('master.')->group(
     function () {
+        // fungsional
         Route::get('fungsional', [FungsionalController::class, 'fetch'])->name('fetch');
         Route::get('fungsional/{id}', [FungsionalController::class, 'fetch'])->name('fetch');
         Route::post('fungsional/create', [FungsionalController::class, 'create'])->name('create');
         Route::post('fungsional/update/{id}', [FungsionalController::class, 'update'])->name('update');
         Route::delete('fungsional/delete/{id}', [FungsionalController::class, 'destroy'])->name('delete');
+
+        // kinerja
+        Route::get('kinerja', [KinerjaController::class, 'fetch'])->name('fetch');
+        Route::get('kinerja/{id}', [KinerjaController::class, 'fetch'])->name('fetch');
+        Route::post('kinerja/create', [KinerjaController::class, 'create'])->name('create');
+        Route::post('kinerja/update/{id}', [KinerjaController::class, 'update'])->name('update');
+        Route::delete('kinerja/delete/{id}', [KinerjaController::class, 'destroy'])->name('delete');
+
+        // tambahan
+        Route::get('tambahan', [TambahanController::class, 'fetch'])->name('fetch');
+        Route::get('tambahan/{id}', [TambahanController::class, 'fetch'])->name('fetch');
+        Route::post('tambahan/create', [TambahanController::class, 'create'])->name('create');
+        Route::post('tambahan/update/{id}', [TambahanController::class, 'update'])->name('update');
+        Route::delete('tambahan/delete/{id}', [TambahanController::class, 'destroy'])->name('delete');
     }
 );
 
