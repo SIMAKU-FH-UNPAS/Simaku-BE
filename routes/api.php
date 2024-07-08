@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\UserController;
@@ -17,7 +18,7 @@ use App\Http\Controllers\API\dosenlb\DosenLuarBiasaController;
 use App\Http\Controllers\API\dosenlb\LaporanController as DosenlbLaporanController;
 use App\Http\Controllers\API\dosenlb\TransaksiGajiController as DosenlbTransaksiGajiController;
 use App\Http\Controllers\API\dosenlb\SlipGajiController as DosenlbSlipGajiController;
-
+use App\Http\Controllers\API\master\FungsionalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,24 +31,34 @@ use App\Http\Controllers\API\dosenlb\SlipGajiController as DosenlbSlipGajiContro
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request){
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
 // AUTH USER ADMIN
-Route::name('auth.')->group(function(){
+Route::name('auth.')->group(function () {
     Route::post('login', [UserController::class, 'login']);
     Route::post('register', [UserController::class, 'register']);
-    Route::middleware('auth:sanctum')->group(function(){
+    Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [UserController::class, 'logout'])->name('logout');
         Route::get('user', [UserController::class, 'fetch'])->name('fetch');
     });
-
 });
+
+// master
+Route::prefix('master')->middleware('auth:sanctum')->name('master.')->group(
+    function () {
+        Route::get('fungsional', [FungsionalController::class, 'fetch'])->name('fetch');
+        Route::get('fungsional/{id}', [FungsionalController::class, 'fetch'])->name('fetch');
+        Route::post('fungsional/create', [FungsionalController::class, 'create'])->name('create');
+        Route::post('fungsional/update/{id}', [FungsionalController::class, 'update'])->name('update');
+        Route::delete('fungsional/delete/{id}', [FungsionalController::class, 'destroy'])->name('delete');
+    }
+);
 
 //Dosen Tetap
 Route::prefix('dosentetap')->middleware('auth:sanctum')->name('dosentetap.')->group(
-    function(){
+    function () {
         Route::get('', [DosenTetapController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenTetapController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenTetapController::class, 'create'])->name('create');
@@ -66,12 +77,12 @@ Route::prefix('dosentetap')->middleware('auth:sanctum')->name('dosentetap.')->gr
         Route::get('laporan/pajak', [DosenTetapLaporanController::class, 'laporanpajak'])->name('laporanpajak');
         Route::get('laporan/potongan', [DosenTetapLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
         Route::get('laporan/rekapitulasibank', [DosenTetapLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
-});
-
+    }
+);
 
 // Karyawan
 Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
-    function(){
+    function () {
         Route::get('', [KaryawanController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [KaryawanController::class, 'fetch'])->name('fetch');
         Route::post('create', [KaryawanController::class, 'create'])->name('create');
@@ -90,13 +101,12 @@ Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
         Route::get('laporan/pajak', [KaryawanLaporanController::class, 'laporanpajak'])->name('laporanpajak');
         Route::get('laporan/potongan', [KaryawanLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
         Route::get('laporan/rekapitulasibank', [KaryawanLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
-});
-
-
+    }
+);
 
 // Dosen Luar Biasa
 Route::prefix('dosenlb')->middleware('auth:sanctum')->name('dosenlb.')->group(
-    function(){
+    function () {
         Route::get('', [DosenLuarBiasaController::class, 'fetch'])->name('fetch');
         Route::get('/{id}', [DosenLuarBiasaController::class, 'fetch'])->name('fetch');
         Route::post('create', [DosenLuarBiasaController::class, 'create'])->name('create');
@@ -115,8 +125,5 @@ Route::prefix('dosenlb')->middleware('auth:sanctum')->name('dosenlb.')->group(
         Route::get('laporan/pajak', [DosenlbLaporanController::class, 'laporanpajak'])->name('laporanpajak');
         Route::get('laporan/potongan', [DosenlbLaporanController::class, 'laporanpotongan'])->name('laporanpotongan');
         Route::get('laporan/rekapitulasibank', [DosenlbLaporanController::class, 'rekapitulasibank'])->name('rekapitulasibank');
-});
-
-
-
-
+    }
+);
