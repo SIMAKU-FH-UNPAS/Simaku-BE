@@ -53,11 +53,11 @@ class FungsionalController extends Controller
 
         try {
 
-            $fungsional = Fungsional::create([
-                'nama' => $request->input('nama'),
-                'tgl_awal' => $request->input('tgl_awal'),
-                'tgl_akhir' => $request->input('tgl_akhir'),
-            ]);
+            $fungsional = new Fungsional();
+            $fungsional->nama = $request->input('nama');
+            $fungsional->tgl_awal = $request->input('tgl_awal');
+            $fungsional->tgl_akhir = $request->input('tgl_akhir');
+            $fungsional->save();
 
             DB::commit();
 

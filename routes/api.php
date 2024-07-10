@@ -20,7 +20,9 @@ use App\Http\Controllers\API\dosenlb\TransaksiGajiController as DosenlbTransaksi
 use App\Http\Controllers\API\dosenlb\SlipGajiController as DosenlbSlipGajiController;
 use App\Http\Controllers\API\master\FungsionalController;
 use App\Http\Controllers\API\master\KinerjaController;
+use App\Http\Controllers\API\master\KinerjaFungsionalController;
 use App\Http\Controllers\API\master\TambahanController;
+use App\Models\master\KinerjaFungsional;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +72,18 @@ Route::prefix('master')->middleware('auth:sanctum')->name('master.')->group(
         Route::post('tambahan/create', [TambahanController::class, 'create'])->name('create');
         Route::post('tambahan/update/{id}', [TambahanController::class, 'update'])->name('update');
         Route::delete('tambahan/delete/{id}', [TambahanController::class, 'destroy'])->name('delete');
+    }
+);
+
+// jenis-kinerja
+Route::prefix('jenis-kinerja')->middleware('auth:sanctum')->name('jenis-kinerja.')->group(
+    function () {
+        // fungsional
+        Route::get('kinerja-fungsional', [KinerjaFungsionalController::class, 'fetch'])->name('fetch');
+        Route::get('kinerja-fungsional/{id}', [KinerjaFungsionalController::class, 'fetch'])->name('fetch');
+        Route::post('kinerja-fungsional/create', [KinerjaFungsionalController::class, 'create'])->name('create');
+        Route::post('kinerja-fungsional/update/{id}', [KinerjaFungsionalController::class, 'update'])->name('update');
+        Route::delete('kinerja-fungsional/delete/{id}', [KinerjaFungsionalController::class, 'destroy'])->name('delete');
     }
 );
 

@@ -62,7 +62,7 @@ class TambahanController extends Controller
             DB::commit();
 
             if (!$fungsional) {
-                throw new Exception('Data Dosen Tetap not created');
+                throw new Exception('Data Tambahan not created');
             }
 
             return ResponseFormatter::success(

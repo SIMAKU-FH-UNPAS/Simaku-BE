@@ -18,7 +18,7 @@ class KinerjaController extends Controller
         $nama = $request->input('nama');
         $tgl_awal = $request->input('tgl_awal');
         $tgl_akhir = $request->input('tgl_akhir');
-        $limit = $request->input('limit', 10);
+        $limit = $request->input('limit', 3);
 
         $kinerjaQuery = Kinerja::query();
 
