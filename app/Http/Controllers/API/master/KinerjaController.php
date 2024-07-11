@@ -63,21 +63,21 @@ class KinerjaController extends Controller
 
         try {
 
-            $fungsional = Kinerja::create([
-                'nama' => $request->input('nama'),
-                'tgl_awal' => $request->input('tgl_awal'),
-                'tgl_akhir' => $request->input('tgl_akhir'),
-            ]);
+            $kinerja = new Kinerja();
+            $kinerja->nama = $request->input('nama');
+            $kinerja->tgl_awal = $request->input('tgl_awal');
+            $kinerja->tgl_akhir = $request->input('tgl_akhir');
+            $kinerja->save();
 
             DB::commit();
 
-            if (!$fungsional) {
+            if (!$kinerja) {
                 throw new Exception('Data Dosen Tetap not created');
             }
 
             return ResponseFormatter::success(
                 [
-                    'fungsional' => $fungsional
+                    'kinerja' => $kinerja
                 ],
                 'Data Kinerja created'
             );
@@ -95,13 +95,13 @@ class KinerjaController extends Controller
 
         try {
 
-            $fungsional = Kinerja::find($id);
+            $kinerja = Kinerja::find($id);
 
-            if (!$fungsional) {
+            if (!$kinerja) {
                 return ResponseFormatter::error('Data Kinerja not found', 404);
             }
 
-            $fungsional->update([
+            $kinerja->update([
                 'nama' => $request->input('nama'),
                 'tgl_awal' => $request->input('tgl_awal'),
                 'tgl_akhir' => $request->input('tgl_akhir'),
@@ -111,7 +111,7 @@ class KinerjaController extends Controller
 
             return ResponseFormatter::success(
                 [
-                    'fungsional' => $fungsional
+                    'kinerja' => $kinerja
                 ],
                 'Data Kinerja updated'
             );
@@ -126,8 +126,8 @@ class KinerjaController extends Controller
         DB::beginTransaction();
 
         try {
-            $fungsional = Kinerja::find($id);
-            $fungsional->delete();
+            $kinerja = Kinerja::find($id);
+            $kinerja->delete();
 
             DB::commit();
             return ResponseFormatter::success('Data Kinerja deleted');

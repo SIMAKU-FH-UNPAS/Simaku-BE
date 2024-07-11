@@ -62,21 +62,21 @@ class TambahanController extends Controller
 
         try {
 
-            $fungsional = Tambahan::create([
-                'nama' => $request->input('nama'),
-                'tgl_awal' => $request->input('tgl_awal'),
-                'tgl_akhir' => $request->input('tgl_akhir'),
-            ]);
+            $tambahan = new Tambahan();
+            $tambahan->nama = $request->input('nama');
+            $tambahan->tgl_awal = $request->input('tgl_awal');
+            $tambahan->tgl_akhir = $request->input('tgl_akhir');
+            $tambahan->save();
 
             DB::commit();
 
-            if (!$fungsional) {
+            if (!$tambahan) {
                 throw new Exception('Data Tambahan not created');
             }
 
             return ResponseFormatter::success(
                 [
-                    'fungsional' => $fungsional
+                    'tambahan' => $tambahan
                 ],
                 'Data Tambahan created'
             );
@@ -94,13 +94,13 @@ class TambahanController extends Controller
 
         try {
 
-            $fungsional = Tambahan::find($id);
+            $tambahan = Tambahan::find($id);
 
-            if (!$fungsional) {
+            if (!$tambahan) {
                 return ResponseFormatter::error('Data Tambahan not found', 404);
             }
 
-            $fungsional->update([
+            $tambahan->update([
                 'nama' => $request->input('nama'),
                 'tgl_awal' => $request->input('tgl_awal'),
                 'tgl_akhir' => $request->input('tgl_akhir'),
@@ -110,7 +110,7 @@ class TambahanController extends Controller
 
             return ResponseFormatter::success(
                 [
-                    'fungsional' => $fungsional
+                    'tambahan' => $tambahan
                 ],
                 'Data Tambahan updated'
             );
@@ -125,8 +125,8 @@ class TambahanController extends Controller
         DB::beginTransaction();
 
         try {
-            $fungsional = Tambahan::find($id);
-            $fungsional->delete();
+            $tambahan = Tambahan::find($id);
+            $tambahan->delete();
 
             DB::commit();
             return ResponseFormatter::success('Data Tambahan deleted');
