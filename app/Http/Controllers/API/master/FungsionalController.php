@@ -11,38 +11,47 @@ use Illuminate\Support\Facades\DB;
 
 class FungsionalController extends Controller
 {
-    public function fetch(Request $request)
+    public function fetch()
     {
-        $id = $request->input('id');
-        $nama = $request->input('nama');
-        $tgl_awal = $request->input('tgl_awal');
-        $tgl_akhir = $request->input('tgl_akhir');
-        $limit = $request->input('limit', 10);
+        $search = request()->q;
+        $fungsional = Fungsional::select('*')
+            ->orderBy(request()->sortby, request()->sortbydesc)
+            ->when($search, function ($posts, $search) {
+                $posts = $posts->where('nama', 'LIKE', '%' . $search . '%');
+            })
+            ->paginate(request()->per_page)->toArray();
 
-        $fungsionalQuery = Fungsional::query();
+        $i = $fungsional['from'];
+        $hasil_data_fungsional = [];
+        foreach ($fungsional['data'] as $data_fungsional) {
+            $row = [];
+            $row['no'] = $i++;
+            $row['id'] = $data_fungsional['id'];
+            $row['nama'] = $data_fungsional['nama'];
+            $row['tgl_awal'] = $data_fungsional['tgl_awal'];
+            $row['tgl_akhir'] = $data_fungsional['tgl_akhir'];
 
-        if ($id) {
-            $fungsional = $fungsionalQuery
-                ->find($id);
-
-            if ($fungsional) {
-                return ResponseFormatter::success($fungsional, 'Data Fungsional found');
-            }
-            return ResponseFormatter::error('Data Fungsional not found', 404);
-        }
-
-        $fungsional = $fungsionalQuery;
-
-        if ($nama) {
-            $fungsionalQuery->where('nama', 'like', '%' . $nama . '%');
+            $hasil_data_fungsional[] = $row;
         }
 
         return ResponseFormatter::success(
-            $fungsional->paginate($limit),
-            'Data Fungsional Found'
+            [
+                'data' => $hasil_data_fungsional,
+                'current_page' => $fungsional['current_page'],
+                'first_page_url' => $fungsional['first_page_url'],
+                'from' => $fungsional['from'],
+                'last_page' => $fungsional['last_page'],
+                'last_page_url' => $fungsional['last_page_url'],
+                'links' => $fungsional['links'],
+                'next_page_url' => $fungsional['next_page_url'],
+                'path' => $fungsional['path'],
+                'per_page' => $fungsional['per_page'],
+                'prev_page_url' => $fungsional['prev_page_url'],
+                'to' => $fungsional['to'],
+                'total' => $fungsional['total'],
+            ],
+            'Data fungsional found'
         );
-
-        return ResponseFormatter::success($fungsional, 'Data Fungsional Found');
     }
 
     public function create(Request $request)

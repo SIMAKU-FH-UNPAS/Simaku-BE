@@ -17,87 +17,60 @@ use App\Http\Requests\dosentetap\UpdateDosenTetapRequest;
 
 class DosenTetapController extends Controller
 {
-    public function fetch(Request $request)
+    public function fetch()
     {
-        $id = $request->input('id');
-        $nama = $request->input('nama');
-        $no_pegawai = $request->input('no_pegawai');
-        $npwp = $request->input('npwp');
-        $status = $request->input('status');
-        $golongan = $request->input('golongan');
-        $jabatan = $request->input('jabatan');
-        $alamat_KTP = $request->input('alamat_KTP');
-        $alamat_saat_ini = $request->input('alamat_saat_ini');
-        $nomor_hp = $request->input('nomor_hp');
-        $limit = $request->input('limit', 10);
+        $search = request()->q;
+        $dosen_tetap = Dosen_Tetap::select('*')
+            ->orderBy(request()->sortby, request()->sortbydesc)
+            ->when($search, function ($posts, $search) {
+                $posts = $posts->where('nama', 'LIKE', '%' . $search . '%');
+            })
+            ->with('banks')
+            ->paginate(request()->per_page)
+            ->toArray();
 
-        $dosentetapQuery = Dosen_Tetap::query();
+        $i = $dosen_tetap['from'];
+        $hasil_data_dosen_tetap = [];
+        foreach ($dosen_tetap['data'] as $data_dosen_tetap) {
+            $row = [];
+            $row['no'] = $i++;
+            $row['id'] = $data_dosen_tetap['id'];
+            $row['nama'] = $data_dosen_tetap['nama'];
+            $row['no_pegawai'] = $data_dosen_tetap['no_pegawai'];
+            $row['npwp'] = $data_dosen_tetap['npwp'];
+            $row['status'] = $data_dosen_tetap['status'];
+            $row['golongan'] = $data_dosen_tetap['golongan'];
+            $row['jabatan'] = $data_dosen_tetap['jabatan'];
+            $row['alamat_KTP'] = $data_dosen_tetap['alamat_KTP'];
+            $row['alamat_saat_ini'] = $data_dosen_tetap['alamat_saat_ini'];
+            $row['nomor_hp'] = $data_dosen_tetap['nomor_hp'];
+            $row['banks'] = $data_dosen_tetap['banks'];
 
-
-        // Get single data
-        if ($id) {
-            $dosentetap = $dosentetapQuery->with('banks')->find($id);
-
-            if ($dosentetap) {
-                return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap found');
-            }
-            return ResponseFormatter::error('Data Dosen Tetap not found', 404);
+            $hasil_data_dosen_tetap[] = $row;
         }
-
-        //    Get multiple Data
-        $dosentetap = $dosentetapQuery;
-
-        // Get by attribute
-        if ($nama) {
-            $dosentetap->where('nama', 'like', '%' . $nama . '%');
-        }
-        if ($no_pegawai) {
-            $dosentetap->where('no_pegawai', 'like', '%' . $no_pegawai . '%');
-        }
-        if ($npwp) {
-            $dosentetap->where('npwp', 'like', '%' . $npwp . '%');
-        }
-        if ($status) {
-            // Filter berdasarkan status "aktif" atau "tidak aktif"
-            if ($status === 'Aktif' || $status === 'Tidak Aktif') {
-                $dosentetap->where('status', $status);
-            } else {
-                // Jika nilai status tidak valid, berikan respon error
-                return ResponseFormatter::error('Data Dosen Tetap not Found', 404);
-            }
-        }
-        if ($jabatan) {
-            $dosentetap->where('jabatan', 'like', '%' . $jabatan . '%');
-        }
-        if ($alamat_KTP) {
-            $dosentetap->where('alamat_KTP', 'like', '%' . $alamat_KTP . '%');
-        }
-        if ($alamat_saat_ini) {
-            $dosentetap->where('alamat_saat_ini', 'like', '%' . $alamat_saat_ini . '%');
-        }
-        if ($golongan) {
-            $dosentetap->where('golongan', 'like', '%' . $golongan . '%');
-        }
-        if ($nomor_hp) {
-            $dosentetap->where('nomor_hp', 'like', '%' . $nomor_hp . '%');
-        }
-
-        //Fetch All Data
-        $dosentetap->with('banks');
 
         return ResponseFormatter::success(
-            $dosentetap->paginate($limit),
-            'Data Dosen Tetap Found'
+            [
+                'data' => $hasil_data_dosen_tetap,
+                'current_page' => $dosen_tetap['current_page'],
+                'first_page_url' => $dosen_tetap['first_page_url'],
+                'from' => $dosen_tetap['from'],
+                'last_page' => $dosen_tetap['last_page'],
+                'last_page_url' => $dosen_tetap['last_page_url'],
+                'links' => $dosen_tetap['links'],
+                'next_page_url' => $dosen_tetap['next_page_url'],
+                'path' => $dosen_tetap['path'],
+                'per_page' => $dosen_tetap['per_page'],
+                'prev_page_url' => $dosen_tetap['prev_page_url'],
+                'to' => $dosen_tetap['to'],
+                'total' => $dosen_tetap['total'],
+            ],
+            'Data Dosen Tetap found'
         );
-
-        return ResponseFormatter::success($dosentetap, 'Data Dosen Tetap Found');
     }
-
-
 
     public function create(CreateDosenTetapRequest $dosentetapRequest, CreateBankRequest $bankRequest)
     {
-
         // Memulai transaksi database
         DB::beginTransaction();
 

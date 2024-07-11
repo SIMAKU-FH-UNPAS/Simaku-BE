@@ -11,38 +11,47 @@ use Illuminate\Support\Facades\DB;
 
 class TambahanController extends Controller
 {
-    public function fetch(Request $request)
+    public function fetch()
     {
-        $id = $request->input('id');
-        $nama = $request->input('nama');
-        $tgl_awal = $request->input('tgl_awal');
-        $tgl_akhir = $request->input('tgl_akhir');
-        $limit = $request->input('limit', 10);
+        $search = request()->q;
+        $tambahan = Tambahan::select('*')
+            ->orderBy(request()->sortby, request()->sortbydesc)
+            ->when($search, function ($posts, $search) {
+                $posts = $posts->where('nama', 'LIKE', '%' . $search . '%');
+            })
+            ->paginate(request()->per_page)->toArray();
 
-        $tambahanQuery = Tambahan::query();
+        $i = $tambahan['from'];
+        $hasil_data_tambahan = [];
+        foreach ($tambahan['data'] as $data_tambahan) {
+            $row = [];
+            $row['no'] = $i++;
+            $row['id'] = $data_tambahan['id'];
+            $row['nama'] = $data_tambahan['nama'];
+            $row['tgl_awal'] = $data_tambahan['tgl_awal'];
+            $row['tgl_akhir'] = $data_tambahan['tgl_akhir'];
 
-        if ($id) {
-            $fungsional = $tambahanQuery
-                ->find($id);
-
-            if ($fungsional) {
-                return ResponseFormatter::success($fungsional, 'Data Tambahan found');
-            }
-            return ResponseFormatter::error('Data Tambahan not found', 404);
-        }
-
-        $fungsional = $tambahanQuery;
-
-        if ($nama) {
-            $tambahanQuery->where('nama', 'like', '%' . $nama . '%');
+            $hasil_data_tambahan[] = $row;
         }
 
         return ResponseFormatter::success(
-            $fungsional->paginate($limit),
-            'Data Tambahan Found'
+            [
+                'data' => $hasil_data_tambahan,
+                'current_page' => $tambahan['current_page'],
+                'first_page_url' => $tambahan['first_page_url'],
+                'from' => $tambahan['from'],
+                'last_page' => $tambahan['last_page'],
+                'last_page_url' => $tambahan['last_page_url'],
+                'links' => $tambahan['links'],
+                'next_page_url' => $tambahan['next_page_url'],
+                'path' => $tambahan['path'],
+                'per_page' => $tambahan['per_page'],
+                'prev_page_url' => $tambahan['prev_page_url'],
+                'to' => $tambahan['to'],
+                'total' => $tambahan['total'],
+            ],
+            'Data tambahan found'
         );
-
-        return ResponseFormatter::success($fungsional, 'Data Tambahan Found');
     }
 
     public function create(Request $request)

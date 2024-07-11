@@ -12,38 +12,47 @@ use Illuminate\Support\Facades\DB;
 
 class KinerjaController extends Controller
 {
-    public function fetch(Request $request)
+    public function fetch()
     {
-        $id = $request->input('id');
-        $nama = $request->input('nama');
-        $tgl_awal = $request->input('tgl_awal');
-        $tgl_akhir = $request->input('tgl_akhir');
-        $limit = $request->input('limit', 3);
+        $search = request()->q;
+        $kinerja = Kinerja::select('*')
+            ->orderBy(request()->sortby, request()->sortbydesc)
+            ->when($search, function ($posts, $search) {
+                $posts = $posts->where('nama', 'LIKE', '%' . $search . '%');
+            })
+            ->paginate(request()->per_page)->toArray();
 
-        $kinerjaQuery = Kinerja::query();
+        $i = $kinerja['from'];
+        $hasil_data_kinerja = [];
+        foreach ($kinerja['data'] as $data_kinerja) {
+            $row = [];
+            $row['no'] = $i++;
+            $row['id'] = $data_kinerja['id'];
+            $row['nama'] = $data_kinerja['nama'];
+            $row['tgl_awal'] = $data_kinerja['tgl_awal'];
+            $row['tgl_akhir'] = $data_kinerja['tgl_akhir'];
 
-        if ($id) {
-            $fungsional = $kinerjaQuery
-                ->find($id);
-
-            if ($fungsional) {
-                return ResponseFormatter::success($fungsional, 'Data Kinerja found');
-            }
-            return ResponseFormatter::error('Data Kinerja not found', 404);
-        }
-
-        $fungsional = $kinerjaQuery;
-
-        if ($nama) {
-            $kinerjaQuery->where('nama', 'like', '%' . $nama . '%');
+            $hasil_data_kinerja[] = $row;
         }
 
         return ResponseFormatter::success(
-            $fungsional->paginate($limit),
-            'Data Kinerja Found'
+            [
+                'data' => $hasil_data_kinerja,
+                'current_page' => $kinerja['current_page'],
+                'first_page_url' => $kinerja['first_page_url'],
+                'from' => $kinerja['from'],
+                'last_page' => $kinerja['last_page'],
+                'last_page_url' => $kinerja['last_page_url'],
+                'links' => $kinerja['links'],
+                'next_page_url' => $kinerja['next_page_url'],
+                'path' => $kinerja['path'],
+                'per_page' => $kinerja['per_page'],
+                'prev_page_url' => $kinerja['prev_page_url'],
+                'to' => $kinerja['to'],
+                'total' => $kinerja['total'],
+            ],
+            'Data kinerja found'
         );
-
-        return ResponseFormatter::success($fungsional, 'Data Kinerja Found');
     }
 
     public function create(Request $request)
