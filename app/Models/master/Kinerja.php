@@ -12,7 +12,7 @@ class Kinerja extends Model implements Auditable
     use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
     protected $fillable = [
         'nama',
-        'tgl_awal',
-        'tgl_akhir',
+        'jenis',
+        'deskripsi',
     ];
 }
