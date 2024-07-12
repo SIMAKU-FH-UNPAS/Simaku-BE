@@ -114,8 +114,8 @@ class KinerjaController extends Controller
 
             $kinerja->update([
                 'nama' => $request->input('nama'),
-                'tgl_awal' => $request->input('tgl_awal'),
-                'tgl_akhir' => $request->input('tgl_akhir'),
+                'jenis' => $request->input('jenis'),
+                'deskripsi' => $request->input('deskripsi'),
             ]);
 
             DB::commit();
