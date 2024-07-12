@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\dosenlb\Doslb_Master_Transaksi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Dosen_Luar_Biasa extends Model
+class Dosen_Luar_Biasa extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that are mass assignable.
@@ -31,10 +32,12 @@ class Dosen_Luar_Biasa extends Model
         'nomor_hp'
     ];
 
-    public function banks(){
-        return $this->hasMany(Doslb_Bank::class,'dosen_luar_biasa_id', 'id');
+    public function banks()
+    {
+        return $this->hasMany(Doslb_Bank::class, 'dosen_luar_biasa_id', 'id');
     }
-    public function master_transaksi(){
-        return $this->hasMany(Doslb_Master_Transaksi::class,'dosen_luar_biasa_id', 'id');
+    public function master_transaksi()
+    {
+        return $this->hasMany(Doslb_Master_Transaksi::class, 'dosen_luar_biasa_id', 'id');
     }
 }

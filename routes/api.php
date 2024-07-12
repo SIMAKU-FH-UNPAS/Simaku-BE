@@ -52,38 +52,12 @@ Route::name('auth.')->group(function () {
 // master
 Route::prefix('master')->middleware('auth:sanctum')->name('master.')->group(
     function () {
-        // fungsional
-        Route::get('fungsional', [FungsionalController::class, 'fetch'])->name('fetch');
-        Route::get('fungsional/{id}', [FungsionalController::class, 'fetch'])->name('fetch');
-        Route::post('fungsional/create', [FungsionalController::class, 'create'])->name('create');
-        Route::post('fungsional/update/{id}', [FungsionalController::class, 'update'])->name('update');
-        Route::delete('fungsional/delete/{id}', [FungsionalController::class, 'destroy'])->name('delete');
-
         // kinerja
         Route::get('kinerja', [KinerjaController::class, 'fetch'])->name('fetch');
-        Route::get('kinerja/{id}', [KinerjaController::class, 'fetch'])->name('fetch');
+        Route::get('kinerja/{id}', [KinerjaController::class, 'fetchById'])->name('fetchById');
         Route::post('kinerja/create', [KinerjaController::class, 'create'])->name('create');
         Route::post('kinerja/update/{id}', [KinerjaController::class, 'update'])->name('update');
         Route::delete('kinerja/delete/{id}', [KinerjaController::class, 'destroy'])->name('delete');
-
-        // tambahan
-        Route::get('tambahan', [TambahanController::class, 'fetch'])->name('fetch');
-        Route::get('tambahan/{id}', [TambahanController::class, 'fetch'])->name('fetch');
-        Route::post('tambahan/create', [TambahanController::class, 'create'])->name('create');
-        Route::post('tambahan/update/{id}', [TambahanController::class, 'update'])->name('update');
-        Route::delete('tambahan/delete/{id}', [TambahanController::class, 'destroy'])->name('delete');
-    }
-);
-
-// jenis-kinerja
-Route::prefix('jenis-kinerja')->middleware('auth:sanctum')->name('jenis-kinerja.')->group(
-    function () {
-        // fungsional
-        Route::get('kinerja-fungsional', [KinerjaFungsionalController::class, 'fetch'])->name('fetch');
-        Route::get('kinerja-fungsional/{id}', [KinerjaFungsionalController::class, 'fetch'])->name('fetch');
-        Route::post('kinerja-fungsional/create', [KinerjaFungsionalController::class, 'create'])->name('create');
-        Route::post('kinerja-fungsional/update/{id}', [KinerjaFungsionalController::class, 'update'])->name('update');
-        Route::delete('kinerja-fungsional/delete/{id}', [KinerjaFungsionalController::class, 'destroy'])->name('delete');
     }
 );
 

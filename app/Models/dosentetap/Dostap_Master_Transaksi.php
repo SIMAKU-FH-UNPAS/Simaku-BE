@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\dosentetap\Dostap_Gaji_Fakultas;
 use App\Models\dosentetap\Dostap_Gaji_Universitas;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Dostap_Master_Transaksi extends Model
+class Dostap_Master_Transaksi extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
-
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
     /**
      * The attributes that are mass assignable.
      *
@@ -35,22 +35,28 @@ class Dostap_Master_Transaksi extends Model
         'dostap_pajak_id',
     ];
 
-    public function dosen_tetap(){
-        return $this->belongsTo(Dosen_Tetap::class,'dosen_tetap_id', 'id');
+    public function dosen_tetap()
+    {
+        return $this->belongsTo(Dosen_Tetap::class, 'dosen_tetap_id', 'id');
     }
-    public function bank(){
-        return $this->belongsTo(Dostap_Bank::class,'dostap_bank_id', 'id');
+    public function bank()
+    {
+        return $this->belongsTo(Dostap_Bank::class, 'dostap_bank_id', 'id');
     }
-    public function gaji_universitas(){
-        return $this->belongsTo(Dostap_Gaji_Universitas::class,'dostap_gaji_universitas_id', 'id');
+    public function gaji_universitas()
+    {
+        return $this->belongsTo(Dostap_Gaji_Universitas::class, 'dostap_gaji_universitas_id', 'id');
     }
-    public function gaji_fakultas(){
-        return $this->belongsTo(Dostap_Gaji_Fakultas::class,'dostap_gaji_fakultas_id', 'id');
+    public function gaji_fakultas()
+    {
+        return $this->belongsTo(Dostap_Gaji_Fakultas::class, 'dostap_gaji_fakultas_id', 'id');
     }
-    public function potongan(){
-        return $this->belongsTo(Dostap_Potongan::class,'dostap_potongan_id', 'id');
+    public function potongan()
+    {
+        return $this->belongsTo(Dostap_Potongan::class, 'dostap_potongan_id', 'id');
     }
-    public function pajak(){
-        return $this->belongsTo(Dostap_Pajak::class,'dostap_pajak_id', 'id');
+    public function pajak()
+    {
+        return $this->belongsTo(Dostap_Pajak::class, 'dostap_pajak_id', 'id');
     }
 }

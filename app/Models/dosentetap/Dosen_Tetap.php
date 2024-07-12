@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\dosentetap\Dostap_Master_Transaksi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Dosen_Tetap extends Model
+class Dosen_Tetap extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that are mass assignable.
@@ -32,10 +33,12 @@ class Dosen_Tetap extends Model
     ];
 
 
-    public function banks(){
-        return $this->hasMany(Dostap_Bank::class,'dosen_tetap_id', 'id');
+    public function banks()
+    {
+        return $this->hasMany(Dostap_Bank::class, 'dosen_tetap_id', 'id');
     }
-    public function master_transaksi(){
-        return $this->hasMany(Dostap_Master_Transaksi::class,'dosen_tetap_id', 'id');
+    public function master_transaksi()
+    {
+        return $this->hasMany(Dostap_Master_Transaksi::class, 'dosen_tetap_id', 'id');
     }
 }

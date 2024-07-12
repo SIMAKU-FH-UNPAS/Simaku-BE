@@ -29,8 +29,8 @@ class KinerjaController extends Controller
             $row['no'] = $i++;
             $row['id'] = $data_kinerja['id'];
             $row['nama'] = $data_kinerja['nama'];
-            $row['tgl_awal'] = $data_kinerja['tgl_awal'];
-            $row['tgl_akhir'] = $data_kinerja['tgl_akhir'];
+            $row['jenis'] = $data_kinerja['jenis'];
+            $row['deskripsi'] = $data_kinerja['deskripsi'];
 
             $hasil_data_kinerja[] = $row;
         }
@@ -55,6 +55,17 @@ class KinerjaController extends Controller
         );
     }
 
+    public function fetchById($id)
+    {
+        $data = Kinerja::find($id);
+        return ResponseFormatter::success(
+            [
+                'data' => $data
+            ],
+            'Data kinerja found'
+        );
+    }
+
     public function create(Request $request)
     {
         $this->_validate($request);
@@ -65,8 +76,8 @@ class KinerjaController extends Controller
 
             $kinerja = new Kinerja();
             $kinerja->nama = $request->input('nama');
-            $kinerja->tgl_awal = $request->input('tgl_awal');
-            $kinerja->tgl_akhir = $request->input('tgl_akhir');
+            $kinerja->jenis = $request->input('jenis');
+            $kinerja->deskripsi = $request->input('deskripsi');
             $kinerja->save();
 
             DB::commit();
@@ -141,12 +152,10 @@ class KinerjaController extends Controller
     {
         $validator = $request->validate([
             'nama' => ['required'],
-            'tgl_awal' => ['required'],
-            'tgl_akhir' => ['required'],
+            'jenis' => ['required'],
         ], [
             'nama.required' => "Nama tidak boleh kosong",
-            'tgl_awal.required' => "Tanggal Awal tidak boleh kosong",
-            'tgl_akhir.required' => "Tanggal Akhir boleh kosong",
+            'jenis.required' => "Tanggal Awal tidak boleh kosong",
         ]);
 
         return $validator;

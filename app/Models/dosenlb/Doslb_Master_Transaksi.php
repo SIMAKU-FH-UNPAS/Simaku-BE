@@ -10,10 +10,12 @@ use App\Models\dosenlb\Dosen_Luar_Biasa;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\dosenlb\Doslb_Komponen_Pendapatan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Doslb_Master_Transaksi extends Model
+class Doslb_Master_Transaksi extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
+
 
     /**
      * The attributes that are mass assignable.
@@ -32,20 +34,24 @@ class Doslb_Master_Transaksi extends Model
         'doslb_potongan_id',
         'doslb_pajak_id',
     ];
-    public function dosen_luar_biasa(){
-        return $this->belongsTo(Dosen_Luar_Biasa::class,'dosen_luar_biasa_id', 'id');
+    public function dosen_luar_biasa()
+    {
+        return $this->belongsTo(Dosen_Luar_Biasa::class, 'dosen_luar_biasa_id', 'id');
     }
-    public function bank(){
-        return $this->belongsTo(Doslb_Bank::class,'doslb_bank_id', 'id');
+    public function bank()
+    {
+        return $this->belongsTo(Doslb_Bank::class, 'doslb_bank_id', 'id');
     }
-    public function komponen_pendapatan(){
-        return $this->belongsTo(Doslb_Komponen_Pendapatan::class,'doslb_komponen_pendapatan_id', 'id');
+    public function komponen_pendapatan()
+    {
+        return $this->belongsTo(Doslb_Komponen_Pendapatan::class, 'doslb_komponen_pendapatan_id', 'id');
     }
-    public function potongan(){
-        return $this->belongsTo(Doslb_Potongan::class,'doslb_potongan_id', 'id');
+    public function potongan()
+    {
+        return $this->belongsTo(Doslb_Potongan::class, 'doslb_potongan_id', 'id');
     }
-    public function pajak(){
-        return $this->belongsTo(Doslb_Pajak::class,'doslb_pajak_id', 'id');
+    public function pajak()
+    {
+        return $this->belongsTo(Doslb_Pajak::class, 'doslb_pajak_id', 'id');
     }
 }
-

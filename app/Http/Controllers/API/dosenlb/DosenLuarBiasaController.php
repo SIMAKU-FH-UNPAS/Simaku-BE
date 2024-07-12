@@ -85,7 +85,6 @@ class DosenLuarBiasaController extends Controller
                 'alamat_KTP' => $dosenlbRequest->alamat_KTP,
                 'alamat_saat_ini' => $dosenlbRequest->alamat_saat_ini,
                 'nomor_hp' => $dosenlbRequest->nomor_hp
-
             ]);
 
             // Create Data Bank

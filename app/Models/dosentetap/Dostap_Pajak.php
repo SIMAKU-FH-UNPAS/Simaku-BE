@@ -1,17 +1,18 @@
 <?php
+
 namespace App\Models\dosentetap;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\dosentetap\Dostap_Master_Transaksi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Dostap_Pajak extends Model
+class Dostap_Pajak extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
-
-        /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -35,8 +36,8 @@ class Dostap_Pajak extends Model
         'pendapatan_bersih',
     ];
 
-    public function master_transaksi(){
-        return $this->hasOne(Dostap_Master_Transaksi::class,'dostap_pajak_id', 'id');
+    public function master_transaksi()
+    {
+        return $this->hasOne(Dostap_Master_Transaksi::class, 'dostap_pajak_id', 'id');
     }
-
 }

@@ -6,12 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\dosentetap\Dostap_Master_Transaksi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Dostap_Gaji_Universitas extends Model
+class Dostap_Gaji_Universitas extends Model implements Auditable
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory, SoftDeletes, \OwenIt\Auditing\Auditable;
 
-        /**
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -32,9 +33,8 @@ class Dostap_Gaji_Universitas extends Model
         'honor_universitas',
     ];
 
-    public function master_transaksi(){
-        return $this->hasOne(Dostap_Master_Transaksi::class,'dostap_gaji_universitas_id', 'id');
+    public function master_transaksi()
+    {
+        return $this->hasOne(Dostap_Master_Transaksi::class, 'dostap_gaji_universitas_id', 'id');
     }
-
-
 }
