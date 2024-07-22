@@ -28,6 +28,13 @@ class KaryawanController extends Controller
             ->paginate(request()->per_page)
             ->toArray();
 
+        $totalAktif = Karyawan::where('status', 'Aktif')
+            ->count();
+        $totalNonAktif = Karyawan::where('status', 'Tidak Aktif')
+            ->count();
+        $totalSemua = Karyawan::whereIn('status', ['Aktif', 'Tidak Aktif'])
+            ->count();
+
         $i = $karyawan['from'];
         $hasil_data_karyawan = [];
         foreach ($karyawan['data'] as $data_karyawan) {
@@ -44,6 +51,9 @@ class KaryawanController extends Controller
             $row['alamat_saat_ini'] = $data_karyawan['alamat_saat_ini'];
             $row['nomor_hp'] = $data_karyawan['nomor_hp'];
             $row['banks'] = $data_karyawan['banks'];
+            $row['totalAktif'] = $totalAktif;
+            $row['totalNonAktif'] = $totalNonAktif;
+            $row['totalSemua'] = $totalSemua;
 
             $hasil_data_karyawan[] = $row;
         }
@@ -68,7 +78,16 @@ class KaryawanController extends Controller
         );
     }
 
-
+    public function fetchById($id)
+    {
+        $data = Karyawan::find($id);
+        return ResponseFormatter::success(
+            [
+                'data' => $data
+            ],
+            'Data karyawan found'
+        );
+    }
 
     public function create(CreateKaryawanRequest $karyawanRequest, CreateBankRequest $bankRequest)
     {

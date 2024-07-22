@@ -28,6 +28,13 @@ class DosenLuarBiasaController extends Controller
             ->paginate(request()->per_page)
             ->toArray();
 
+        $totalAktif = Dosen_Luar_Biasa::where('status', 'Aktif')
+            ->count();
+        $totalNonAktif = Dosen_Luar_Biasa::where('status', 'Tidak Aktif')
+            ->count();
+        $totalSemua = Dosen_Luar_Biasa::whereIn('status', ['Aktif', 'Tidak Aktif'])
+            ->count();
+
         $i = $dosen_lb['from'];
         $hasil_data_dosen_lb = [];
         foreach ($dosen_lb['data'] as $data_dosen_lb) {
@@ -44,6 +51,9 @@ class DosenLuarBiasaController extends Controller
             $row['alamat_saat_ini'] = $data_dosen_lb['alamat_saat_ini'];
             $row['nomor_hp'] = $data_dosen_lb['nomor_hp'];
             $row['banks'] = $data_dosen_lb['banks'];
+            $row['totalAktif'] = $totalAktif;
+            $row['totalNonAktif'] = $totalNonAktif;
+            $row['totalSemua'] = $totalSemua;
 
             $hasil_data_dosen_lb[] = $row;
         }
@@ -63,6 +73,17 @@ class DosenLuarBiasaController extends Controller
                 'prev_page_url' => $dosen_lb['prev_page_url'],
                 'to' => $dosen_lb['to'],
                 'total' => $dosen_lb['total'],
+            ],
+            'Data Dosen LB found'
+        );
+    }
+
+    public function fetchById($id)
+    {
+        $data = Dosen_Luar_Biasa::find($id);
+        return ResponseFormatter::success(
+            [
+                'data' => $data
             ],
             'Data Dosen LB found'
         );

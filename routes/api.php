@@ -65,7 +65,7 @@ Route::prefix('master')->middleware('auth:sanctum')->name('master.')->group(
 Route::prefix('dosentetap')->middleware('auth:sanctum')->name('dosentetap.')->group(
     function () {
         Route::get('', [DosenTetapController::class, 'fetch'])->name('fetch');
-        Route::get('/{id}', [DosenTetapController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [DosenTetapController::class, 'fetchById'])->name('fetchById');
         Route::post('create', [DosenTetapController::class, 'create'])->name('create');
         Route::put('update/{id}', [DosenTetapController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenTetapController::class, 'destroy'])->name('delete');
@@ -89,7 +89,7 @@ Route::prefix('dosentetap')->middleware('auth:sanctum')->name('dosentetap.')->gr
 Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
     function () {
         Route::get('', [KaryawanController::class, 'fetch'])->name('fetch');
-        Route::get('/{id}', [KaryawanController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [KaryawanController::class, 'fetchById'])->name('fetchById');
         Route::post('create', [KaryawanController::class, 'create'])->name('create');
         Route::put('update/{id}', [KaryawanController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [KaryawanController::class, 'destroy'])->name('delete');
@@ -113,7 +113,7 @@ Route::prefix('karyawan')->middleware('auth:sanctum')->name('karyawan.')->group(
 Route::prefix('dosenlb')->middleware('auth:sanctum')->name('dosenlb.')->group(
     function () {
         Route::get('', [DosenLuarBiasaController::class, 'fetch'])->name('fetch');
-        Route::get('/{id}', [DosenLuarBiasaController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [DosenLuarBiasaController::class, 'fetchById'])->name('fetchById');
         Route::post('create', [DosenLuarBiasaController::class, 'create'])->name('create');
         Route::put('update/{id}', [DosenLuarBiasaController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [DosenLuarBiasaController::class, 'destroy'])->name('delete');
