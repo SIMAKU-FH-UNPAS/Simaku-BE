@@ -30,7 +30,7 @@ class KinerjaController extends Controller
             $row['id'] = $data_kinerja['id'];
             $row['nama'] = $data_kinerja['nama'];
             $row['jenis'] = $data_kinerja['jenis'];
-            $row['deskripsi'] = $data_kinerja['deskripsi'];
+            $row['nominal'] = $data_kinerja['nominal'];
 
             $hasil_data_kinerja[] = $row;
         }
@@ -77,7 +77,7 @@ class KinerjaController extends Controller
             $kinerja = new Kinerja();
             $kinerja->nama = $request->input('nama');
             $kinerja->jenis = $request->input('jenis');
-            $kinerja->deskripsi = $request->input('deskripsi');
+            $kinerja->nominal = $request->input('nominal');
             $kinerja->save();
 
             DB::commit();
@@ -115,7 +115,7 @@ class KinerjaController extends Controller
             $kinerja->update([
                 'nama' => $request->input('nama'),
                 'jenis' => $request->input('jenis'),
-                'deskripsi' => $request->input('deskripsi'),
+                'nominal' => $request->input('nominal'),
             ]);
 
             DB::commit();
