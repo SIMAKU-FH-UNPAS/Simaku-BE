@@ -51,9 +51,6 @@ class DosenLuarBiasaController extends Controller
             $row['alamat_saat_ini'] = $data_dosen_lb['alamat_saat_ini'];
             $row['nomor_hp'] = $data_dosen_lb['nomor_hp'];
             $row['banks'] = $data_dosen_lb['banks'];
-            $row['totalAktif'] = $totalAktif;
-            $row['totalNonAktif'] = $totalNonAktif;
-            $row['totalSemua'] = $totalSemua;
 
             $hasil_data_dosen_lb[] = $row;
         }
@@ -73,6 +70,10 @@ class DosenLuarBiasaController extends Controller
                 'prev_page_url' => $dosen_lb['prev_page_url'],
                 'to' => $dosen_lb['to'],
                 'total' => $dosen_lb['total'],
+                'totalAktif' => $totalAktif,
+                'totalNonAktif' => $totalNonAktif,
+                'totalSemua' => $totalSemua,
+
             ],
             'Data Dosen LB found'
         );

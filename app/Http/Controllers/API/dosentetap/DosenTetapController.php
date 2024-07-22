@@ -52,9 +52,6 @@ class DosenTetapController extends Controller
             $row['alamat_saat_ini'] = $data_dosen_tetap['alamat_saat_ini'];
             $row['nomor_hp'] = $data_dosen_tetap['nomor_hp'];
             $row['banks'] = $data_dosen_tetap['banks'];
-            $row['totalAktif'] = $totalAktif;
-            $row['totalNonAktif'] = $totalNonAktif;
-            $row['totalSemua'] = $totalSemua;
 
             $hasil_data_dosen_tetap[] = $row;
         }
@@ -74,6 +71,9 @@ class DosenTetapController extends Controller
                 'prev_page_url' => $dosen_tetap['prev_page_url'],
                 'to' => $dosen_tetap['to'],
                 'total' => $dosen_tetap['total'],
+                'totalAktif' => $totalAktif,
+                'totalNonAktif' => $totalNonAktif,
+                'totalSemua' => $totalSemua,
             ],
             'Data Dosen Tetap found'
         );

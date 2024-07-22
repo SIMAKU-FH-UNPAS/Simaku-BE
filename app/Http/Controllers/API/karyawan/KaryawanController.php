@@ -51,9 +51,6 @@ class KaryawanController extends Controller
             $row['alamat_saat_ini'] = $data_karyawan['alamat_saat_ini'];
             $row['nomor_hp'] = $data_karyawan['nomor_hp'];
             $row['banks'] = $data_karyawan['banks'];
-            $row['totalAktif'] = $totalAktif;
-            $row['totalNonAktif'] = $totalNonAktif;
-            $row['totalSemua'] = $totalSemua;
 
             $hasil_data_karyawan[] = $row;
         }
@@ -73,6 +70,9 @@ class KaryawanController extends Controller
                 'prev_page_url' => $karyawan['prev_page_url'],
                 'to' => $karyawan['to'],
                 'total' => $karyawan['total'],
+                'totalAktif' => $totalAktif,
+                'totalNonAktif' => $totalNonAktif,
+                'totalSemua' => $totalSemua,
             ],
             'Data karyawan found'
         );
