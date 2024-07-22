@@ -13,6 +13,6 @@ class Kinerja extends Model implements Auditable
     protected $fillable = [
         'nama',
         'jenis',
-        'deskripsi',
+        'nominal',
     ];
 }
