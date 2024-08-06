@@ -21,6 +21,7 @@ use App\Http\Controllers\API\dosenlb\SlipGajiController as DosenlbSlipGajiContro
 use App\Http\Controllers\API\master\FungsionalController;
 use App\Http\Controllers\API\master\KinerjaController;
 use App\Http\Controllers\API\master\KinerjaFungsionalController;
+use App\Http\Controllers\API\master\PegawaiController;
 use App\Http\Controllers\API\master\TambahanController;
 use App\Models\master\KinerjaFungsional;
 
@@ -58,6 +59,18 @@ Route::prefix('master')->middleware('auth:sanctum')->name('master.')->group(
         Route::post('kinerja/create', [KinerjaController::class, 'create'])->name('create');
         Route::post('kinerja/update/{id}', [KinerjaController::class, 'update'])->name('update');
         Route::delete('kinerja/delete/{id}', [KinerjaController::class, 'destroy'])->name('delete');
+    }
+);
+
+// master
+Route::prefix('pegawai')->middleware('auth:sanctum')->name('pegawai.')->group(
+    function () {
+        // pegawai
+        Route::get('', [PegawaiController::class, 'fetch'])->name('fetch');
+        Route::get('/{id}', [PegawaiController::class, 'fetchById'])->name('fetchById');
+        Route::post('create', [PegawaiController::class, 'create'])->name('create');
+        Route::post('update/{id}', [PegawaiController::class, 'update'])->name('update');
+        Route::delete('delete/{id}', [PegawaiController::class, 'destroy'])->name('delete');
     }
 );
 
