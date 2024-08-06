@@ -90,6 +90,7 @@ class PegawaiController extends Controller
                 'npwp' => $request->input('npwp'),
                 'status' => $request->input('status'),
                 'golongan' => $request->input('golongan'),
+                'tipe_pegawai' => $request->input('tipe_pegawai'),
                 'jabatan' => $request->input('jabatan'),
                 'alamat_ktp' => $request->input('alamat_ktp'),
                 'alamat_saat_ini' => $request->input('alamat_saat_ini'),
@@ -143,6 +144,7 @@ class PegawaiController extends Controller
                 'npwp' => $request->input('npwp'),
                 'status' => $request->input('status'),
                 'golongan' => $request->input('golongan'),
+                'tipe_pegawai' => $request->input('tipe_pegawai'),
                 'jabatan' => $request->input('jabatan'),
                 'alamat_ktp' => $request->input('alamat_ktp'),
                 'alamat_saat_ini' => $request->input('alamat_saat_ini'),
@@ -221,5 +223,9 @@ class PegawaiController extends Controller
         ]);
 
         return $validator;
+    }
+
+    public function createKinerja(Request $request)
+    {
     }
 }

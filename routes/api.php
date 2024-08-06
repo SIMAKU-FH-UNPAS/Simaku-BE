@@ -71,6 +71,8 @@ Route::prefix('pegawai')->middleware('auth:sanctum')->name('pegawai.')->group(
         Route::post('create', [PegawaiController::class, 'create'])->name('create');
         Route::post('update/{id}', [PegawaiController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [PegawaiController::class, 'destroy'])->name('delete');
+
+        Route::post('kinerja/create', [PegawaiController::class, 'createKinerja'])->name('createKinerja');
     }
 );
 
