@@ -129,7 +129,7 @@ class PegawaiController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->_validate($request);
+        $this->_validateUpdate($request);
 
         DB::beginTransaction();
         try {
@@ -211,6 +211,27 @@ class PegawaiController extends Controller
         $validator = $request->validate([
             'nama' => 'required|string|max:255',
             'no_pegawai' => 'required|string|max:255|unique:dosen_tetap,no_pegawai,NULL,id,deleted_at,NULL',
+            'npwp' => 'string|max:255',
+            'status' => 'required|string|in:Aktif,Tidak Aktif',
+            'golongan' => 'required|string|in:IIA,IIB,IIC,IID,IIIA,IIIB,IIIC,IIID,IVA,IVB,IVC,IVD,IVE',
+            'tipe_pegawai' => 'required|string|in:dosen tetap,dosen lb,karyawan tetap,karyawan kontrak universitas,karyawan kontrak fakultas',
+            'jabatan' => 'required|string|max:255',
+            'alamat_ktp' => 'required|string|max:255',
+            'alamat_saat_ini' => 'required|string|max:255',
+            'nomor_hp' => 'required|string|max:255',
+            'banks' => 'nullable|array',
+            'banks.*.nama_bank' => 'nullable|string',
+            'banks.*.no_rekening' => 'nullable|string'
+        ]);
+
+        return $validator;
+    }
+
+    private function _validateUpdate($request)
+    {
+        $validator = $request->validate([
+            'nama' => 'required|string|max:255',
+            // 'no_pegawai' => 'required|string|max:255|unique:dosen_tetap,no_pegawai,NULL,id,deleted_at,NULL',
             'npwp' => 'string|max:255',
             'status' => 'required|string|in:Aktif,Tidak Aktif',
             'golongan' => 'required|string|in:IIA,IIB,IIC,IID,IIIA,IIIB,IIIC,IIID,IVA,IVB,IVC,IVD,IVE',
