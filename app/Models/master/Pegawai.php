@@ -18,6 +18,7 @@ class Pegawai extends Model implements Auditable
         'npwp',
         'status',
         'golongan',
+        'tipe_pegawai',
         'jabatan',
         'alamat_ktp',
         'alamat_saat_ini',

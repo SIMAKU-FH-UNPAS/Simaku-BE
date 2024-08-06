@@ -213,6 +213,7 @@ class PegawaiController extends Controller
             'npwp' => 'string|max:255',
             'status' => 'required|string|in:Aktif,Tidak Aktif',
             'golongan' => 'required|string|in:IIA,IIB,IIC,IID,IIIA,IIIB,IIIC,IIID,IVA,IVB,IVC,IVD,IVE',
+            'tipe_pegawai' => 'required|string|in:dosen,karyawan,dosen lb',
             'jabatan' => 'required|string|max:255',
             'alamat_ktp' => 'required|string|max:255',
             'alamat_saat_ini' => 'required|string|max:255',
