@@ -71,8 +71,17 @@ Route::prefix('pegawai')->middleware('auth:sanctum')->name('pegawai.')->group(
         Route::post('create', [PegawaiController::class, 'create'])->name('create');
         Route::post('update/{id}', [PegawaiController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [PegawaiController::class, 'destroy'])->name('delete');
+    }
+);
 
-        Route::post('kinerja/create', [PegawaiController::class, 'createKinerja'])->name('createKinerja');
+// master
+Route::prefix('kinerja-tambahan')->middleware('auth:sanctum')->name('kinerja-tambahan.')->group(
+    function () {
+        Route::get('', [PegawaiController::class, 'kinerjaTambahan'])->name('kinerjaTambahan');
+        Route::get('/{id}', [PegawaiController::class, 'kinerjaTambahanById'])->name('kinerjaTambahanById');
+        Route::post('create', [PegawaiController::class, 'createKinerja'])->name('createKinerja');
+        Route::post('update/{id}', [PegawaiController::class, 'updateKinerja'])->name('updateKinerja');
+        Route::delete('delete/{id}', [PegawaiController::class, 'destroyKinerja'])->name('deleteKinerja');
     }
 );
 

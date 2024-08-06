@@ -2,6 +2,7 @@
 
 namespace App\Models\master;
 
+use App\Models\pegawai\KinerjaTambahan;
 use App\Models\pegawai\PegawaiBank;
 use App\Models\pegawai\PegawaiMasterTransaksi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,6 +30,12 @@ class Pegawai extends Model implements Auditable
     {
         return $this->hasMany(PegawaiBank::class, 'pegawais_id', 'id');
     }
+
+    public function kinerja_tambahan()
+    {
+        return $this->hasMany(KinerjaTambahan::class, 'pegawais_id', 'id');
+    }
+
     // public function master_transaksi()
     // {
     //     return $this->hasMany(PegawaiMasterTransaksi::class, 'pegawais_id', 'id');

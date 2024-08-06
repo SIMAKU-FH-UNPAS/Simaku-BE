@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\master;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\master\Pegawai;
+use App\Models\pegawai\KinerjaTambahan;
 use App\Models\pegawai\PegawaiBank;
 use Exception;
 use Illuminate\Http\Request;
@@ -226,7 +227,154 @@ class PegawaiController extends Controller
         return $validator;
     }
 
+    public function kinerjaTambahan()
+    {
+        $search = request()->q;
+        $kinerja = Pegawai::select('*')
+            ->orderBy(request()->sortby, request()->sortbydesc)
+            ->when($search, function ($posts, $search) {
+                $posts = $posts->where('nama', 'LIKE', '%' . $search . '%');
+            })
+            ->with('kinerja_tambahan.kinerja')
+            ->paginate(request()->per_page)->toArray();
+
+        $i = $kinerja['from'];
+        $hasil_data_kinerja = [];
+        foreach ($kinerja['data'] as $data_kinerja) {
+            $row = [];
+            $row['no'] = $i++;
+            $row['id'] = $data_kinerja['id'];
+            $row['nama'] = $data_kinerja['nama'];
+            $row['status'] = $data_kinerja['status'];
+            $row['golongan'] = $data_kinerja['golongan'];
+            $row['tipe_pegawai'] = $data_kinerja['tipe_pegawai'];
+            $row['jabatan'] = $data_kinerja['jabatan'];
+            $row['kinerja_tambahan'] = $data_kinerja['kinerja_tambahan'];
+
+            $hasil_data_kinerja[] = $row;
+        }
+
+        return ResponseFormatter::success(
+            [
+                'data' => $hasil_data_kinerja,
+                'current_page' => $kinerja['current_page'],
+                'first_page_url' => $kinerja['first_page_url'],
+                'from' => $kinerja['from'],
+                'last_page' => $kinerja['last_page'],
+                'last_page_url' => $kinerja['last_page_url'],
+                'links' => $kinerja['links'],
+                'next_page_url' => $kinerja['next_page_url'],
+                'path' => $kinerja['path'],
+                'per_page' => $kinerja['per_page'],
+                'prev_page_url' => $kinerja['prev_page_url'],
+                'to' => $kinerja['to'],
+                'total' => $kinerja['total'],
+            ],
+            'Data kinerja tambahan found'
+        );
+    }
+
+    public function kinerjaTambahanById($id)
+    {
+        $data = Pegawai::where('id', $id)
+            ->with('kinerja_tambahan.kinerja')
+            ->first();
+
+        return ResponseFormatter::success(
+            [
+                'data' => $data
+            ],
+            'Data kinerja tambahan found'
+        );
+    }
+
     public function createKinerja(Request $request)
     {
+        $this->_validateKinerja($request);
+
+        DB::beginTransaction();
+        try {
+
+            $kinerjaTambahan = new KinerjaTambahan();
+            $kinerjaTambahan->pegawais_id = $request->input('pegawais_id');
+            $kinerjaTambahan->kinerjas_id = $request->input('kinerjas_id');
+            $kinerjaTambahan->tgl_awal = $request->input('tgl_awal');
+            $kinerjaTambahan->tgl_akhir = $request->input('tgl_akhir');
+            $kinerjaTambahan->save();
+
+            DB::commit();
+
+            if (!$kinerjaTambahan) {
+                throw new Exception('Data Kinerja Tambahan not created');
+            }
+
+            return ResponseFormatter::success(
+                [
+                    'kinerjaTambahan' => $kinerjaTambahan
+                ],
+                'Data Kinerja Tambahan created'
+            );
+        } catch (Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error($e->getMessage(), 500);
+        }
+    }
+
+    public function updateKinerja(Request $request, $id)
+    {
+        $this->_validateKinerja($request);
+        DB::beginTransaction();
+        try {
+
+            $kinerjaTambahan = KinerjaTambahan::find($id);
+            if (!$kinerjaTambahan) {
+                return ResponseFormatter::error('Data Kinerja Tambahan not found', 404);
+            }
+
+            $kinerjaTambahan->update([
+                'pegawais_id' => $request->input('pegawais_id'),
+                'kinerjas_id' => $request->input('kinerjas_id'),
+                'tgl_awal' => $request->input('tgl_awal'),
+                'tgl_akhir' => $request->input('tgl_akhir'),
+            ]);
+
+            DB::commit();
+            return ResponseFormatter::success('Data Kinerja Tambahan updated');
+        } catch (Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error($e->getMessage(), 500);
+        }
+    }
+
+    public function destroyKinerja($id)
+    {
+        DB::beginTransaction();
+        try {
+
+            $kinerjaTambahan = KinerjaTambahan::find($id);
+            if (!$kinerjaTambahan) {
+                return ResponseFormatter::error('Data Kinerja Tambahan not found', 404);
+            }
+
+            $kinerjaTambahan->delete();
+
+            DB::commit();
+            return ResponseFormatter::success('Data Kinerja Tambahan deleted');
+        } catch (Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error($e->getMessage(), 500);
+        }
+    }
+
+    public function _validateKinerja($request)
+    {
+        $validator = $request->validate([
+            'pegawais_id' => 'required',
+            'kinerjas_id' => 'required',
+            'tgl_awal' => 'required',
+            'tgl_akhir' => 'required',
+        ]);
+
+        return $validator;
     }
 }
