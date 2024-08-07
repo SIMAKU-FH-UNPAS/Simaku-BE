@@ -55,6 +55,17 @@ class KinerjaController extends Controller
         );
     }
 
+    public function all()
+    {
+        $kinerja = Kinerja::get();
+        return ResponseFormatter::success(
+            [
+                'data' => $kinerja,
+            ],
+            'Data kinerja found'
+        );
+    }
+
     public function fetchById($id)
     {
         $data = Kinerja::find($id);
