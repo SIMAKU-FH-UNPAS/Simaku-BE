@@ -36,8 +36,8 @@ class Pegawai extends Model implements Auditable
         return $this->hasMany(KinerjaTambahan::class, 'pegawais_id', 'id');
     }
 
-    // public function master_transaksi()
-    // {
-    //     return $this->hasMany(PegawaiMasterTransaksi::class, 'pegawais_id', 'id');
-    // }
+    public function master_transaksi()
+    {
+        return $this->hasMany(PegawaiMasterTransaksi::class, 'pegawais_id', 'id');
+    }
 }

@@ -297,15 +297,34 @@ class PegawaiController extends Controller
 
     public function kinerjaTambahanById($id)
     {
-        $data = Pegawai::where('id', $id)
-            ->with('kinerja_tambahan.kinerja')
-            ->first();
+        $search = request()->q;
+        $pegawai = Pegawai::where('pegawais.id', $id)
+            ->leftJoin('kinerja_tambahans as b', 'pegawais.id', '=', 'b.pegawais_id')
+            ->Join('kinerjas as c', 'c.id', '=', 'b.kinerjas_id')
+            ->selectRaw('pegawais.nama, c.nama as kinerja_tambahan, b.tgl_awal, b.tgl_akhir')
+            ->orderBy(request()->sortby, request()->sortbydesc)
+            ->when($search, function ($posts, $search) {
+                $posts = $posts->where('c.nama', 'LIKE', '%' . $search . '%');
+            })
+            ->paginate(request()->per_page)->toArray();
 
         return ResponseFormatter::success(
             [
-                'data' => $data
+                'data' => $pegawai,
+                'current_page' => $pegawai['current_page'],
+                'first_page_url' => $pegawai['first_page_url'],
+                'from' => $pegawai['from'],
+                'last_page' => $pegawai['last_page'],
+                'last_page_url' => $pegawai['last_page_url'],
+                'links' => $pegawai['links'],
+                'next_page_url' => $pegawai['next_page_url'],
+                'path' => $pegawai['path'],
+                'per_page' => $pegawai['per_page'],
+                'prev_page_url' => $pegawai['prev_page_url'],
+                'to' => $pegawai['to'],
+                'total' => $pegawai['total'],
             ],
-            'Data kinerja tambahan found'
+            'Data Kinerja Tambahan Pegawai found'
         );
     }
 
