@@ -298,9 +298,10 @@ class PegawaiController extends Controller
     public function kinerjaTambahanById($id)
     {
         $search = request()->q;
-        $pegawai = Pegawai::where('pegawais.id', $id)
-            ->leftJoin('kinerja_tambahans as b', 'pegawais.id', '=', 'b.pegawais_id')
+        $pegawai = Pegawai::leftJoin('kinerja_tambahans as b', 'pegawais.id', '=', 'b.pegawais_id')
             ->Join('kinerjas as c', 'c.id', '=', 'b.kinerjas_id')
+            ->whereNull('b.deleted_at')
+            ->where('pegawais.id', $id)
             ->selectRaw('pegawais.id as id, pegawais.nama, b.id as id_kinerja_tambahan, c.nama as kinerja_tambahan, b.tgl_awal, b.tgl_akhir')
             ->orderBy(request()->sortby, request()->sortbydesc)
             ->when($search, function ($posts, $search) {
