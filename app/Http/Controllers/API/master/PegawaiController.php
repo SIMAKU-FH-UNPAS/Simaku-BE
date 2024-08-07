@@ -301,7 +301,7 @@ class PegawaiController extends Controller
         $pegawai = Pegawai::where('pegawais.id', $id)
             ->leftJoin('kinerja_tambahans as b', 'pegawais.id', '=', 'b.pegawais_id')
             ->Join('kinerjas as c', 'c.id', '=', 'b.kinerjas_id')
-            ->selectRaw('pegawais.id as id, pegawais.nama, c.nama as kinerja_tambahan, b.tgl_awal, b.tgl_akhir')
+            ->selectRaw('pegawais.id as id, pegawais.nama, c.id as id_kinerja_tambahan, c.nama as kinerja_tambahan, b.tgl_awal, b.tgl_akhir')
             ->orderBy(request()->sortby, request()->sortbydesc)
             ->when($search, function ($posts, $search) {
                 $posts = $posts->where('c.nama', 'LIKE', '%' . $search . '%');
@@ -315,6 +315,7 @@ class PegawaiController extends Controller
             $row['no'] = $i++;
             $row['id'] = $data_pegawai['id'];
             $row['nama'] = $data_pegawai['nama'];
+            $row['id_kinerja_tambahan'] = $data_pegawai['id_kinerja_tambahan'];
             $row['kinerja_tambahan'] = $data_pegawai['kinerja_tambahan'];
             $row['tgl_awal'] = $data_pegawai['tgl_awal'];
             $row['tgl_akhir'] = $data_pegawai['tgl_akhir'];
