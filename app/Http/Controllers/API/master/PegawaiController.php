@@ -68,7 +68,7 @@ class PegawaiController extends Controller
     public function fetchById($id)
     {
         $data = Pegawai::where('id', $id)
-            ->with('banks')
+            ->with('banks', 'kinerja_tambahan.kinerja')
             ->first();
 
         return ResponseFormatter::success(
