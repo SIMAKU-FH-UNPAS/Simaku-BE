@@ -16,10 +16,14 @@ class PegawaiController extends Controller
     public function fetch()
     {
         $search = request()->q;
+        $filter = request()->filter;
         $pegawai = Pegawai::select('*')
             ->orderBy(request()->sortby, request()->sortbydesc)
             ->when($search, function ($posts, $search) {
                 $posts = $posts->where('nama', 'LIKE', '%' . $search . '%');
+            })
+            ->when($filter, function ($posts, $filter) {
+                $posts = $posts->where('tipe_pegawai', 'LIKE', '%' . $filter . '%');
             })
             ->with('banks')
             ->paginate(request()->per_page)->toArray();
