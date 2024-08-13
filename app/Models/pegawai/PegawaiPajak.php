@@ -22,6 +22,7 @@ class PegawaiPajak extends Model implements Auditable
         'ptkp',
         'pkp',
         'pajak_pph21',
+        'pajak_pph25',
         'jumlah_set_pajak',
         'potongan_tak_kena_pajak',
         'pendapatan_bersih',

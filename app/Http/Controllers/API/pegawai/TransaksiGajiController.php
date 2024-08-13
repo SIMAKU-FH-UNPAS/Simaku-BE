@@ -200,8 +200,8 @@ class TransaksiGajiController extends Controller
     {
         $this->_validate($request);
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
 
             $gajiEndDate = Carbon::createFromFormat('Y-m-d', $request->input('gaji_date_end'));
 
@@ -292,9 +292,10 @@ class TransaksiGajiController extends Controller
 
     public function update(Request $request, $id)
     {
-        DB::beginTransaction();
-        try {
+        $this->_validateUpdate($request);
 
+        try {
+            DB::beginTransaction();
             $mastertransaksi = PegawaiMasterTransaksi::find($id);
             if ($mastertransaksi) {
                 // Update Gaji Universitas
@@ -389,6 +390,34 @@ class TransaksiGajiController extends Controller
         }
     }
 
+    public function destroy($id)
+    {
+        try {
+            DB::beginTransaction();
+            // Get Master Transaksi
+            $masterTransaksi = PegawaiMasterTransaksi::find($id);
+            // Check if Dosen Luar Biasa exists
+            if (!$masterTransaksi) {
+                return ResponseFormatter::error('Data Transaksi Gaji Dosen Tetap not found', 404);
+            }
+
+            // Hapus gaji universitas, gaji fakultas, potongan, dan pajak berdasarkan kriteria
+            $masterTransaksi->gaji_universitas()->delete();
+            $masterTransaksi->gaji_fakultas()->delete();
+            $masterTransaksi->potongan()->delete();
+            $masterTransaksi->pajak()->delete();
+
+            // Hapus Master Transaksi
+            $masterTransaksi->delete();
+            DB::commit();
+
+            return ResponseFormatter::success('Data Transaksi Gaji Dosen Tetap deleted');
+        } catch (Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error($e->getMessage(), 500);
+        }
+    }
+
     private function _validate($request)
     {
         $validator = $request->validate([
@@ -438,6 +467,57 @@ class TransaksiGajiController extends Controller
             'status_bank' => 'required|string|in:Payroll,Non Payroll',
             'gaji_date_start' => 'required|date', //YYYY-MM-DD
             'gaji_date_end' => 'required|date' //YYYY-MM-DD
+        ]);
+
+        return $validator;
+    }
+
+    private function _validateUpdate($request)
+    {
+        $validator = $request->validate([
+            'gaji_pokok' => 'required|integer',
+            'tunjangan_fungsional' => 'required|integer',
+            'tunjangan_struktural' => 'required|integer',
+            'tunjangan_khusus_istimewa' => 'required|integer',
+            'tunjangan_presensi_kerja' => 'required|integer',
+            'tunjangan_tambahan' => 'required|integer',
+            'tunjangan_suami_istri' => 'required|integer',
+            'tunjangan_anak' => 'required|integer',
+            'uang_lembur_hk' => 'required|integer',
+            'uang_lembur_hl' => 'required|integer',
+            'transport_kehadiran' => 'required|integer',
+            'honor_universitas' => 'required|integer',
+            'gaji_fakultas' => 'required|array',
+            // Validate each key in "gaji_fakultas" to be integer
+            'gaji_fakultas.*' => 'integer',
+            'potongan' => 'required|array',
+            // Validate each key in "gaji_fakultas" to be integer
+            'potongan.*' => 'integer',
+            'pensiun' => 'required|integer',
+            'bruto_pajak' => 'required|integer',
+            'bruto_murni' => 'required|integer',
+            'biaya_jabatan' => 'required|integer',
+            'aksa_mandiri' => 'required|integer',
+            'dplk_pensiun' => 'required|integer',
+            'jumlah_potongan_kena_pajak' => 'required|integer',
+            'jumlah_set_potongan_kena_pajak' => 'required|integer',
+            'ptkp' => 'required|integer',
+            'pkp' => 'required|integer',
+            'pajak_pph21' => 'required|integer',
+            'jumlah_set_pajak' => 'required|integer',
+            'potongan_tak_kena_pajak' => 'required|integer',
+            'pendapatan_bersih' => 'required|integer',
+            'pegawais_bank_id' => [
+                'required',
+                'integer',
+                Rule::exists('pegawai_banks', 'id')
+                    ->where(function ($query, $request) {
+                        $query->where('id', $request->pegawais_bank_id)
+                            ->where('pegawais_id', PegawaiMasterTransaksi::find($request->id)->pegawais_id)
+                            ->whereNull('deleted_at');
+                    }),
+            ],
+            'status_bank' => 'required|string|in:Payroll,Non Payroll'
         ]);
 
         return $validator;

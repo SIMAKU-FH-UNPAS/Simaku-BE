@@ -24,6 +24,8 @@ use App\Http\Controllers\API\master\KinerjaFungsionalController;
 use App\Http\Controllers\API\master\PegawaiController;
 use App\Http\Controllers\API\master\TambahanController;
 use App\Http\Controllers\API\pegawai\TransaksiGajiController;
+use App\Http\Controllers\API\pegawai\TransaksiGajiDosenLbController;
+use App\Http\Controllers\API\pegawai\TransaksiGajiKaryawanController;
 use App\Models\master\KinerjaFungsional;
 
 /*
@@ -75,11 +77,19 @@ Route::prefix('pegawai')->middleware('auth:sanctum')->name('pegawai.')->group(
         Route::post('update/{id}', [PegawaiController::class, 'update'])->name('update');
         Route::delete('delete/{id}', [PegawaiController::class, 'destroy'])->name('delete');
 
-        // gaji
+        // gaji dosen tetap
         Route::get('gaji/{id}', [TransaksiGajiController::class, 'fetch'])->name('fetch');
         Route::get('gaji/transaksi/{id}', [TransaksiGajiController::class, 'fetchById'])->name('fetchById');
         Route::post('gaji/transaksi/create', [TransaksiGajiController::class, 'create'])->name('create');
         Route::put('gaji/transaksi/update/{id}', [TransaksiGajiController::class, 'update'])->name('update');
+        Route::delete('gaji/transaksi/delete/{id}', [TransaksiGajiController::class, 'destroy'])->name('destroy');
+
+        // gaji dosen LB
+        Route::get('gaji/dosen-lb/{id}', [TransaksiGajiDosenLbController::class, 'fetch'])->name('fetch');
+        Route::get('gaji/dosen-lb/transaksi/{id}', [TransaksiGajiDosenLbController::class, 'fetchById'])->name('fetchById');
+        Route::post('gaji/dosen-lb/transaksi/create', [TransaksiGajiDosenLbController::class, 'create'])->name('create');
+        Route::put('gaji/dosen-lb/transaksi/update/{id}', [TransaksiGajiDosenLbController::class, 'update'])->name('update');
+        Route::delete('gaji/dosen-lb/transaksi/delete/{id}', [TransaksiGajiDosenLbController::class, 'destroy'])->name('destroy');
     }
 );
 
@@ -105,8 +115,8 @@ Route::prefix('dosentetap')->middleware('auth:sanctum')->name('dosentetap.')->gr
         // Route::get('gaji/{dosentetapId}', [DosenTetapTransaksiGajiController::class, 'fetch'])->name('fetch');
         // Route::get('gaji/transaksi/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'fetchById'])->name('fetchById');
         // Route::post('gaji/transaksi/create', [DosenTetapTransaksiGajiController::class, 'create'])->name('create');
-        Route::put('gaji/transaksi/update/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'update'])->name('update');
-        Route::delete('gaji/transaksi/delete/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'destroy'])->name('destroy');
+        // Route::put('gaji/transaksi/update/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'update'])->name('update');
+        // Route::delete('gaji/transaksi/delete/{transaksiId}', [DosenTetapTransaksiGajiController::class, 'destroy'])->name('destroy');
         Route::get('gaji/slip/{transaksiId}', [DosenTetapSlipGajiController::class, 'get'])->name('get');
         Route::get('gaji/slip/cetak/{transaksiId}', [DosenTetapSlipGajiController::class, 'viewPDF'])->name('viewPDF');
         Route::post('gaji/slip/kirim/{transaksiId}', [DosenTetapSlipGajiController::class, 'sendWA'])->name('sendWA');

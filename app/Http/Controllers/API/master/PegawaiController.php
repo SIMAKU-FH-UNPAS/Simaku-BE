@@ -87,8 +87,9 @@ class PegawaiController extends Controller
     {
         $this->_validate($request);
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
+
             $pegawai = Pegawai::create([
                 'nama' => $request->input('nama'),
                 'no_pegawai' => $request->input('no_pegawai'),
@@ -135,8 +136,8 @@ class PegawaiController extends Controller
     {
         $this->_validateUpdate($request);
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
 
             $pegawai = Pegawai::find($id);
             if (!$pegawai) {
@@ -189,8 +190,8 @@ class PegawaiController extends Controller
 
     public function destroy($id)
     {
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
             $pegawai = Pegawai::find($id);
 
             if (!$pegawai) {
@@ -352,8 +353,8 @@ class PegawaiController extends Controller
     {
         $this->_validateKinerja($request);
 
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
 
             $kinerjaTambahan = new KinerjaTambahan();
             $kinerjaTambahan->pegawais_id = $request->input('pegawais_id');
@@ -383,8 +384,8 @@ class PegawaiController extends Controller
     public function updateKinerja(Request $request, $id)
     {
         $this->_validateKinerja($request);
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
 
             $kinerjaTambahan = KinerjaTambahan::find($id);
             if (!$kinerjaTambahan) {
@@ -408,8 +409,8 @@ class PegawaiController extends Controller
 
     public function destroyKinerja($id)
     {
-        DB::beginTransaction();
         try {
+            DB::beginTransaction();
 
             $kinerjaTambahan = KinerjaTambahan::find($id);
             if (!$kinerjaTambahan) {

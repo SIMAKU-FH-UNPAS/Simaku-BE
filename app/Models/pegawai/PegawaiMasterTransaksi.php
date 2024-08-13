@@ -18,6 +18,7 @@ class PegawaiMasterTransaksi extends Model implements Auditable
         'status_bank',
         'gaji_date_start',
         'gaji_date_end',
+        'pegawais_komponen_pendapatan_id',
         'pegawais_gaji_univ_id',
         'pegawais_gaji_fakultas_id',
         'pegawais_potongan_id',
@@ -52,5 +53,10 @@ class PegawaiMasterTransaksi extends Model implements Auditable
     public function pajak()
     {
         return $this->belongsTo(PegawaiPajak::class, 'pegawais_pajak_id', 'id');
+    }
+
+    public function komponen_pendapatan()
+    {
+        return $this->belongsTo(PegawaiKomponenPendapatan::class, 'pegawais_komponen_pendapatan_id', 'id');
     }
 }
