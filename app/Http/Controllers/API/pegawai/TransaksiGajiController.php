@@ -108,12 +108,100 @@ class TransaksiGajiController extends Controller
         return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Dosen Tetap Found');
     }
 
-    public function fetchById($id, $bulan, $tahun)
+    public function fetchByFilter($id, $bulan, $tahun)
     {
-        $masterTransaksi = PegawaiMasterTransaksi::whereMonth('gaji_date_end', $bulan)
+        $masterTransaksi = PegawaiMasterTransaksi::where('pegawais_id', $id)
+            ->whereMonth('gaji_date_end', '=', $bulan)
             ->whereYear('gaji_date_end', '=', $tahun)
-            ->where('pegawais_id', $id)
             ->first();
+
+        if (!$masterTransaksi) {
+            return ResponseFormatter::error('Master Transaksi Not Found', 404);
+        }
+
+        $gaji_date_start = Carbon::createFromFormat('Y-m-d', $masterTransaksi->gaji_date_start);
+        $gaji_date_end = Carbon::createFromFormat('Y-m-d', $masterTransaksi->gaji_date_end);
+
+        $pegawai = Pegawai::with('banks')->find($masterTransaksi->pegawais_id);
+        if (!$pegawai) {
+            return ResponseFormatter::error(null, 'Dosen Tetap Not Found', 404);
+        }
+
+        // Inisialisasi data dosen Tetap
+        $transaksi = [
+            'pegawais_id' => $pegawai->id,
+            'no_pegawai' => $pegawai->no_pegawai,
+            'nama' => $pegawai->nama,
+            'npwp' => $pegawai->npwp,
+            'golongan' => $pegawai->golongan,
+            'jabatan' => $pegawai->jabatan,
+            'nomor_hp' => $pegawai->nomor_hp,
+            'banks' => $pegawai->banks,
+            'status_bank' => $pegawai->status_bank,
+            'transaksi' => [],
+        ];
+
+        $bankMasterTransaksi = PegawaiMasterTransaksi::with(['bank'])
+            ->where('pegawais_id', $pegawai->id)
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
+            ->get();
+
+        $gajiunivMasterTransaksi = PegawaiMasterTransaksi::with(['gaji_universitas'])
+            ->where('pegawais_id', $pegawai->id)
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
+            ->get();
+
+        $gajifakMasterTransaksi = PegawaiMasterTransaksi::with('gaji_fakultas')
+            ->where('pegawais_id', $pegawai->id)
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
+            ->get();
+        $gajifakMasterTransaksi->transform(function ($item) {
+            $item->gaji_fakultas->gaji_fakultas = json_decode($item->gaji_fakultas->gaji_fakultas);
+            return $item;
+        });
+
+        $potonganMasterTransaksi = PegawaiMasterTransaksi::with('potongan')
+            ->where('pegawais_id', $pegawai->id)
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
+            ->get();
+        $potonganMasterTransaksi->transform(function ($item) {
+            $item->potongan->potongan = json_decode($item->potongan->potongan);
+            return $item;
+        });
+
+        $pajakMasterTransaksi = PegawaiMasterTransaksi::with(['pajak'])
+            ->where('pegawais_id', $pegawai->id)
+            ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
+            ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
+            ->get();
+
+        // Transformasi data transaksi
+        $transaksiData = [
+            'id' => $masterTransaksi->id,
+            'gaji_date_start' => $gaji_date_start->format('d F Y'),
+            'gaji_date_end' => $gaji_date_end->format('d F Y'),
+            'bank' => $bankMasterTransaksi->pluck('bank')->toArray(),
+            'status_bank' => $masterTransaksi->status_bank,
+            'gaji_universitas' => $gajiunivMasterTransaksi->pluck('gaji_universitas')->toArray(),
+            'gaji_fakultas' => $gajifakMasterTransaksi->pluck('gaji_fakultas')->toArray(),
+            'potongan' => $potonganMasterTransaksi->pluck('potongan')->toArray(),
+            'pajak' => $pajakMasterTransaksi->pluck('pajak')->toArray()
+        ];
+
+
+        // Menambahkan data transaksi ke dalam array transaksi utama
+        $transaksi['transaksi'][] = $transaksiData;
+
+        return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Dosen Tetap Found');
+    }
+
+    public function fetchById($id)
+    {
+        $masterTransaksi = PegawaiMasterTransaksi::find($id);
 
         if (!$masterTransaksi) {
             return ResponseFormatter::error('Master Transaksi Not Found', 404);
