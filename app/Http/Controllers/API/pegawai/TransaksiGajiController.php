@@ -511,11 +511,9 @@ class TransaksiGajiController extends Controller
                 'required',
                 'integer',
                 Rule::exists('pegawai_banks', 'id')
-                    ->where(function ($query, $request) {
-                        $query->where('id', $request->pegawais_bank_id)
-                            ->where('pegawais_id', PegawaiMasterTransaksi::find($request->id)->pegawais_id)
-                            ->whereNull('deleted_at');
-                    }),
+                    ->where('id', $request->pegawais_bank_id)
+                    ->where('pegawais_id', PegawaiMasterTransaksi::find($request->id)->pegawais_id)
+                    ->whereNull('deleted_at')
             ],
             'status_bank' => 'required|string|in:Payroll,Non Payroll'
         ]);

@@ -81,7 +81,7 @@ Route::prefix('pegawai')->middleware('auth:sanctum')->name('pegawai.')->group(
         Route::get('gaji/{id}', [TransaksiGajiController::class, 'fetch'])->name('fetch');
         Route::get('gaji/transaksi/{id}', [TransaksiGajiController::class, 'fetchById'])->name('fetchById');
         Route::post('gaji/transaksi/create', [TransaksiGajiController::class, 'create'])->name('create');
-        Route::put('gaji/transaksi/update/{id}', [TransaksiGajiController::class, 'update'])->name('update');
+        Route::post('gaji/transaksi/update/{id}', [TransaksiGajiController::class, 'update'])->name('update');
         Route::delete('gaji/transaksi/delete/{id}', [TransaksiGajiController::class, 'destroy'])->name('destroy');
 
         // gaji dosen LB
