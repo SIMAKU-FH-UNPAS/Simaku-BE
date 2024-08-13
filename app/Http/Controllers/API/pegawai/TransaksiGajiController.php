@@ -108,9 +108,12 @@ class TransaksiGajiController extends Controller
         return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Dosen Tetap Found');
     }
 
-    public function fetchById($id)
+    public function fetchById($id, $bulan, $tahun)
     {
-        $masterTransaksi = PegawaiMasterTransaksi::find($id);
+        $masterTransaksi = PegawaiMasterTransaksi::whereMonth('gaji_date_end', $bulan)
+            ->whereYear('gaji_date_end', '=', $tahun)
+            ->where('pegawais_id', $id)
+            ->first();
 
         if (!$masterTransaksi) {
             return ResponseFormatter::error('Master Transaksi Not Found', 404);

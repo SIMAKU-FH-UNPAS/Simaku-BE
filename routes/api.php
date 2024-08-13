@@ -79,7 +79,7 @@ Route::prefix('pegawai')->middleware('auth:sanctum')->name('pegawai.')->group(
 
         // gaji dosen tetap
         Route::get('gaji/{id}', [TransaksiGajiController::class, 'fetch'])->name('fetch');
-        Route::get('gaji/transaksi/{id}', [TransaksiGajiController::class, 'fetchById'])->name('fetchById');
+        Route::get('gaji/transaksi/{id}/{bulan}/{tahun}', [TransaksiGajiController::class, 'fetchById'])->name('fetchById');
         Route::post('gaji/transaksi/create', [TransaksiGajiController::class, 'create'])->name('create');
         Route::post('gaji/transaksi/update/{id}', [TransaksiGajiController::class, 'update'])->name('update');
         Route::delete('gaji/transaksi/delete/{id}', [TransaksiGajiController::class, 'destroy'])->name('destroy');
