@@ -35,7 +35,39 @@ class TransaksiGajiDosenLbController extends Controller
             'golongan' => $pegawai->golongan,
             'jabatan' => $pegawai->jabatan,
             'nomor_hp' => $pegawai->nomor_hp,
-            'transaksi' => [],
+        ];
+
+        return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Dosen Luar Biasa Found');
+    }
+
+    public function fetchByFilter($id, $bulan, $tahun)
+    {
+        $masterTransaksi = PegawaiMasterTransaksi::where('pegawais_id', $id)
+            ->whereMonth('gaji_date_end', '=', $bulan)
+            ->whereYear('gaji_date_end', '=', $tahun)
+            ->first();
+
+        if (!$masterTransaksi) {
+            return ResponseFormatter::error('Master Transaksi Not Found', 404);
+        }
+
+        $gaji_date_start = Carbon::createFromFormat('Y-m-d', $masterTransaksi->gaji_date_start);
+        $gaji_date_end = Carbon::createFromFormat('Y-m-d', $masterTransaksi->gaji_date_end);
+
+        $pegawai = Pegawai::with('banks')->find($masterTransaksi->pegawais_id);
+        if (!$pegawai) {
+            return ResponseFormatter::error(null, 'Dosen Tetap Not Found', 404);
+        }
+
+        // Inisialisasi data Dosen Luar Biasa
+        $transaksi = [
+            'pegawais_id' => $pegawai->id,
+            'no_pegawai' => $pegawai->no_pegawai,
+            'nama' => $pegawai->nama,
+            'npwp' => $pegawai->npwp,
+            'golongan' => $pegawai->golongan,
+            'jabatan' => $pegawai->jabatan,
+            'nomor_hp' => $pegawai->nomor_hp,
         ];
 
         // Get ALL DATA Master Transaksi
@@ -45,7 +77,6 @@ class TransaksiGajiDosenLbController extends Controller
             // Get Periode
             $gaji_date_start = Carbon::createFromFormat('Y-m-d', $gaji->gaji_date_start);
             $gaji_date_end = Carbon::createFromFormat('Y-m-d', $gaji->gaji_date_end);
-
 
             $bankMasterTransaksi = PegawaiMasterTransaksi::with(['bank'])
                 ->where('pegawais_id', $pegawai->id)
