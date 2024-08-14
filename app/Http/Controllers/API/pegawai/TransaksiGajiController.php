@@ -36,74 +36,7 @@ class TransaksiGajiController extends Controller
             'golongan' => $pegawai->golongan,
             'jabatan' => $pegawai->jabatan,
             'nomor_hp' => $pegawai->nomor_hp,
-            'transaksi' => [],
         ];
-
-        // Get ALL DATA Master Transaksi
-        $transaksigaji = PegawaiMasterTransaksi::where('pegawais_id', $pegawai->id)->get();
-
-        foreach ($transaksigaji as $gaji) {
-            // Get Periode
-            $gaji_date_start = Carbon::createFromFormat('Y-m-d', $gaji->gaji_date_start);
-            $gaji_date_end = Carbon::createFromFormat('Y-m-d', $gaji->gaji_date_end);
-
-
-            $bankMasterTransaksi = PegawaiMasterTransaksi::with(['bank'])
-                ->where('pegawais_id', $pegawai->id)
-                ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
-                ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
-                ->get();
-
-            $gajiunivMasterTransaksi = PegawaiMasterTransaksi::with(['gaji_universitas'])
-                ->where('pegawais_id', $pegawai->id)
-                ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
-                ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
-                ->get();
-
-            $gajifakMasterTransaksi = PegawaiMasterTransaksi::with('gaji_fakultas')
-                ->where('pegawais_id', $pegawai->id)
-                ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
-                ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
-                ->get();
-            $gajifakMasterTransaksi->transform(function ($item) {
-                $item->gaji_fakultas->gaji_fakultas = json_decode($item->gaji_fakultas->gaji_fakultas);
-                return $item;
-            });
-
-            $potonganMasterTransaksi = PegawaiMasterTransaksi::with('potongan')
-                ->where('pegawais_id', $pegawai->id)
-                ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
-                ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
-                ->get();
-            $potonganMasterTransaksi->transform(function ($item) {
-                $item->potongan->potongan = json_decode($item->potongan->potongan);
-                return $item;
-            });
-
-            $pajakMasterTransaksi = PegawaiMasterTransaksi::with(['pajak'])
-                ->where('pegawais_id', $pegawai->id)
-                ->where('gaji_date_start', $gaji_date_start->format('Y-m-d'))
-                ->where('gaji_date_end', $gaji_date_end->format('Y-m-d'))
-                ->get();
-
-            // Transformasi data transaksi
-            $transaksiData = [
-                'id' => $gaji->id,
-                'periode' => [
-                    'month' => $gaji_date_end->format('F'),
-                    'year' => $gaji_date_end->format('Y'),
-                ],
-                'bank' => $bankMasterTransaksi->pluck('bank')->toArray(),
-                'status_bank' => $gaji->status_bank,
-                'gaji_universitas' => $gajiunivMasterTransaksi->pluck('gaji_universitas')->toArray(),
-                'gaji_fakultas' => $gajifakMasterTransaksi->pluck('gaji_fakultas')->toArray(),
-                'potongan' => $potonganMasterTransaksi->pluck('potongan')->toArray(),
-                'pajak' => $pajakMasterTransaksi->pluck('pajak')->toArray()
-            ];
-
-            // Menambahkan data transaksi ke dalam array transaksi utama
-            $transaksi['transaksi'][] = $transaksiData;
-        }
 
         return ResponseFormatter::success($transaksi, 'Data Transaksi Gaji Dosen Tetap Found');
     }

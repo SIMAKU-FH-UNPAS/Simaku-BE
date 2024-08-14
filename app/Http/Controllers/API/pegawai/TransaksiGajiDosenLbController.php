@@ -274,14 +274,71 @@ class TransaksiGajiDosenLbController extends Controller
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        $this->_validateUpdate($request);
+        try {
+            DB::beginTransaction();
+            $mastertransaksi = PegawaiMasterTransaksi::find($id);
+            if ($mastertransaksi) {
+                // Update Gaji Fakultas
+                $komponenpendapatan = $mastertransaksi->komponen_pendapatan;
+                if ($komponenpendapatan) {
+                    $komponenpendapatan->update([
+                        'komponen_pendapatan' => json_encode($request->input('komponen_pendapatan'))
+                    ]);
+                    // Decode "komponen_pendapatan" data before sending the response
+                    $komponenpendapatan->komponen_pendapatan = json_decode($komponenpendapatan->komponen_pendapatan);
+                }
+
+                // Update Potongan
+                $potongan = $mastertransaksi->potongan;
+                if ($potongan) {
+                    $potongan->update([
+                        'potongan' => json_encode($request->input('potongan'))
+                    ]);
+                    // Decode "potongan" data before sending the response
+                    $potongan->potongan = json_decode($potongan->potongan);
+                }
+
+                $pajak = $mastertransaksi->pajak;
+                if ($pajak) {
+                    $pajak->update([
+                        'pajak_pph25' =>  $request->input('pajak_pph25'),
+                        'pendapatan_bersih' =>  $request->input('pendapatan_bersih'),
+                    ]);
+                }
+
+                $mastertransaksi->update([
+                    'pegawais_id' => $mastertransaksi->pegawais_id, //id yg sama
+                    'pegawais_bank_id' =>  $request->input('pegawais_bank_id'),
+                    'status_bank' => $request->input('status_bank'),
+                    'gaji_date_start' => $mastertransaksi->gaji_date_start, //data yg sama
+                    'gaji_date_end' => $mastertransaksi->gaji_date_end, //data yg sama
+                    'pegawais_komponen_pendapatan_id' => $mastertransaksi->pegawais_komponen_pendapatan_id, //id yg sama
+                    'pegawais_potongan_id' => $mastertransaksi->pegawais_potongan_id, //id yg sama
+                    'pegawais_pajak_id' => $mastertransaksi->pegawais_pajak_id //id yg sama
+                ]);
+
+                DB::commit();
+            } else {
+                return ResponseFormatter::error('Master Transaksi not found', 404);
+            }
+            return ResponseFormatter::success([
+                'transaksi' => $mastertransaksi,
+            ], 'Data Transaksi Gaji Dosen Luar Biasa updated');
+        } catch (Exception $e) {
+            DB::rollback();
+            return ResponseFormatter::error($e->getMessage(), 500);
+        }
+    }
+
     private function _validate($request)
     {
         $validator = $request->validate([
             'komponen_pendapatan' => 'required|array',
-            // Validate each key in "gaji_fakultas" to be integer
             'komponen_pendapatan.*' => 'integer',
             'potongan' => 'required|array',
-            // Validate each key in "gaji_fakultas" to be integer
             'potongan.*' => 'integer',
             'pajak_pph25' => 'nullable|integer',
             'pendapatan_bersih' => 'nullable|integer',
@@ -296,6 +353,28 @@ class TransaksiGajiDosenLbController extends Controller
             'status_bank' => 'required|string|in:Payroll,Non Payroll',
             'gaji_date_start' => 'required|date', //YYYY-MM-DD
             'gaji_date_end' => 'required|date' //YYYY-MM-DD
+        ]);
+
+        return $validator;
+    }
+
+    private function _validateUpdate($request)
+    {
+        $validator = $request->validate([
+            'komponen_pendapatan' => 'required|array',
+            'komponen_pendapatan.*' => 'integer',
+            'potongan' => 'required|array',
+            'potongan.*' => 'integer',
+            'pajak_pph25' => 'nullable|integer',
+            'pendapatan_bersih' => 'nullable|integer',
+            'pegawais_bank_id' => [
+                'required',
+                'integer',
+                Rule::exists('pegawai_banks', 'id')
+                    ->where('pegawais_id', PegawaiMasterTransaksi::find($request->id)->pegawais_id)
+                    ->whereNull('deleted_at'),
+            ],
+            'status_bank' => 'required|string|in:Payroll,Non Payroll'
         ]);
 
         return $validator;
