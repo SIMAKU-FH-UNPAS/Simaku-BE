@@ -89,7 +89,7 @@
                 <tr>
                     <td colspan="2" >POTONGAN</td>
                 </tr>
-                @foreach($potongan->potongan as $column => $value)
+                @foreach($potongan as $column => $value)
                 {{-- Exclude column yang tidak ingin ditampilkan --}}
                 @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
                     @if($value != 0)
@@ -127,7 +127,7 @@
         <p style="margin-bottom: -12px">PEMBAYARAN HONORARIUM MENGAJAR</p>
         <p style="margin-bottom: -12px">DAN PENDAPATAN LAIN</p>
         <p style="margin-bottom: -12px">DOSEN TETAP FH UNPAS</p>
-        <p style="margin-bottom: 15px">=====================================</P>
+        <p style="margin-bottom: 0px">=====================================</P>
     </div>
 
     <div style="width: 290px; margin: auto">
@@ -164,16 +164,16 @@
                 @endforeach
 
                 @foreach($gajiFak->gaji_fakultas as $column => $value)
-                {{-- Exclude column dibawah --}}
-                @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
-                    @if($value != 0)
-                        <tr>
-                            <td>• {{ ucfirst(str_replace('_', ' ', $column)) }}</td>
-                            <td></td>
-                            <td style="text-align: right">{{ format_rupiah($value) }}</td>
-                        </tr>
+                    {{-- Exclude column dibawah --}}
+                    @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
+                        @if($value != 0)
+                            <tr>
+                                <td>• {{ ucfirst(str_replace('_', ' ', $column)) }}</td>
+                                <td></td>
+                                <td style="text-align: right">{{ format_rupiah($value) }}</td>
+                            </tr>
+                        @endif
                     @endif
-                @endif
                 @endforeach
                 <tr>
                     <td style="text-align: right">** JUMLAH **</td>

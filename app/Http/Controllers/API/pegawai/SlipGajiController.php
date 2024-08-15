@@ -36,6 +36,17 @@ class SlipGajiController extends Controller
         // Get data Potongan
         $potongan = $transaksi->potongan;
         $potongan->potongan = json_decode($potongan->potongan, true);
+
+        $pajak = $transaksi->pajak;
+        $pajak_pph21 = [
+            'pajak_pph21' => $pajak->pajak_pph21
+        ];
+
+        $arraytest = [];
+
+        $gabung1 = array_merge($arraytest, $potongan->potongan);
+        $potonganDanPajak = array_merge($gabung1, $pajak_pph21);
+
         //Get data pendapatan bersih
         $pajak = $transaksi->pajak;
         $pendapatanBersih = $pajak->pendapatan_bersih;
@@ -46,7 +57,7 @@ class SlipGajiController extends Controller
         $totalPendapatan = $totalGajiUniv + $totalGajiFak;
 
         // Total Potongan
-        $totalPotongan = array_sum($potongan->potongan);
+        $totalPotongan = array_sum($potonganDanPajak);
 
         $slipgaji[] = [
             'no_pegawai' => $pegawai->no_pegawai,
@@ -64,7 +75,7 @@ class SlipGajiController extends Controller
                 'total_pendapatan' => $totalPendapatan
             ],
             'potongan' => [
-                'potongan' => $potongan,
+                'potongan' => $potonganDanPajak,
                 'total_potongan' => $totalPotongan
             ],
             'jumlah_diterima' => $pendapatanBersih
@@ -95,11 +106,22 @@ class SlipGajiController extends Controller
         $gajiFak = $transaksi->gaji_fakultas;
         $gajiFak->gaji_fakultas = json_decode($gajiFak->gaji_fakultas, true);
         // Get data Potongan
-        $potongan = $transaksi->potongan;
-        $potongan->potongan = json_decode($potongan->potongan, true);
+        $potonganPajak = $transaksi->potongan;
+        $potonganPajak->potongan = json_decode($potonganPajak->potongan, true);
+
+        $pajak = $transaksi->pajak;
+        $pajak_pph21 = [
+            'pajak_pph21' => $pajak->pajak_pph21
+        ];
+
+        $arraytest = [];
+
+        $gabung1 = array_merge($arraytest, $potonganPajak->potongan);
+        $potongan = array_merge($gabung1, $pajak_pph21);
+
         //Get data pendapatan bersih
         $pajak = $transaksi->pajak;
-        $pendapatanBersih = $pajak->pendapatan_bersih;
+        // $pendapatanBersih = $pajak->pendapatan_bersih;
         $jumlahSetPotonganKenaPajak = $pajak->jumlah_set_potongan_kena_pajak;
 
         // Total Pendapatan
@@ -108,10 +130,11 @@ class SlipGajiController extends Controller
         $totalPendapatan = $totalGajiUniv + $totalGajiFak;
 
         // Total Potongan
-        $totalPotongan = array_sum($potongan->potongan);
+        $totalPotongan = array_sum($potongan);
+        $pendapatanBersih = ($totalPendapatan - $totalPotongan);
 
         $pdf = App::make('dompdf.wrapper');
-        $customPaper = array(0, 0, 12 / 2.54 * 72, 14 / 2.54 * 72);
+        $customPaper = array(0, 0, 12 / 2.54 * 72, 30 / 2.54 * 72);
         $pdf->setPaper($customPaper);
         $pdf->loadView('slipgaji.dosentetap.gaji', compact('pegawai', 'gajiUniv', 'gajiFak', 'potongan', 'pendapatanBersih', 'bulanTahun', 'totalPendapatan', 'totalPotongan', 'jumlahSetPotonganKenaPajak'));
 
