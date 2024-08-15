@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\App;
 use App\Http\Controllers\API\dosentetap\SlipGajiController as DosenTetapSlipGajiController;
 use App\Http\Controllers\API\karyawan\SlipGajiController as KaryawanSlipGajiController;
 use App\Http\Controllers\API\dosenlb\SlipGajiController as DosenlbSlipGajiController;
+use App\Http\Controllers\API\pegawai\SlipGajiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +35,7 @@ Route::middleware([
 
 
 // Slip Gaji Dosen Tetap
-Route::get('dosentetap/gaji/slip/pdf/{transaksiId}', [DosenTetapSlipGajiController::class, 'generatePDF'])->name('generatePDF');
+Route::get('pegawai/gaji/slip/pdf/{transaksiId}', [SlipGajiController::class, 'generatePDF'])->name('generatePDF');
 // Slip Gaji Karyawan
 Route::get('karyawan/gaji/slip/pdf/{transaksiId}', [KaryawanSlipGajiController::class, 'generatePDF'])->name('generatePDF');
 // Slip Gaji DosenLuarBiasa

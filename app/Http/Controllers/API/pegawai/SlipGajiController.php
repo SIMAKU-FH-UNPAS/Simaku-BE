@@ -84,7 +84,7 @@ class SlipGajiController extends Controller
         return ResponseFormatter::success($slipgaji, 'Data Slip Gaji Dosen Tetap Found');
     }
 
-    public function viewPDF($id)
+    public function generatePDF($id)
     {
         $transaksi = PegawaiMasterTransaksi::find($id);
 
@@ -141,7 +141,7 @@ class SlipGajiController extends Controller
         return $pdf->stream('slipgaji.pdf');
     }
 
-    public function sample($id)
+    public function viewPDF($id)
     {
         // Get Master Transaksi
         $transaksi = PegawaiMasterTransaksi::find($id);
