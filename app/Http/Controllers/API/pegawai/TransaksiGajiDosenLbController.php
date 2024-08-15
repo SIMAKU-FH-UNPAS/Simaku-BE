@@ -364,15 +364,15 @@ class TransaksiGajiDosenLbController extends Controller
     {
         $validator = $request->validate([
             'komponen_pendapatan' => 'required|array',
-            'komponen_pendapatan.*' => 'integer',
+            'komponen_pendapatan.*' => 'double',
             'potongan' => 'required|array',
-            'potongan.*' => 'integer',
-            'pajak_pph25' => 'nullable|integer',
-            'pendapatan_bersih' => 'nullable|integer',
-            'pegawais_id' => 'required|integer|exists:pegawais,id,deleted_at,NULL',
+            'potongan.*' => 'double',
+            'pajak_pph25' => 'nullable|double',
+            'pendapatan_bersih' => 'nullable|double',
+            'pegawais_id' => 'required|double|exists:pegawais,id,deleted_at,NULL',
             'pegawais_bank_id' => [
                 'required',
-                'integer',
+                'double',
                 Rule::exists('pegawai_banks', 'id')
                     ->where('pegawais_id', $request->pegawais_id)
                     ->whereNull('deleted_at'),
@@ -389,14 +389,14 @@ class TransaksiGajiDosenLbController extends Controller
     {
         $validator = $request->validate([
             'komponen_pendapatan' => 'required|array',
-            'komponen_pendapatan.*' => 'integer',
+            'komponen_pendapatan.*' => 'double',
             'potongan' => 'required|array',
-            'potongan.*' => 'integer',
-            'pajak_pph25' => 'nullable|integer',
-            'pendapatan_bersih' => 'nullable|integer',
+            'potongan.*' => 'double',
+            'pajak_pph25' => 'nullable|double',
+            'pendapatan_bersih' => 'nullable|double',
             'pegawais_bank_id' => [
                 'required',
-                'integer',
+                'double',
                 Rule::exists('pegawai_banks', 'id')
                     ->where('pegawais_id', PegawaiMasterTransaksi::find($request->id)->pegawais_id)
                     ->whereNull('deleted_at'),

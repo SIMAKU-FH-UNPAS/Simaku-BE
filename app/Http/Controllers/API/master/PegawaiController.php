@@ -200,6 +200,15 @@ class PegawaiController extends Controller
             $pegawai->banks()->delete();
 
             // master transaksi disini
+            $pegawai->master_transaksi()->each(function ($transaksi) {
+                // Delete related records
+                $transaksi->gaji_universitas()->delete();
+                $transaksi->gaji_fakultas()->delete();
+                $transaksi->komponen_pendapatan()->delete();
+                $transaksi->potongan()->delete();
+                $transaksi->pajak()->delete();
+                $transaksi->delete();
+            });
 
             $pegawai->delete();
 
