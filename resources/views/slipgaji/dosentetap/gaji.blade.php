@@ -68,6 +68,19 @@
                         @endif
                     @endif
                 @endforeach
+
+                @foreach($gajiFak->gaji_fakultas as $column => $value)
+                {{-- Exclude column dibawah --}}
+                @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
+                    @if($value != 0)
+                        <tr>
+                            <td>• {{ ucfirst(str_replace('_', ' ', $column)) }}</td>
+                            <td></td>
+                            <td style="text-align: right">{{ format_rupiah($value) }}</td>
+                        </tr>
+                    @endif
+                @endif
+                @endforeach
                 <tr>
                     <td style="text-align: right">** JUMLAH I **</td>
                     <td></td>
@@ -108,7 +121,8 @@
             <p style="margin-top: 40px">{{ $pegawai->nama }}</p>
         </div>
     </div>
-
+    <br>
+    <br>
     <div style="text-align: center; font-size: 11px; margin-top: -20px">
         <p style="margin-bottom: -12px">PEMBAYARAN HONORARIUM MENGAJAR</p>
         <p style="margin-bottom: -12px">DAN PENDAPATAN LAIN</p>
@@ -147,6 +161,19 @@
                             </tr>
                         @endif
                     @endif
+                @endforeach
+
+                @foreach($gajiFak->gaji_fakultas as $column => $value)
+                {{-- Exclude column dibawah --}}
+                @if (!in_array($column, ['id', 'deleted_at', 'created_at', 'updated_at']))
+                    @if($value != 0)
+                        <tr>
+                            <td>• {{ ucfirst(str_replace('_', ' ', $column)) }}</td>
+                            <td></td>
+                            <td style="text-align: right">{{ format_rupiah($value) }}</td>
+                        </tr>
+                    @endif
+                @endif
                 @endforeach
                 <tr>
                     <td style="text-align: right">** JUMLAH **</td>
