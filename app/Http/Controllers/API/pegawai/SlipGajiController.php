@@ -137,16 +137,15 @@ class SlipGajiController extends Controller
         $namapegawai = $pegawai->nama;
         $nomorhp = $pegawai->nomor_hp;
 
-
         $filePath = "pegawai/gaji/slip/cetak/$id";
-        // $fileUrl = url($filePath);
+        $fileUrl = url($filePath);
 
         // Use the Wa helper to send WhatsApp message with the PDF
         $waHelper = new Wa();
         $nama = $namapegawai; // Set the recipient's name
         $hp = $nomorhp; // Set the recipient's phone number
         $pesan = 'Berikut merupakan rincian gaji pada periode ' . $bulanTahun; // Set your custom message
-        $responseStatus = $waHelper->waSend("Budi Ramdani", "6281220482629", $pesan, $fileUrl);
+        $responseStatus = $waHelper->waSend($nama, $hp, $pesan, $fileUrl);
 
         if ($responseStatus === 'success') {
             return ResponseFormatter::success('WhatsApp message sent with PDF', 200);
