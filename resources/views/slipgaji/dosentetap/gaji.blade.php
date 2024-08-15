@@ -42,12 +42,12 @@
                 <tr>
                     <td>No</td>
                     <td>:</td>
-                    <td>{{ $dosentetap->no_pegawai }}</td>
+                    <td>{{ $pegawai->no_pegawai }}</td>
                 </tr>
                 <tr>
                     <td>Nama</td>
                     <td>:</td>
-                    <td>{{ $dosentetap->nama }}</td>
+                    <td>{{ $pegawai->nama }}</td>
                 </tr>
             </table>
         </div>
@@ -105,11 +105,9 @@
         <div style="text-align: center; font-size: 11px;">
             <p style="margin-bottom: -12px">1 {{ $bulanTahun }}</p>
             <p>Tanda Tangan</p>
-            <p style="margin-top: 40px">{{ $dosentetap->nama }}</p>
+            <p style="margin-top: 40px">{{ $pegawai->nama }}</p>
         </div>
     </div>
-
-    <div class="page_break"></div>
 
     <div style="text-align: center; font-size: 11px; margin-top: -20px">
         <p style="margin-bottom: -12px">PEMBAYARAN HONORARIUM MENGAJAR</p>
@@ -124,12 +122,12 @@
                 <tr>
                     <td>No</td>
                     <td>:</td>
-                    <td>{{ $dosentetap->no_pegawai }}</td>
+                    <td>{{ $pegawai->no_pegawai }}</td>
                 </tr>
                 <tr>
                     <td>Nama</td>
                     <td>:</td>
-                    <td>{{ $dosentetap->nama }}</td>
+                    <td>{{ $pegawai->nama }}</td>
                 </tr>
             </table>
         </div>
@@ -161,7 +159,7 @@
         <div style="text-align: center; font-size: 11px;">
             <p style="margin-bottom: -12px">1 {{ $bulanTahun }}</p>
             <p>Tanda Tangan</p>
-            <p style="margin-top: 40px">{{ $dosentetap->nama }}</p>
+            <p style="margin-top: 40px">{{ $pegawai->nama }}</p>
         </div>
     </div>
 

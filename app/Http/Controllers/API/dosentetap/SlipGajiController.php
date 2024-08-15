@@ -110,7 +110,6 @@ class SlipGajiController extends Controller
         // Total Potongan
         $totalPotongan = array_sum($potongan->potongan);
 
-
         $pdf = App::make('dompdf.wrapper');
         $customPaper = array(0, 0, 12 / 2.54 * 72, 14 / 2.54 * 72);
         $pdf->setPaper($customPaper);
