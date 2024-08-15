@@ -84,7 +84,7 @@ class SlipGajiController extends Controller
         return ResponseFormatter::success($slipgaji, 'Data Slip Gaji Dosen Tetap Found');
     }
 
-    public function viewPDF($id)
+    public function generatePDF($id)
     {
         $transaksi = PegawaiMasterTransaksi::find($id);
 
@@ -139,6 +139,21 @@ class SlipGajiController extends Controller
         $pdf->loadView('slipgaji.dosentetap.gaji', compact('pegawai', 'gajiUniv', 'gajiFak', 'potongan', 'pendapatanBersih', 'bulanTahun', 'totalPendapatan', 'totalPotongan', 'jumlahSetPotonganKenaPajak'));
 
         return $pdf->stream('slipgaji.pdf');
+    }
+
+    public function viewPDF($id)
+    {
+        // Get Master Transaksi
+        $transaksi = PegawaiMasterTransaksi::find($id);
+
+        if (!$transaksi) {
+            return ResponseFormatter::error('Master Transaksi Not Found', 404);
+        }
+
+        $filePath = "pegawai/gaji/slip/pdf/$id";
+        $fileUrl = url($filePath);
+
+        return ResponseFormatter::success(['url' => $fileUrl], 'PDF Slip Gaji Dosen Tetap Found');
     }
 
     public function sendWA($id)
